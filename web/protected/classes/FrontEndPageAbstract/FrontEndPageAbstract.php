@@ -9,14 +9,6 @@
 abstract class FrontEndPageAbstract extends TPage 
 {
 	/**
-	 * @var TCallback
-	 */
-	protected $_getUserBtn = null;
-	/**
-	 * @var TCallback
-	 */
-	protected $_loginUserBtn = null;
-	/**
 	 * constructor
 	 */
 	public function __construct()
@@ -30,44 +22,6 @@ abstract class FrontEndPageAbstract extends TPage
 	public function onInit($param)
 	{
 		parent::onInit($param);
-		
-		$this->_getUserBtn = new TCallback();
-		$this->_getUserBtn->ID = 'getUserBtn';
-		$this->_getUserBtn->OnCallback = 'Page.getCurrentUser';
-		$this->getControls()->add($this->_getUserBtn);
-		
-		$this->_loginUserBtn = new TCallback();
-		$this->_loginUserBtn->ID = 'loginUserBtn';
-		$this->_loginUserBtn->OnCallback = 'Page.login';
-		$this->getControls()->add($this->_loginUserBtn);
-		
-		$this->getPage()->setTheme($this->_getThemeByName(Core::getLibrary()->getInfo('lib_theme')));
-	}
-	/**
-	 * getting the theme by name
-	 *
-	 * @param string $themeName The name of the theme
-	 *
-	 * @throws Exception
-	 * @return TTheme
-	 */
-	protected function _getThemeByName($themeName)
-	{
-		try
-		{
-			$currentTheme = $this->getPage()->getTheme();
-			$currentThemeName = $currentTheme->getName();
-			$currentThemePath = $currentTheme->getBasePath();
-			$currentThemeUrl = $currentTheme->getBaseUrl();
-				
-			$newThemePath = str_replace($currentThemeName,$themeName,$currentTheme->getBasePath());
-			$newThemeUrl = str_replace($currentThemeName,$themeName,$currentTheme->getBaseUrl());
-			return new TTheme($newThemePath,$newThemeUrl);
-		}
-		catch(Exception $e)
-		{
-			throw new Exception("Can't create new theme '".$themeName."' : ".$e->getMessage());
-		}
 	}
 	/**
 	 * (non-PHPdoc)
@@ -87,7 +41,7 @@ abstract class FrontEndPageAbstract extends TPage
 	 */
 	protected function _getEndJs() 
 	{
-	    return 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); pageJs._currentLib = ' . trim(Core::getLibrary()->getId()) . ';pageJs.setCallbackId("getUser", "' . $this->_getUserBtn->getUniqueID() . '"); pageJs.setCallbackId("loginUser", "' . $this->_loginUserBtn->getUniqueID() . '"); }';
+	    return 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
 	}
 	/**
 	 * (non-PHPdoc)
@@ -167,58 +121,6 @@ abstract class FrontEndPageAbstract extends TPage
 	    return $array;
 	}
 	/**
-	 * Trying to get the current user
-	 * 
-	 * @param TCallback           $sender
-	 * @param TCallbackParameters $param
-	 * 
-	 * @throws Exception
-	 */
-	public function getCurrentUser($sender, $params)
-	{
-		$errors = $results = array();
-		try
-		{
-			if(!Core::getUser() instanceof UserAccount)
-				throw new Exception('Invalid user!');
-			$results['user'] = array('id' => Core::getUser()->getId(), 'name' => trim(Core::getUser()->getPerson()));
-		}
-		catch(Exception $ex)
-		{
-			$errors[] = $ex->getMessage();
-		}
-		$params->ResponseData = StringUtilsAbstract::getJson($results, $errors);
-	}
-	/**
-	 * Trying to get the current user
-	 * 
-	 * @param TCallback           $sender
-	 * @param TCallbackParameters $param
-	 * 
-	 * @throws Exception
-	 */
-	public function login($sender, $params)
-	{
-		$errors = $results = array();
-        try 
-        {
-            if(!isset($params->CallbackParameter->username) || ($username = trim($params->CallbackParameter->username)) === '')
-                throw new Exception('username not provided!');
-            if(!isset($params->CallbackParameter->password) || ($password = trim($params->CallbackParameter->password)) === '')
-                throw new Exception('password not provided!');
-            
-            $authManager=$this->getApplication()->getModule('auth');
-            if(!$authManager->login($username, $password))
-            	throw new Exception('Invalid user!');
-            $results['user'] = array('id' => Core::getUser()->getId(), 'name' => trim(Core::getUser()->getPerson()));
-        }
-        catch(Exception $ex)
-        {
-        	$errors[] = $ex->getMessage();
-        }
-        $params->ResponseData = StringUtilsAbstract::getJson($results, $errors);
-	}
-	/**
 	 * Getting the 404 page
 	 * 
 	 * @param string $title   The title of the page
@@ -232,17 +134,6 @@ abstract class FrontEndPageAbstract extends TPage
 		$html = "<h1>$title</h1>";
 		$html .= $content;
 		return $html;
-	}
-	/**
-	 * Getting system setting passing to the .page file
-	 * 
-	 * @param string $type The system setting's type code
-	 * 
-	 * @return Ambigous <string, multitype:>
-	 */
-	public function getSystemSettings($type)
-	{
-		return SystemSettings::getSettings($type);
 	}
 }
 ?>
