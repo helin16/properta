@@ -3,13 +3,10 @@ return array(
 	'Database' => array(
 			'Driver' => 'mysql',
 			'DBHost' => 'localhost',
-			'DB' => 'bmv',
+			'DB' => 'properta',
 			'Username' => 'root',
-			'Password' => 'root'
+			'Password' => ''
 		)
-	,'social' => array (
-		'addThisAccount' => 'helin16' 
-	)
 );
 
 ?>

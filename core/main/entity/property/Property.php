@@ -82,7 +82,6 @@ class Property extends BaseEntityAbstract
         DaoMap::setStringType('description', 'text');
         DaoMap::setManyToOne('address', 'Address', 'pro_addr', true);
         parent::__loadDaoMap();
-        DaoMap::createUniqueIndex('name');
         DaoMap::commit();
     }
 }
