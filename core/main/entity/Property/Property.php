@@ -18,7 +18,7 @@ class Property extends BaseEntityAbstract
 	 * The address of the property
 	 * 
 	 */
-	protected $address;
+	protected $address = null;
 	/**
 	 * Getter for description
 	 *
@@ -40,6 +40,28 @@ class Property extends BaseEntityAbstract
 	    $this->description = $value;
 	    return $this;
 	}
+	/**
+	 * Getter for address
+	 *
+	 * @return Address
+	 */
+	public function getAddress() 
+	{
+		$this->loadManyToOne('address');
+	    return $this->address;
+	}
+	/**
+	 * Setter for address
+	 *
+	 * @param address $value The address
+	 *
+	 * @return Property
+	 */
+	public function setAddress($value) 
+	{
+	    $this->address = $value;
+	    return $this;
+	}
     /**
      * (non-PHPdoc)
      * @see BaseEntity::__toString()
@@ -58,22 +80,10 @@ class Property extends BaseEntityAbstract
     {
         DaoMap::begin($this, 'pro');
         DaoMap::setStringType('description', 'text');
+        DaoMap::setManyToOne('address', 'Address', 'pro_addr', true);
         parent::__loadDaoMap();
         DaoMap::createUniqueIndex('name');
         DaoMap::commit();
-    }
-    /**
-     * overload the get function from parent
-     * 
-     * @param int $id The id of the role
-     * 
-     * @return NULL
-     */
-    public static function get($id)
-    {
-    	if(!self::cacheExsits($id))
-    		self::addCache($id, parent::get($id));
-    	return self::getCache($id);
     }
 }
 ?>

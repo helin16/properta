@@ -9,12 +9,6 @@
 class Role extends BaseEntityAbstract
 {
     /**
-     * ID the guest role
-     * 
-     * @var int
-     */
-    const ID_GUEST = 1;
-    /**
      * ID the TENANT role
      * 
      * @var int
