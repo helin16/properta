@@ -6,12 +6,8 @@
  * @subpackage Exception
  * @author     lhe<helin16@gmail.com>
  */
-class CoreException extends Exception
+class CoreException extends BaseExceptionAbstract
 {
-	public function __construct($message)
-	{
-		parent::__construct($message, 0);
-	}
 }
 
 ?>

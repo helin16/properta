@@ -6,13 +6,8 @@
  * @subpackage Exception
  * @author     lhe<helin16@gmail.com>
  */
-class DaoException extends Exception
+class DaoException extends BaseExceptionAbstract
 {
-	public function __construct($message, $code = 0)
-	{
-		// Supply the base exception class with an arbitrary code value
-		parent::__construct($message, $code);
-	}
 }
 
 ?>

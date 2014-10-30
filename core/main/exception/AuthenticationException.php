@@ -1,5 +1,5 @@
 <?php
-class AuthenticationException extends Exception
+class AuthenticationException extends BaseExceptionAbstract
 {
 }
 ?>

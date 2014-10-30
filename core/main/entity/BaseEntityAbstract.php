@@ -13,6 +13,12 @@ abstract class BaseEntityAbstract
 	 * @var array
 	 */
 	protected $_jsonArray = array();
+	/**
+	 * The entity level runtime cache
+	 * 
+	 * @var array
+	 */
+	private static $_entityCache = array();
     /**
      * Internal id used by all application entities
      *
@@ -404,6 +410,60 @@ abstract class BaseEntityAbstract
     	return FactoryAbastract::dao(get_class($this))->save($this);
     }
     /**
+     * Getting the runtime cache
+     * 
+     * @param string $key The key of the cache 
+     * 
+     * @param mixed
+     */
+    protected static function getCache($key)
+    {
+    	if(!self::cacheExsits($key))
+    		return null;
+    	$class = get_called_class();
+    	return BaseEntityAbstract::$_entityCache[$class][$key];
+    }
+    /**
+     * adding the runtime cache
+     *
+     * @param string $key  The key of the cache
+     * @param mixed  $data The data of the cache
+     *
+     * @param mixed
+     */
+    protected static function addCache($key, $data)
+    {
+    	BaseEntityAbstract::$_entityCache[$class][$key] = $data;
+    	return BaseEntityAbstract::$_entityCache[$class][$key];
+    }
+    /**
+     * Check whether the key exsits in the runtime cache
+     * 
+     * @param string $key The key of the cache
+     * 
+     * @return boolean
+     */
+    protected static function cacheExsits($key)
+    {
+    	$class = get_called_class();
+    	return isset(BaseEntityAbstract::$_entityCache[$class]) && isset(BaseEntityAbstract::$_entityCache[$class][$key]);
+    }
+    /**
+     * remove the cache from runtime cache
+     * 
+     * @param string $key The key of the cache
+     * 
+     * @return boolean
+     */
+    protected static function removeCache($key)
+    {
+    	if(!self::cacheExsits($key))
+    		return false;
+    	$class = get_called_class();
+    	unset(BaseEntityAbstract::$_entityCache[$class][$key]);
+    	return true;
+    }
+    /**
      * Find all entities
      * 
      * @param string  $activeOnly
@@ -509,32 +569,6 @@ abstract class BaseEntityAbstract
     public static function getQuery()
     {
     	return FactoryAbastract::dao(get_called_class())->getQuery();
-    }
-	/**
-     * Add a join table record for many to many relationship
-     *
-     * @param BaseEntityAbstract $leftEntity  The left entity
-     * @param BaseEntityAbstract $rightEntity The right entity
-     *
-     * @return int
-     */
-    public function saveManyToManyJoin(BaseEntityAbstract &$leftEntity, BaseEntityAbstract $rightEntity)
-    {
-        FactoryAbastract::dao(get_called_class())->saveManyToManyJoin($leftEntity, $rightEntity);
-        return $leftEntity;
-    }
-    /**
-     * Remove a join table record for many to many relationship
-     *
-     * @param BaseEntityAbstract $leftEntity  The left entity
-     * @param BaseEntityAbstract $rightEntity The right entity
-     *
-     * @return int
-     */
-    public function deleteManyToManyJoin(BaseEntityAbstract &$leftEntity, BaseEntityAbstract $rightEntity)
-    {
-        FactoryAbastract::dao(get_called_class())->deleteManyToManyJoin($leftEntity, $rightEntity);
-        return $leftEntity;
     }
 }
 

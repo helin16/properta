@@ -15,33 +15,28 @@ class Role extends BaseEntityAbstract
      */
     const ID_GUEST = 1;
     /**
-     * ID the READER role
+     * ID the TENANT role
      * 
      * @var int
      */
-    const ID_READER = 2;
+    const ID_TENANT = 40;
     /**
-     * ID the library admin role
+     * ID the Agent role
      * 
      * @var int
      */
-    const ID_LIB_ADMIN = 3;
+    const ID_AGENT = 41;
     /**
-     * ID the sysadmin role
+     * ID the OWNER role
      * 
      * @var int
      */
-    const ID_ADMIN = 10;
+    const ID_OWNER = 42;
     /**
      * The name of the role
      * @var string
      */
     private $name;
-    /**
-     * The useraccounts of the person
-     * @var array
-     */
-    protected $userAccounts;
     /**
      * getter Name
      *
@@ -64,27 +59,6 @@ class Role extends BaseEntityAbstract
         return $this;
     }
     /**
-     * getter UserAccounts
-     *
-     * @return array
-     */
-    public function getUserAccounts()
-    {
-        return $this->userAccounts;
-    }
-    /**
-     * setter UserAccounts
-     *
-     * @param array $UserAccounts The useraccounts linked to that role
-     *
-     * @return Role
-     */
-    public function setUserAccounts(array $UserAccounts)
-    {
-        $this->userAccounts = $UserAccounts;
-        return $this;
-    }
-    /**
      * (non-PHPdoc)
      * @see BaseEntity::__toString()
      */
@@ -102,10 +76,22 @@ class Role extends BaseEntityAbstract
     {
         DaoMap::begin($this, 'r');
         DaoMap::setStringType('name', 'varchar');
-        DaoMap::setManyToMany("userAccounts", "UserAccount", DaoMap::RIGHT_SIDE, "ua");
         parent::__loadDaoMap();
         DaoMap::createUniqueIndex('name');
         DaoMap::commit();
+    }
+    /**
+     * overload the get function from parent
+     * 
+     * @param int $id The id of the role
+     * 
+     * @return NULL
+     */
+    public static function get($id)
+    {
+    	if(!self::cacheExsits($id))
+    		self::addCache($id, parent::get($id));
+    	return self::getCache($id);
     }
 }
 ?>

@@ -8,30 +8,6 @@
 class Log extends BaseEntityAbstract
 {
 	/**
-	 * The type for SupplierConnectorAbstract
-	 * 
-	 * @var string
-	 */
-	const TYPE_SC = 'SupplierConnectorAbstract';
-	/**
-	 * The type for Product Import Script
-	 * 
-	 * @var string
-	 */
-	const TYPE_PIMPORT = 'ProductImportScript';
-	/**
-	 * The type for LibraryConnector script
-	 * 
-	 * @var string
-	 */
-	const TYPE_LC = 'LibraryConnector';
-	/**
-	 * The type for Auto expiry shelfitem Script
-	 *
-	 * @var string
-	 */
-	const TYPE_AUTO_EXPIRY = 'AutoExpiryShelfItem';
-	/**
 	 * caching the transid
 	 * 
 	 * @var string
