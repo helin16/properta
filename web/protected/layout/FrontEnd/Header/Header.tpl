@@ -47,7 +47,7 @@
        </div><!-- end columns -->
        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
        		<div class="top-bar-menu pull-right">
-           		<span class="login-btn"><a data-toggle="modal" href="#login-box"><i class="fa fa-user"></i>Member Login</a></span>
+           		<span class="login-btn"><a data-toggle="modal" href="/login.html"><i class="fa fa-user"></i>Member Login</a></span>
                	<span><a href="shop-cart.html"><i class="fa fa-shopping-cart"></i> 4 items - $600.00</a></span>
            </div><!-- end top-bar-menu -->
        </div><!-- end columns -->

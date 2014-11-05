@@ -41,7 +41,17 @@ abstract class FrontEndPageAbstract extends TPage
 	 */
 	protected function _getEndJs() 
 	{
-	    return 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
+		$js ='jQuery("#header > .top-head").affix({
+				offset: {
+				    top: 10,
+				    bottom: function () {
+				      return (this.bottom = jQuery(".footer").outerHeight(true))
+				    }
+				}
+			}).on("affix.bs.affix", function(){ jQuery( this ).data("originalPadding", jQuery( this ).css("padding")).css("padding", 0); })
+			.on("affixed-top.bs.affix", function() {jQuery( this ).css("padding", jQuery( this ).data("originalPadding"));});';
+	    $js .= 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
+	    return $js;
 	}
 	/**
 	 * (non-PHPdoc)

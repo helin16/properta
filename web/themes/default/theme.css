@@ -44,7 +44,6 @@ a:link,a {
 	padding: 24px 0;
 	background-color: #ffffff;
 	width: 100%;
-	top: 40px;
 	height: auto !important;
     border-bottom: 1px solid #EBE9E9;
 	z-index: 999;
@@ -141,4 +140,9 @@ a:link,a {
     box-shadow: none;
     height: 62px;
     margin-bottom: 10px;
+}
+
+.login-form {
+	width: 50%;
+	margin: 60px auto;
 }

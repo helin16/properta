@@ -15,14 +15,6 @@ class Controller extends FrontEndPageAbstract
     protected function _getEndJs()
     {
         $js = parent::_getEndJs();
-        $js .='(function($) {
-		  	"use strict";
-			$(".top-head").affix({
-				offset: {
-					top: 100
-				}
-			});
-        })(jQuery);';
         return $js;
     }
 }
