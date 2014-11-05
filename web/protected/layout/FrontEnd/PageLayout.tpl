@@ -32,7 +32,7 @@
 </com:THead>
 <body role="document">
 	<com:TForm Attributes.id="main-form">
-		<header id="header" class="affix-top">
+		<header id="header">
 			<com:Application.layout.FrontEnd.Header.Header />
 		</header>
 		<div id="mainbody">

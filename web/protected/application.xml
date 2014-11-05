@@ -19,6 +19,9 @@
 			<!-- FrontEnd:: login page -->
 			<url ServiceParameter="FrontEnd.Login.LoginController" pattern="login.html" />
 			
+			<!-- FrontEnd:: CMS:: ContactUs page -->
+			<url ServiceParameter="FrontEnd.CMS.ContactUs.Controller" pattern="contactus.html" />
+			
 			<!-- FrontEnd:: logout page -->
 			<url ServiceParameter="FrontEnd.Logout.LogoutController" pattern="logout.html" />
 			
