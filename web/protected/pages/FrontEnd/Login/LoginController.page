@@ -1,25 +1,46 @@
 <com:TContent ID="MainContent">
     <com:TCallback ID="loginBtn" OnCallback="login" />
+    <br />
+    <br />
 	<div class="container">
-		<div class="login-form" role="form">
-			<h2 class="form-signin-heading"></h2>
-			<div class="form-group">
-				<label for="email">Email:</label>
-				<div class="input-group">
-					<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span> 
-					<input id="email" type="email" class="form-control email" placeholder="Your email" onkeydown="pageJs.keydown(event, function(){$('loginbtn').click();});" required autofocus/>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="login-form" role="form">
+					<h4 class="form-signin-heading">Got Account? Sign in Please.</h4>
+					<div class="msg-div"></div>
+					<div class="form-group">
+						<label for="email">Email:</label>
+						<div class="input-group">
+							<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span> 
+							<input login-panel="email" type="email" class="form-control email" placeholder="Your email" onkeydown="pageJs.keydown(event, function(){$('loginbtn').click();});" required autofocus/>
+						</div>
+					</div> 
+					<div class="form-group">
+						<label for="password">Password:</label>
+						<div class="input-group">
+							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span> 
+							<input login-panel="password" type="password" class="form-control password" placeholder="Password" onkeydown="pageJs.keydown(event, function(){$('loginbtn').click();});" required />
+						</div>
+					</div> 
+					<span class="btn btn-lg btn-primary pull-right" type="button" onclick="pageJs.login(this);" data-loading-text="Signing in...">Sign in</span>
 				</div>
-			</div> 
-			<div class="form-group">
-				<label for="password">Password:</label>
-				<div class="input-group">
-					<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span> 
-					<input id="password" type="password" class="form-control password" placeholder="Password" onkeydown="pageJs.keydown(event, function(){$('loginbtn').click();});" required />
+			</div>
+			<div class="col-sm-6">
+				<div class="panel panel-success login-form" role="form">
+					<div class=" panel-body">
+						<h4 class="form-signin-heading">New? One Step Signup.</h4>
+						<p>An email will be sent to provided email address with the initial password. Please remember to change it.
+						<div class="form-group">
+							<label for="email">Email:</label>
+							<div class="input-group">
+								<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span> 
+								<input id="email" type="email" class="form-control email" placeholder="Your email" onkeydown="pageJs.keydown(event, function(){$('loginbtn').click();});" required autofocus/>
+							</div>
+						</div>
+						<span class="btn btn-lg btn-success pull-right" onclick="pageJs.login(this);">Sign me up</span>
+					</div>
 				</div>
-			</div> 
-			<button id="loginbtn" class="btn btn-lg btn-primary btn-block iconbtn" type="button" onclick="pageJs.login(this);">
-				<div class="btnname">Sign in</div>
-			</button>
+			</div>
 		</div>
 	</div>
 </com:TContent>

@@ -13,29 +13,15 @@ class LoginController extends FrontEndPageAbstract
         $errors = $results = array();
         try 
         {
-            if(!isset($params->CallbackParameter->username) || ($username = trim($params->CallbackParameter->username)) === '')
-                throw new Exception('username not provided!');
+            if(!isset($params->CallbackParameter->email) || ($email = trim($params->CallbackParameter->email)) === '')
+                throw new Exception('email not provided!');
             if(!isset($params->CallbackParameter->password) || ($password = trim($params->CallbackParameter->password)) === '')
                 throw new Exception('password not provided!');
             
-            if(isset($_REQUEST['return']) && ($returnUrl = trim($_REQUEST['return'])) !== '' )
-            	WebUserManager::$fromLocalDB = true;
-            
             $authManager=$this->getApplication()->getModule('auth');
-            if(!$authManager->login($username, $password))
-            	throw new Exception('Invalid username or password!');
-            
-            if(isset($_REQUEST['return']) && ($returnUrl = trim($_REQUEST['return'])) !== '' )
-            	WebUserManager::$fromLocalDB = false;
-            
-            if(Core::getRole() instanceof Role && in_array(trim(Core::getRole()->getId()), array(trim(role::ID_ADMIN), trim(Role::ID_LIB_ADMIN))) 
-            	&& isset($_REQUEST['return']) && ($returnUrl = trim($_REQUEST['return'])) !== '' 
-           	)
-            {
-            	$results['url'] = $returnUrl;
-            }
-            else
-            	$results['url'] = '/user.html';
+            if(!$authManager->login($email, $password))
+            	throw new Exception('No user found!');
+            $results['url'] = '/backend.html';
         }
         catch(Exception $ex)
         {
