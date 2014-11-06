@@ -10,12 +10,12 @@ html,body,#main-form {
 }
 
 .section-title-heading {
-    text-align: center;
+	text-align: center;
 }
 
 .section-title:before {
-    left: -100px;
-    top: 10px;
+	left: -100px;
+	top: 10px;
 }
 
 #main-form>#mainbody,#main-form>#footer {
@@ -40,35 +40,46 @@ a:link,a {
 	-webkit-transition: background-color .2s linear, color .2s linear;
 }
 
-#header > .top-head {
+#header>.top-head {
 	padding: 24px 0;
 	background-color: #ffffff;
 	width: 100%;
 	height: auto !important;
-    border-bottom: 1px solid #EBE9E9;
+	border-bottom: 1px solid #EBE9E9;
 	z-index: 999;
 	left: 0;
 }
-#header > .top-bar {
+
+#header>.top-bar {
 	background-color: #FFFFFF;
-    border-bottom: 1px solid #EBE9E9;
-    width: 100%;
-    z-index: 999;
+	border-bottom: 1px solid #EBE9E9;
+	width: 100%;
+	z-index: 999;
 }
-#header > .top-bar a {
-    display: inline-block;
+
+.user-menu-bar .navbar {
+	margin: 0px;
+	padding: 0px;
+	min-height: 0px;
+}
+
+.user-menu-bar .navbar ul li:last-child {
+	border-left: 1px #EBE9E9 solid;
+}
+
+#header>.top-bar .navbar a {
+	display: inline-block;
 	color: #979EA2;
-    padding: 0 7px;
-    text-decoration: none;
-    font-size: 13px;
-    height: 42px;
-    line-height: 42px;
-    width: auto;
+	padding: 0 12px;
+	text-decoration: none;
+	font-size: 13px;
+	height: 42px;
+	line-height: 42px;
+	width: auto;
+	margin: 0px;
 }
-#header > .top-bar .top-bar-menu .login-btn{
-	border-right: 1px solid #EBE9E9;
-}
-#header > .top-bar a:hover{
+
+#header>.top-bar .navbar a:hover {
 	background-color: #73b819;
 	color: #fff !important;
 }
@@ -100,14 +111,14 @@ a:link,a {
 
 #footer>.banner {
 	background: #73B819 url("images/cloud-things.png") repeat center center;
-	padding : 10px 0;
+	padding: 10px 0;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-webkit-background-size: cover;
 	-o-background-size: cover;
 	padding: 10px 0;
 	color: #FFFFFF;
-    font-size: 16px;
+	font-size: 16px;
 }
 
 #footer>.columns {
@@ -131,13 +142,70 @@ a:link,a {
 	position: static;
 }
 
-
 .contact-form-wrapper {
 	min-height: 500px;
 }
+
 .contact-form .form-control {
 	border-color: #DDDDDD;
-    box-shadow: none;
-    height: 62px;
-    margin-bottom: 10px;
+	box-shadow: none;
+	height: 62px;
+	margin-bottom: 10px;
+}
+
+.parallax {
+	background-attachment: fixed !important;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.parallax .overlay {
+	background-color: rgba(0, 0, 0, 0.7);
+	padding: 60px 0;
+}
+
+.parallax.backend-home {
+	background-image: url('images/parallax-client.jpg');
+}
+
+.icon-header {
+	font-size: 70px;
+	vertical-align: middle;
+}
+
+.blue {
+	color: #3F8DBF !important;
+}
+
+.orange {
+	color: #FB8728 !important;
+}
+
+.red {
+	color: #CE2424 !important;
+}
+
+.green {
+	color: #09C798 !important;
+}
+
+.highlight {
+	color: #FFFFFF;
+	display: block;
+	font-size: 48px;
+	font-weight: bold;
+	margin-bottom: 0;
+	overflow: hidden;
+	padding: 30px 0;
+}
+
+.milestone-details {
+	color: #FFFFFF;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.stat {
+	text-align: center;
 }

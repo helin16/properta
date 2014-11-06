@@ -22,7 +22,7 @@
 							<input login-panel="password" type="password" class="form-control password" placeholder="Password" onkeydown="pageJs.keydown(event, function(){$('loginbtn').click();});" required />
 						</div>
 					</div> 
-					<span class="btn btn-lg btn-primary pull-right" type="button" onclick="pageJs.login(this);" data-loading-text="Signing in...">Sign in</span>
+					<span id="loginbtn" class="btn btn-lg btn-primary pull-right" type="button" onclick="pageJs.login(this);" data-loading-text="Signing in...">Sign in</span>
 				</div>
 			</div>
 			<div class="col-sm-6">

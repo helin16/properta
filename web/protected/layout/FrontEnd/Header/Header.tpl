@@ -35,21 +35,26 @@
 <div class="top-bar clearfix">
 	<div class="container">
        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-           <div class="social-icons">
-               <span><a href="#" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Facebook"><i class="fa fa-facebook"></i></a></span>
-               <span><a href="#" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Google Plus"><i class="fa fa-google-plus"></i></a></span>
-               <span><a href="#" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Twitter"><i class="fa fa-twitter"></i></a></span>
-               <span><a href="#" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Youtube"><i class="fa fa-youtube"></i></a></span>
-               <span><a href="#" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Linkedin"><i class="fa fa-linkedin"></i></a></span>
-               <span><a href="#" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Dribbble"><i class="fa fa-dribbble"></i></a></span>
-               <span><a href="#" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Skype"><i class="fa fa-skype"></i></a></span>
-           </div><!-- end social icons -->
        </div><!-- end columns -->
-       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-       		<div class="top-bar-menu pull-right">
-           		<span class="login-btn"><a data-toggle="modal" href="/login.html"><i class="fa fa-user"></i>Member Login</a></span>
-               	<span><a href="shop-cart.html"><i class="fa fa-shopping-cart"></i> 4 items - $600.00</a></span>
-           </div><!-- end top-bar-menu -->
+       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 user-menu-bar">
+       	   <com:TPanel ID="user_menu_not_login" CssClass="top-bar-menu pull-right">
+       	   		<nav class="navbar navbar-default" role="navigation">
+       	   			<ul class="nav navbar-nav">
+       	   				<li><a data-toggle="modal" href="/login.html"><i class="fa fa-user"></i> Member Login</a></li>
+       	   				<li><a href="/login.html"><i class="fa fa-male"></i> Sign Up</a></li>
+       	   			</ul>
+       	   		</nav>
+           </com:TPanel><!-- end top-bar-menu -->
+       	   <com:TPanel ID="user_menu_login" CssClass="top-bar-menu pull-right" Visible='false'>
+       	   		<nav class="navbar navbar-default" role="navigation">
+       	   			<ul class="nav navbar-nav">
+       	   				<li><a>Welcome, <%= Core::getUser()->getFirstName() %></a></li>
+       	   				<li><a href="/" title="Settings"><i class="glyphicon glyphicon-cog"></i></a></li>
+       	   				<li><a href="/" title="Messages"><i class="glyphicon glyphicon-envelope"></i></a></li>
+       	   				<li><a href="/logout.html" title="sign out"><i class="fa fa-sign-out"></i></a></li>
+       	   			</ul>
+       	   		</nav>
+           </com:TPanel><!-- end top-bar-menu -->
        </div><!-- end columns -->
    </div>
 </div>

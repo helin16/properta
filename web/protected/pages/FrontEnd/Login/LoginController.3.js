@@ -53,7 +53,7 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 			tmp.me._markFormGroupError($(tmp.passwordbox), tmp.me._getErrMsg('Please provide an password!'));
 			tmp.hasError = true;
 		}
-		return tmp.hasError === true ? false : {'email': $F(tmp.usernamebox).strip(), 'password': $F(tmp.usernamebox).strip()};
+		return tmp.hasError === true ? false : {'email': $F(tmp.usernamebox).strip(), 'password': $F(tmp.passwordbox).strip()};
 	}
 
 	,_getErrMsg: function (msg) {

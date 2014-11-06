@@ -139,6 +139,15 @@ class UserAccount extends BaseEntityAbstract
         return $this->person;
     }
     /**
+     * The username of the useraccount
+     * 
+     * @return string
+     */
+    public function getUsername()
+    {
+    	return trim($this->getEmail());
+    }
+    /**
      * Setter Person
      *
      * @param Person $Person The person that this useraccount belongs to
@@ -215,7 +224,7 @@ class UserAccount extends BaseEntityAbstract
     {
     	$query = self::getQuery();
     	$userAccounts = self::getAllByCriteria("`email` = :email AND `Password` = :password", array('email' => $email, 'password' => ($noHashPass === true ? $password : sha1($password))), false, 1, 1);
-    	if(count($userAccounts) > 1)
+    	if(count($userAccounts) > 0)
     		return $userAccounts[0];
     	return null;
     }

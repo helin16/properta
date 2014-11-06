@@ -1,6 +1,6 @@
 /**
- * The FrontEndPageAbstract Js file
+ * The BackEndPageAbstract Js file
  */
 var BackEndPageJs = new Class.create();
-BackEndPageJs.prototype = Object.extend(new BPCPageJs(), {
+BackEndPageJs.prototype = Object.extend(new FrontPageJs(), {
 });

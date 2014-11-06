@@ -17,5 +17,23 @@ abstract class BackEndPageAbstract extends FrontEndPageAbstract
 	    if(!Core::getUser() instanceof UserAccount || (Core::getUser()->getId() === UserAccount::ID_GUEST_ACCOUNT))
 	    	die(FrontEndPageAbstract::show404Page('Page Not Found', 'Oops, the page you are looking for is not there'));
 	}
+	/**
+	 * Getting The end javascript
+	 *
+	 * @return string
+	 */
+	protected function _getEndJs()
+	{
+		$js ='jQuery("#header > .top-bar").affix({
+				offset: {
+				    top: 10,
+				    bottom: function () {
+				      return (this.bottom = jQuery(".footer").outerHeight(true))
+				    }
+				}
+			}).on("affix.bs.affix", function(){ jQuery( this ).css("top", 0); });';
+		$js .= 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
+		return $js;
+	}
 }
 ?>
