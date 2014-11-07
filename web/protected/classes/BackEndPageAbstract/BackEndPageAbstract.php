@@ -35,5 +35,16 @@ abstract class BackEndPageAbstract extends FrontEndPageAbstract
 		$js .= 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
 		return $js;
 	}
+	/**
+	 * loading the page js class files
+	 */
+	protected function _loadPageJsClass()
+	{
+		parent::_loadPageJsClass();
+		$cScripts = self::getLastestJS(__CLASS__);
+		if (isset($cScripts['js']) && ($lastestJs = trim($cScripts['js'])) !== '')
+			$this->getPage()->getClientScript()->registerScriptFile('BackEndPageJs', Prado::getApplication()->getAssetManager()->publishFilePath(dirname(__FILE__) . '/'  . $lastestJs, true));
+		return $this;
+	}
 }
 ?>

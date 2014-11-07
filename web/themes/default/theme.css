@@ -63,11 +63,11 @@ a:link,a {
 	min-height: 0px;
 }
 
-.user-menu-bar .navbar ul li:last-child {
+.user-menu-bar ul.nav > li:last-child {
 	border-left: 1px #EBE9E9 solid;
 }
 
-#header>.top-bar .navbar a {
+#header>.top-bar ul.nav > li > a {
 	display: inline-block;
 	color: #979EA2;
 	padding: 0 12px;
@@ -77,11 +77,13 @@ a:link,a {
 	line-height: 42px;
 	width: auto;
 	margin: 0px;
+	border-radio: 0;
 }
 
-#header>.top-bar .navbar a:hover {
+#header>.top-bar ul.nav > li > a:hover {
 	background-color: #73b819;
 	color: #fff !important;
+	border-radio: 0;
 }
 
 #header .navbar {
@@ -208,4 +210,14 @@ a:link,a {
 
 .stat {
 	text-align: center;
+}
+
+.no-result-div {
+	border: 2px dashed #EEEEEE;
+    border-radius: 4px;
+    color: #777777;
+    margin-bottom: 20px;
+    padding: 20px;
+    position: relative;
+    text-align: center;
 }
