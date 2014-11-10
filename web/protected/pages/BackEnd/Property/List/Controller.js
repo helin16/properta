@@ -3,14 +3,8 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new BackEndPageJs(), {
-	_htmlIDs: {}
-	,_pagination: {'pageNo': 1, 'pageSize': 30} //the pagination details
+	_pagination: {'pageNo': 1, 'pageSize': 30} //the pagination details
 	,_searchCriteria: {} //the searching criteria
-	
-	,setHTMLIDs: function(htmlIds) {
-		this._htmlIDs = htmlIds;
-		return this;
-	}
 	
 	,getResults: function(reset, pageSize) {
 		var tmp = {};

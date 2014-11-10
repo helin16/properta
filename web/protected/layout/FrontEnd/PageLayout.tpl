@@ -31,7 +31,7 @@
 	</script>
 </com:THead>
 <body role="document">
-	<com:TForm Attributes.id="main-form">
+	<com:TForm Attributes.id="main-form" Attributes.onSubmit="return false;">
 		<header id="header">
 			<com:Application.layout.FrontEnd.Header.Header />
 		</header>

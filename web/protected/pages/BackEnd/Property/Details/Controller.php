@@ -25,49 +25,9 @@ class Controller extends BackEndPageAbstract
 		}
 		
 		$js = parent::_getEndJs();
-		$js .= "pageJs.setHTMLIDs(" . json_encode(array('resultDivId' => 'result-div', 'totalNoOfItemsId' => 'totalNoOfItemsId')) . ")";
-		$js .= ".setCallbackId('getItems', '" . $this->getItemsBtn->getUniqueID() . "')";
-		$js .= ".getResults(true, 30);";
+		$js .= "pageJs.setHTMLIDs(" . json_encode(array('itemDivId' => 'item-details-div')) . ")";
+		$js .= ".load(" . json_encode($property->getJson()) . ");";
 		return $js;
-	}
-	/**
-	 * Getting the items list
-	 * 
-	 * @param TCallback          $sender
-	 * @param TCallbackParameter $param
-	 * 
-	 * @return Controller
-	 */
-	public function getItems($sender, $param)
-	{
-		$results = $errors = array();
-		try 
-		{
-			$pageNo = 1;
-			$pageSize = DaoQuery::DEFAUTL_PAGE_SIZE;
-			
-			if(isset($param->CallbackParameter->pagination))
-			{
-				$pageNo = $param->CallbackParameter->pagination->pageNo;
-				$pageSize = $param->CallbackParameter->pagination->pageSize;
-			}
-			$serachCriteria = isset($param->CallbackParameter->searchCriteria) ? json_decode(json_encode($param->CallbackParameter->searchCriteria), true) : array();
-			$where = array(1);
-			$params = array();
-			$stats = array();
-			$objects = Property::getAllByCriteria(implode(' AND ', $where), $params, false, $pageNo, $pageSize, array(), $stats);
-			
-			$results['pageStats'] = $stats;
-			$results['items'] = array();
-			foreach($objects as $obj)
-				$results['items'][] = $obj->getJson();
-		}
-		catch(Exception $ex)
-		{
-			$errors[] = $ex->getMessage();
-		}
-		$param->ResponseData = StringUtilsAbstract::getJson($results, $errors);
-		return $this;
 	}
 }
 ?>

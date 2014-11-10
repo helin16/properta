@@ -24,7 +24,7 @@
     <![endif]-->
 </com:THead>
 <body>
-    <com:TForm>
+    <com:TForm Attributes.id="main-form" Attributes.onSubmit="return false;">
         <com:TContentPlaceHolder ID="MainContent" />
     </com:TForm>
 </body>

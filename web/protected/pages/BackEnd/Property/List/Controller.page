@@ -11,7 +11,7 @@
 						<input type="search" class="form-control" placeholder="type an address" onkeydown="pageJs.keydown(event, function(){$('searchBtn').click();});">
 						<div class="input-group-btn">
 							<span class="btn btn-default" title="Search" id="searchBtn"><i class="glyphicon glyphicon-search"></i></span>
-							<a id="new-property-btn" href="/property/new.html" class="btn btn-success" title="Add a Propery" style="display: inline-block;"><i class="glyphicon glyphicon-plus"></i></a>
+							<a id="new-property-btn" href="/backend/property/new.html" class="btn btn-success" title="Add a Propery" style="display: inline-block;"><i class="glyphicon glyphicon-plus"></i></a>
 						</div>
 					</div>
 				</div>
