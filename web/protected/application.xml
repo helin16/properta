@@ -28,8 +28,10 @@
 			<!-- BackEnd:: home page -->
 			<url ServiceParameter="BackEnd.Home.Controller" pattern="/backend.html" />
 			
-			<!-- BackEnd:: home page -->
+			<!-- BackEnd:: Property:: List page -->
 			<url ServiceParameter="BackEnd.Property.List.Controller" pattern="/backend/properties.html" />
+			<!-- BackEnd:: Property:: Details page -->
+			<url ServiceParameter="BackEnd.Property.Details.Controller" pattern="/backend/property/{id}.html" parameters.id="\w+"/>
 			
 			<!-- asset service -->
 			<url ServiceId="asset" ServiceParameter="" pattern="asset/{method}" parameters.method="get" />

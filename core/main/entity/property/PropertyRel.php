@@ -107,5 +107,43 @@ class PropertyRel extends BaseEntityAbstract
         parent::__loadDaoMap();
         DaoMap::commit();
     }
+    /**
+     * Getting the relationships for a user
+     * 
+     * @param Property    $property
+     * @param UserAccount $user
+     * @param Role        $role
+     * @param bool        $activeOnly
+     * @param int         $pageNo
+     * @param int         $pageSize
+     * @param array       $orderBy
+     * @param array       $stats
+     * 
+     * @throws CoreException
+     * @return Ambigous <Ambigous, multitype:, multitype:BaseEntityAbstract >
+     */
+    public static function getRelationships(Property $property = null, UserAccount $user = null, Role $role = null, $activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+    {
+    	if(!$property instanceof Property && !$user instanceof UserAccount)
+    		throw new CoreException('At least one of the search criterial should be provided: property or user');
+    	$where = array();
+    	$param = array();
+    	if($property instanceof Property)
+    	{
+    		$where[]= 'propertyId = ?';
+    		$param[] = $property->getId();
+    	}
+    	if($user instanceof UserAccount)
+    	{
+    		$where[] = 'userAccountId = ?';
+    		$param[] = $user->getId();
+    	}
+    	if($role instanceof Role)
+    	{
+    		$where[] = 'roleId = ?';
+    		$param[] = $role->getId();
+    	}
+    	return self::getAllByCriteria(implode(' AND ', $where), $param, $activeOnly, $pageNo, $pageSize, $orderBy, $stats);
+    }
 }
 ?>
