@@ -93,7 +93,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		return new Element('div', {'class': 'no-result-div'})
 			.insert({'bottom': new Element('h4', {'class': ''})})
 			.insert({'bottom': new Element('p', {'class': 'lead'}).update('There isn\'t any property for you yet, please ')
-				.insert({'bottom': new Element('span', {'class': 'btn btn-success btn-xs'}).update(new Element('span', {'class': 'glyphicon glyphicon-plus'}))
+				.insert({'bottom': new Element('a', {'href': $('new-property-btn').readAttribute('href'), 'class': 'btn btn-success btn-xs'}).update(new Element('span', {'class': 'glyphicon glyphicon-plus'}))
 					.insert({'bottom': ' ADD'})
 				})
 				.insert({'bottom': ' one now.'})
