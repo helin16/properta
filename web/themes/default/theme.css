@@ -8,7 +8,6 @@ html,body,#main-form {
 	font-size: 14px;
 	line-height: 175%;
 }
-
 .section-title-heading {
 	text-align: center;
 }
@@ -22,8 +21,12 @@ html,body,#main-form {
 	display: block;
 }
 
-#main-form>#mainbody {
+#main-form > #mainbody {
 	min-height: 70%;
+	padding: 50px 0 100px 0;
+}
+#main-form > #mainbody .page-header {
+	margin-top: 0px;	
 }
 
 #main-form>#footer {
@@ -220,4 +223,12 @@ a:link,a {
     padding: 20px;
     position: relative;
     text-align: center;
+}
+
+#addr-viewer .input-group {
+	margin: 10px 0;
+	width: 100%;
+}
+#addr-viewer .input-group .input-group-addon{
+	width: 100px;
 }
