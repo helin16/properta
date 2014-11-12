@@ -21,6 +21,24 @@ class Property extends BaseEntityAbstract
 	 */
 	private $pKey;
 	/**
+	 * The number of rooms
+	 * 
+	 * @var int
+	 */
+	private $noOfRoom;
+	/**
+	 * the number of car spaces
+	 * 
+	 * @var int
+	 */
+	private $noOfCars;
+	/**
+	 * The number of bathrooms
+	 * 
+	 * @var int
+	 */
+	private $noOfBaths;
+	/**
 	 * The address of the property
 	 * 
 	 */
@@ -90,6 +108,69 @@ class Property extends BaseEntityAbstract
 	    $this->pKey = $value;
 	    return $this;
 	}
+	/**
+	 * Getter for noOfRoom
+	 *
+	 * @return int
+	 */
+	public function getNoOfRoom() 
+	{
+	    return $this->noOfRoom;
+	}
+	/**
+	 * Setter for noOfRoom
+	 *
+	 * @param int $value The noOfRoom
+	 *
+	 * @return Property
+	 */
+	public function setNoOfRoom($value) 
+	{
+	    $this->noOfRoom = $value;
+	    return $this;
+	}
+	/**
+	 * Getter for noOfCars
+	 *
+	 * @return int
+	 */
+	public function getNoOfCars() 
+	{
+	    return $this->noOfCars;
+	}
+	/**
+	 * Setter for noOfCars
+	 *
+	 * @param int $value The noOfCars
+	 *
+	 * @return Property
+	 */
+	public function setNoOfCars($value) 
+	{
+	    $this->noOfCars = $value;
+	    return $this;
+	}
+	/**
+	 * Getter for noOfBaths
+	 *
+	 * @return int
+	 */
+	public function getNoOfBaths() 
+	{
+	    return $this->noOfBaths;
+	}
+	/**
+	 * Setter for noOfBaths
+	 *
+	 * @param int $value The noOfBaths
+	 *
+	 * @return Property
+	 */
+	public function setNoOfBaths($value)
+	{
+	    $this->noOfBaths = $value;
+	    return $this;
+	}
     /**
      * (non-PHPdoc)
      * @see BaseEntity::__toString()
@@ -138,9 +219,15 @@ class Property extends BaseEntityAbstract
         DaoMap::setStringType('pKey', 'varchar', 32);
         DaoMap::setStringType('description', 'text');
         DaoMap::setManyToOne('address', 'Address', 'pro_addr', true);
+        DaoMap::setIntType('noOfRooms');
+        DaoMap::setIntType('noOfCars');
+        DaoMap::setIntType('noOfBaths');
         parent::__loadDaoMap();
         
         DaoMap::createUniqueIndex('pKey');
+        DaoMap::createIndex('noOfRooms');
+        DaoMap::createIndex('noOfCars');
+        DaoMap::createIndex('noOfBaths');
         DaoMap::commit();
     }
     /**
