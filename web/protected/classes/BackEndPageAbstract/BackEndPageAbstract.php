@@ -24,15 +24,7 @@ abstract class BackEndPageAbstract extends FrontEndPageAbstract
 	 */
 	protected function _getEndJs()
 	{
-		$js ='jQuery("#header > .top-bar").affix({
-				offset: {
-				    top: 10,
-				    bottom: function () {
-				      return (this.bottom = jQuery(".footer").outerHeight(true))
-				    }
-				}
-			}).on("affix.bs.affix", function(){ jQuery( this ).css("top", 0); });';
-		$js .= 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
+		$js = 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
 		return $js;
 	}
 	/**

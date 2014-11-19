@@ -18,13 +18,26 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		}
 		return tmp.address;
 	}
-	,_showMap: function(mapViewer) {
+	,confirmAddr: function() {
 		var tmp = {};
 		tmp.me = this;
-		tmp.map = new google.maps.Map(mapViewer, {center: new google.maps.LatLng(-33.8688, 151.2195), zoom: 13 });
-		tmp.infowindow = new google.maps.InfoWindow();
-		tmp.autocomplete.bindTo('bounds', tmp.map);
-		
+		$(tmp.me._htmlIDs.mapViewer).hide();
+		tmp.editView = $(tmp.me._htmlIDs.editViewer);
+		tmp.editView.update('')
+			.insert({'bottom': new Element('div', {'class': 'text-center', 'style': 'padding: 100px 0;'})
+				.insert({'bottom': new Element('span', {'class': 'fa fa-refresh fa-5x fa-spin'}) })
+			})
+		.show();
+		tmp.me.postAjax(tmp.me.getCallbackId('checkAddr'), {'newAddr': tmp.me._item.newAddr}, {
+			'onLoading': function() {}
+			,'onSuccess': function() {
+				try {
+					
+				} catch (e) {
+					tmp.editView.update(tmp.me.getAlertBox('ERROR', e).addClassName('alert-danger'));
+				}
+			}
+		})
 		return tmp.me;
 	}
 	/**
@@ -33,7 +46,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,_bindAutoComplete: function (txtBox, editPanel) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.map = new google.maps.Map(editPanel.down('#map-viewer'), {center: new google.maps.LatLng(-33.8688, 151.2195), zoom: 13});
+		tmp.map = new google.maps.Map(editPanel.down('#' + tmp.me._htmlIDs.mapViewer), {center: new google.maps.LatLng(-33.8688, 151.2195), zoom: 13});
 		$(txtBox).store('auto-complete', tmp.autocomplete = new google.maps.places.Autocomplete(txtBox));
 		tmp.infowindow = new google.maps.InfoWindow();
 		tmp.marker = new google.maps.Marker({
@@ -41,6 +54,17 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			anchorPoint : new google.maps.Point(0, -29)
 		});
 		google.maps.event.addListener(tmp.autocomplete, 'place_changed', function() {
+			$(txtBox).writeAttribute('disabled', true)
+				.insert({'after': new Element('span', {'class': 'input-group-addon btn btn-danger', 'title': 'reset'}).update( new Element('span', {'class': 'glyphicon glyphicon-remove'}) )
+					.observe('click', function() {
+						$(txtBox).writeAttribute('disabled', false).value = '';
+						$(txtBox).focus();
+						$(tmp.me._htmlIDs.mapViewer).show();
+						$(tmp.me._htmlIDs.editViewer).hide();
+						$(this).remove();
+					})
+				})
+			
 			tmp.infowindow.close();
 			tmp.marker.setVisible(false);
 			tmp.place = tmp.autocomplete.getPlace();
@@ -72,14 +96,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		        ].join(' ');
 		    }
 		    tmp.me._item.newAddr = tmp.me._getAddressObj(tmp.place);
-		    tmp.infowindow.setContent('<div><strong>' + tmp.place.name + '</strong><br>' + tmp.address);
+		    tmp.infowindow.setContent('<div><div><strong>' + tmp.place.name + '</strong></div><div><small>' + tmp.address + '</small></div><span class="btn btn-primary btn-xs" onclick="pageJs.confirmAddr();">comfirm</span></div>');
 		    tmp.infowindow.open(tmp.map, tmp.marker);
-		    
-		    editPanel.down('#addr-viewer').getElementsBySelector('[addr-viewer]').each(function(el){
-		    	tmp.type = el.readAttribute('addr-viewer');
-		    	if(tmp.me._item.newAddr[tmp.type])
-		    		el.update(tmp.me._item.newAddr[tmp.type]);
-		    });
 		});
 	}
 	,_getEditPanel: function() {
@@ -87,30 +105,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.me = this;
 		tmp.newDiv = new Element('section')
 			.insert({'bottom': new Element('div', {'class': 'row'})
-				.insert({'bottom': new Element('div', {'class': 'col-sm-5','id': 'addr-viewer'})
-					.insert({'bottom': new Element('div', {'class': 'input-group'})
-						.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('Street') })
-						.insert({'bottom': new Element('span', {'class': 'form-control', 'addr-viewer': 'street'}) })
-					})
-					.insert({'bottom': new Element('div', {'class': 'input-group'})
-						.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('Suburb') })
-						.insert({'bottom': new Element('span', {'class': 'form-control', 'addr-viewer': 'city'}) })
-					})
-					.insert({'bottom': new Element('div', {'class': 'input-group'})
-						.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('Street') })
-						.insert({'bottom': new Element('span', {'class': 'form-control', 'addr-viewer': 'street'}) })
-					})
-					.insert({'bottom': new Element('div', {'class': 'input-group'})
-						.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('State') })
-						.insert({'bottom': new Element('span', {'class': 'form-control', 'addr-viewer': 'region'}) })
-					})
-					.insert({'bottom': new Element('div', {'class': 'input-group'})
-						.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('PostCode') })
-						.insert({'bottom': new Element('span', {'class': 'form-control', 'addr-viewer': 'postCode'}) })
-					})
-				})
-				.insert({'bottom': new Element('div', {'class': 'col-sm-7', 'id': 'map-viewer', 'style': 'height: 400px;'})
-				})
+				.insert({'bottom': new Element('div', {'class': 'col-sm-12', 'id': tmp.me._htmlIDs.mapViewer, 'style': 'min-height: 400px;'}) })
+				.insert({'bottom': new Element('div', {'class': 'col-sm-12', 'id': tmp.me._htmlIDs.editViewer, 'style': 'min-height: 400px; display:none;'}) })
 			});
 		return tmp.newDiv;
 	}
@@ -123,17 +119,10 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.newDiv = new Element('div')
 			.insert({'bottom': new Element('div', {'class': 'page-header'})
 				.insert({'bottom': new Element('div', {'class': 'row'})
-					.insert({'bottom': new Element('div', {'class': 'col-sm-9'})
-						.insert({'bottom': new Element('h3').update('Creating Property @: ')
-							.insert({'bottom': new Element('div', {'class': 'btn-group text-reset-wrapper', 'style': 'width: 60%'})
-								.insert({'bottom': tmp.searchBox = new Element('input', {'id': 'addr-search-box', 'class': 'text-reset-box form-control', 'placeholder': 'Type in an address'}) })
-								.insert({'bottom': new Element('a', {'href': 'javascript: void(0)', 'class': 'text-reset-btn', 'style': 'position: absolute; font-size: 12px; right: 10px; top: 0; bottom: 0; height: 14px; margin: auto;color: #ccc'}).update( new Element('span', {'class': 'glyphicon glyphicon-remove'}) )
-									.observe('click', function() {
-										$('addr-search-box').value = '';
-									})
-								})
-							})
-						})
+					.insert({'bottom': new Element('h4', {'class': 'col-sm-3'}).update('Creating Property @: ')
+					})
+					.insert({'bottom': new Element('div', {'class': 'input-group col-sm-9'})
+						.insert({'bottom': tmp.searchBox = new Element('input', {'id': 'addr-search-box', 'class': 'form-control', 'placeholder': 'Type in an address'}) })
 					})
 				})
 			})
@@ -158,6 +147,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.me._item = item;
+		tmp.me._htmlIDs.mapViewer = 'map-viewer';
+		tmp.me._htmlIDs.editViewer = 'property-edit-viewer';
 		if(tmp.me._item.id)
 			tmp.me._showDetailsPanel();
 		else

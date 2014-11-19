@@ -53,8 +53,12 @@ CREATE TABLE `address` (
 DROP TABLE IF EXISTS `property`;
 CREATE TABLE `property` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`pKey` varchar(32) NOT NULL DEFAULT '',
 	`description` text NOT NULL ,
 	`addressId` int(10) unsigned NULL DEFAULT NULL,
+	`noOfRooms` int(10) unsigned NOT NULL DEFAULT 0,
+	`noOfCars` int(10) unsigned NOT NULL DEFAULT 0,
+	`noOfBaths` int(10) unsigned NOT NULL DEFAULT 0,
 	`active` bool NOT NULL DEFAULT 1,
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
 	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
@@ -64,6 +68,10 @@ CREATE TABLE `property` (
 	,INDEX (`addressId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
+	,INDEX (`noOfRooms`)
+	,INDEX (`noOfCars`)
+	,INDEX (`noOfBaths`)
+	,UNIQUE INDEX (`pKey`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `propertyrel`;
 CREATE TABLE `propertyrel` (

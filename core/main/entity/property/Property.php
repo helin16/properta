@@ -25,7 +25,7 @@ class Property extends BaseEntityAbstract
 	 * 
 	 * @var int
 	 */
-	private $noOfRoom;
+	private $noOfRooms;
 	/**
 	 * the number of car spaces
 	 * 
@@ -109,13 +109,13 @@ class Property extends BaseEntityAbstract
 	    return $this;
 	}
 	/**
-	 * Getter for noOfRoom
+	 * Getter for noOfRooms
 	 *
 	 * @return int
 	 */
-	public function getNoOfRoom() 
+	public function getNoOfRooms() 
 	{
-	    return $this->noOfRoom;
+	    return $this->noOfRooms;
 	}
 	/**
 	 * Setter for noOfRoom
@@ -124,9 +124,9 @@ class Property extends BaseEntityAbstract
 	 *
 	 * @return Property
 	 */
-	public function setNoOfRoom($value) 
+	public function setNoOfRooms($value) 
 	{
-	    $this->noOfRoom = $value;
+	    $this->noOfRooms = $value;
 	    return $this;
 	}
 	/**
