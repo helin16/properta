@@ -17,7 +17,6 @@ class Controller extends BackEndPageAbstract
 		$js = parent::_getEndJs();
 		$js .= "pageJs.setHTMLIDs(" . json_encode(array('resultDivId' => 'result-div', 'totalNoOfItemsId' => 'totalNoOfItemsId')) . ")";
 		$js .= ".setCallbackId('getItems', '" . $this->getItemsBtn->getUniqueID() . "')";
-		$js .= ".setCallbackId('checkAddr', '" . $this->checkAddrBtn->getUniqueID() . "')";
 		$js .= ".getResults(true, 30);";
 		return $js;
 	}
@@ -46,33 +45,6 @@ class Controller extends BackEndPageAbstract
 			$where = array(1);
 			$params = array();
 			$stats = array();
-			$objects = Property::getAllByCriteria(implode(' AND ', $where), $params, false, $pageNo, $pageSize, array(), $stats);
-			
-			$results['pageStats'] = $stats;
-			$results['items'] = array();
-			foreach($objects as $obj)
-				$results['items'][] = $obj->getJson();
-		}
-		catch(Exception $ex)
-		{
-			$errors[] = $ex->getMessage();
-		}
-		$param->ResponseData = StringUtilsAbstract::getJson($results, $errors);
-		return $this;
-	}
-	/**
-	 * checking the address
-	 * 
-	 * @param TCallback          $sender
-	 * @param TCallbackParameter $param
-	 * 
-	 * @return Controller
-	 */
-	public function checkAddr($sender, $param)
-	{
-		$results = $errors = array();
-		try 
-		{
 			$objects = Property::getAllByCriteria(implode(' AND ', $where), $params, false, $pageNo, $pageSize, array(), $stats);
 			
 			$results['pageStats'] = $stats;

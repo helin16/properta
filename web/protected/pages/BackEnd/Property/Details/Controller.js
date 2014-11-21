@@ -4,7 +4,13 @@
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	_item: {} //the item entity that we are dealing with
-
+	/**
+	 * getting an address object from place(google map object)
+	 * 
+	 * @param place Google map object
+	 * 
+	 * @return object
+	 */
 	,_getAddressObj: function(place) {
 		var tmp = {};
 		tmp.me = this;
@@ -18,6 +24,9 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		}
 		return tmp.address;
 	}
+	/**
+	 * checking whether the backend has such an address or not
+	 */
 	,confirmAddr: function() {
 		var tmp = {};
 		tmp.me = this;
@@ -27,12 +36,15 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			.insert({'bottom': new Element('div', {'class': 'text-center', 'style': 'padding: 100px 0;'})
 				.insert({'bottom': new Element('span', {'class': 'fa fa-refresh fa-5x fa-spin'}) })
 			})
-		.show();
-		tmp.me.postAjax(tmp.me.getCallbackId('checkAddr'), {'newAddr': tmp.me._item.newAddr}, {
+			.show();
+		tmp.me.postAjax(tmp.me.getCallbackId('checkAddr'), {'checkAddr': tmp.me._item.newAddr}, {
 			'onLoading': function() {}
-			,'onSuccess': function() {
+			,'onSuccess': function(sender, param) {
 				try {
-					
+					tmp.result = tmp.me.getResp(param, false, true);
+					if(!tmp.result)
+						return;
+					console.debug(tmp.result);
 				} catch (e) {
 					tmp.editView.update(tmp.me.getAlertBox('ERROR', e).addClassName('alert-danger'));
 				}
@@ -40,9 +52,62 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		})
 		return tmp.me;
 	}
-	showAddrEditPanel: function() {
+	/**
+	 * showing the address manual input panel
+	 */
+	,showAddrEditPanel: function() {
 		var tmp = {};
 		tmp.me = this;
+		$(tmp.me._htmlIDs.mapViewer).hide();
+		tmp.editView = $(tmp.me._htmlIDs.editViewer)
+			.show()
+			.update('')
+			.insert({'bottom': new Element('div', {'class': 'form-horizontal addr-edit-panel'})
+				.insert({'bottom': new Element('h4').update('Please manually type in the address:') })
+				.insert({'bottom': new Element('div', {'class': 'form-group'})
+					.insert({'bottom': new Element('label', {'class': 'control-label col-sm-2'}).update('Street:') })
+					.insert({'bottom': new Element('div', {'class': 'col-sm-10'})
+						.insert({'bottom': new Element('input', {'class': 'form-control', 'addr-viewer': 'street', 'value': tmp.me._item.newAddr.street})})
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'form-group'})
+					.insert({'bottom': new Element('label', {'class': 'control-label col-sm-2'}).update('Suburb:') })
+					.insert({'bottom': new Element('div', {'class': 'col-sm-10'})
+						.insert({'bottom': new Element('input', {'class': 'form-control', 'addr-viewer': 'city', 'value': tmp.me._item.newAddr.city}) })
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'form-group'})
+					.insert({'bottom': new Element('label', {'class': 'control-label col-sm-2'}).update('State:') })
+					.insert({'bottom': new Element('div', {'class': 'col-sm-10'})
+						.insert({'bottom': new Element('input', {'class': 'form-control', 'addr-viewer': 'region', 'value': tmp.me._item.newAddr.region}) })
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'form-group'})
+					.insert({'bottom': new Element('label', {'class': 'control-label col-sm-2'}).update('Country:') })
+					.insert({'bottom': new Element('div', {'class': 'col-sm-10'})
+						.insert({'bottom': new Element('input', {'class': 'form-control', 'addr-viewer': 'country', 'value': tmp.me._item.newAddr.country}) })
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'form-group'})
+					.insert({'bottom': new Element('label', {'class': 'control-label col-sm-2'}).update('PostCode:') })
+					.insert({'bottom': new Element('div', {'class': 'col-sm-10'})
+						.insert({'bottom': new Element('input', {'class': 'form-control', 'addr-viewer': 'postCode', 'value': tmp.me._item.newAddr.postCode}) })
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'form-group'})
+					.insert({'bottom': new Element('div', {'class': 'col-sm-offset-2 col-sm-10'})
+						.insert({'bottom': new Element('span', {'class': 'btn btn-success'}).update('Confirm this address')
+							.observe('click', function() {
+								$(this).up('.addr-edit-panel').getElementsBySelector('[addr-viewer]').each(function(el) {
+									tmp.me._item.newAddr[el.readAttribute('addr-viewer')] = $F(el).strip();
+								});
+								tmp.me.confirmAddr();
+							})
+						})
+					})
+				})
+				
+			});
 		return tmp.me;
 	}
 	/**
@@ -106,7 +171,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		    		+ '<div><small>' + tmp.address + '</small></div>'
 		    		+ '<div><small>Is this the right address?</small></div>'
 		    		+ '<div>'
-		    			+ '<span class="btn btn-default btn-xs" onclick="pageJs.showAddrEditPanel();" title="No, it is NOT the address I meant">NO</span> '
+		    			+ '<span class="btn btn-default btn-xs" onclick="pageJs.showAddrEditPanel();" title="No, it is NOT the address I meant">NO, manual enter</span> '
 		    			+ '<span class="btn btn-success btn-xs pull-right" onclick="pageJs.confirmAddr();" title="Yes, it is">YES</span>'
 		    		+ '</div>');
 		    tmp.infowindow.open(tmp.map, tmp.marker);
@@ -131,7 +196,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.newDiv = new Element('div')
 			.insert({'bottom': new Element('div', {'class': 'page-header'})
 				.insert({'bottom': new Element('div', {'class': 'row'})
-					.insert({'bottom': new Element('h4', {'class': 'col-sm-3'}).update('Creating Property @: ')
+					.insert({'bottom': new Element('h4', {'class': 'col-sm-3'}).update('Adding Property @: ')
 					})
 					.insert({'bottom': new Element('div', {'class': 'input-group col-sm-9'})
 						.insert({'bottom': tmp.searchBox = new Element('input', {'id': 'addr-search-box', 'class': 'form-control', 'placeholder': 'Type in an address'}) })
