@@ -69,25 +69,25 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			})
 			.insert({'bottom': new Element('h3').update('I am the ...') })
 			.insert({'bottom': new Element('div', {'class': 'row'})
-				.insert({'bottom': new Element('div', {'class': 'form-group col-sm-4 text-center'})
-					.insert({'bottom': new Element('a', {'class': 'milstone-counter'})
-						.insert({'bottom': new Element('span', {'class': 'fa fa-calendar fa-5x icon-header blue'}) })
-						.insert({'bottom': new Element('span', {'class': 'stat-count highlight blue'}).update('Agent') })
-						.insert({'bottom': new Element('span', {'class': 'milestone-details blue'}).update('Who manages this property') })
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'form-group col-sm-4 text-center rel-type-selector blue'})
+					.insert({'bottom': new Element('div', {'class': 'milstone-counter'})
+						.insert({'bottom': new Element('span', {'class': 'fa fa-calendar fa-5x icon-header'}) })
+						.insert({'bottom': new Element('span', {'class': 'stat-count highlight'}).update('Agent') })
+						.insert({'bottom': new Element('span', {'class': 'milestone-details'}).update('Who manages this property') })
 					})
 				})
-				.insert({'bottom': new Element('div', {'class': 'form-group col-sm-4 text-center'})
-					.insert({'bottom': new Element('a', {'class': 'milstone-counter'})
-						.insert({'bottom': new Element('span', {'class': 'fa fa-map-marker fa-5x icon-header green'}) })
-						.insert({'bottom': new Element('span', {'class': 'stat-count highlight green'}).update('Owner') })
-						.insert({'bottom': new Element('span', {'class': 'milestone-details green'}).update('Who owns this property') })
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'form-group col-sm-4 text-center rel-type-selector green'})
+					.insert({'bottom': new Element('div', {'class': 'milstone-counter'})
+						.insert({'bottom': new Element('span', {'class': 'fa fa-map-marker fa-5x icon-header'}) })
+						.insert({'bottom': new Element('span', {'class': 'stat-count highlight'}).update('Owner') })
+						.insert({'bottom': new Element('span', {'class': 'milestone-details'}).update('Who owns this property') })
 					})
 				})
-				.insert({'bottom': new Element('div', {'class': 'form-group col-sm-4 text-center'})
-					.insert({'bottom': new Element('a', {'class': 'milstone-counter'})
-						.insert({'bottom': new Element('span', {'class': 'fa fa-key fa-5x icon-header orange'}) })
-						.insert({'bottom': new Element('span', {'class': 'stat-count highlight orange'}).update('Tanent') })
-						.insert({'bottom': new Element('span', {'class': 'milestone-details orange'}).update('Who rents this property') })
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'form-group col-sm-4 text-center rel-type-selector orange'})
+					.insert({'bottom': new Element('div', {'class': 'milstone-counter'})
+						.insert({'bottom': new Element('span', {'class': 'fa fa-key fa-5x icon-header'}) })
+						.insert({'bottom': new Element('span', {'class': 'stat-count highlight'}).update('Tanent') })
+						.insert({'bottom': new Element('span', {'class': 'milestone-details'}).update('Who rents this property') })
 					})
 				})
 			});
@@ -99,6 +99,17 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,confirmAddr: function() {
 		var tmp = {};
 		tmp.me = this;
+		tmp.hasErrorInAddr = false;
+		$H(tmp.me._item.newAddr).each(function(item){
+			if(item.value.blank()) {
+				tmp.hasErrorInAddr = true;
+			}
+		});
+		if(tmp.hasErrorInAddr === true) {
+			tmp.me.showAddrEditPanel('<span class="text-warning">Missing some information in selected address, please manually correct them and submit:</span>');
+			return tmp.me;
+		}
+		
 		$(tmp.me._htmlIDs.mapViewer).hide();
 		tmp.editView = $(tmp.me._htmlIDs.editViewer);
 		tmp.editView.update('')
@@ -132,7 +143,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	/**
 	 * showing the address manual input panel
 	 */
-	,showAddrEditPanel: function() {
+	,showAddrEditPanel: function(title) {
 		var tmp = {};
 		tmp.me = this;
 		$(tmp.me._htmlIDs.mapViewer).hide();
@@ -140,7 +151,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			.show()
 			.update('')
 			.insert({'bottom': new Element('div', {'class': 'form-horizontal addr-edit-panel'})
-				.insert({'bottom': new Element('h4').update('Please manually type in the address:') })
+				.insert({'bottom': new Element('h4').update(title ? title : 'Please manually type in the address:') })
 				.insert({'bottom': new Element('div', {'class': 'form-group'})
 					.insert({'bottom': new Element('label', {'class': 'control-label col-sm-2'}).update('Street:') })
 					.insert({'bottom': new Element('div', {'class': 'col-sm-10'})
@@ -175,10 +186,16 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					.insert({'bottom': new Element('div', {'class': 'col-sm-offset-2 col-sm-10'})
 						.insert({'bottom': new Element('span', {'class': 'btn btn-success'}).update('Confirm this address')
 							.observe('click', function() {
+								tmp.hasError = false;
 								$(this).up('.addr-edit-panel').getElementsBySelector('[addr-viewer]').each(function(el) {
+									if($F(el).blank()) {
+										tmp.me._markFormGroupError(el, 'This field is required.');
+										tmp.hasError = true;
+									}
 									tmp.me._item.newAddr[el.readAttribute('addr-viewer')] = $F(el).strip();
 								});
-								tmp.me.confirmAddr();
+								if(tmp.hasError === false)
+									tmp.me.confirmAddr();
 							})
 						})
 					})
@@ -244,7 +261,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		        ].join(' ');
 		    }
 		    tmp.me._item.newAddr = tmp.me._getAddressObj(tmp.place);
-		    tmp.infowindow.setContent('<div>'
+		    tmp.markerMinWidth = (jQuery( document ).width() / 5);
+		    tmp.infowindow.setContent('<div class="my-marker-div" style="min-width: ' + (tmp.markerMinWidth > 200 ? tmp.markerMinWidth : 200) + 'px;">'
 		    		+ '<div><strong>' + tmp.place.name + '</strong></div>'
 		    		+ '<div><small>' + tmp.address + '</small></div>'
 		    		+ '<div><small>Is this the right address?</small></div>'

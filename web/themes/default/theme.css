@@ -232,3 +232,35 @@ a:link,a {
 #addr-viewer .input-group .input-group-addon{
 	width: 100px;
 }
+
+.rel-type-selector {
+	padding: 20px 0;
+}
+.rel-type-selector .milstone-counter .highlight,
+.rel-type-selector .milstone-counter .milestone-details {
+	color: inherit;
+}
+a.rel-type-selector:hover,
+a.rel-type-selector:active,
+a.rel-type-selector:focus,
+.rel-type-selector a,
+.rel-type-selector a:active,
+.rel-type-selector a:focus,
+.rel-type-selector a:hover {
+	text-decoration: none;
+	outline: none;
+}
+.rel-type-selector:hover {
+	background-color: #73b819;
+	color: #fff !important;
+	border-radius: 4px;
+}
+
+.social-btn {
+	margin: 0 4px;
+	color: #fff;
+	display: inline-block;
+}
+.social-btn:hover {
+	color: #2a6496;
+}
