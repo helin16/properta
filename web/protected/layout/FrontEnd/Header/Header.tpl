@@ -22,11 +22,11 @@
 		</nav>
 	</div>
 </div>
-<div class="top-bar clearfix">
+<div class="top-bar clearfix" <%= Core::getUser() instanceof UserAccount ? 'style="background: #eee;"' : '' %>>
 	<div class="container">
        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
        </div><!-- end columns -->
-       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 user-menu-bar">
+       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 user-menu-bar" >
        	   <com:TPanel ID="user_menu_not_login" CssClass="top-bar-menu pull-right">
       	   		<ul class="nav nav-pills" role="tablist">
       	   			<li><a data-toggle="modal" href="/login.html"><i class="fa fa-user"></i> Member Login</a></li>
