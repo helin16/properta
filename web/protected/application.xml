@@ -62,7 +62,7 @@
 	</services>
 	<!-- application parameters -->
 	<parameters>
-		<parameter id="AppTitle" value="My Property Manager" />
+		<parameter id="AppTitle" value="PropertA" />
 		<parameter id="AppVersion" value="1.0.0" />
 	</parameters>
 

@@ -44,7 +44,6 @@ a:link,a {
 }
 
 #header>.top-head {
-	padding: 24px 0;
 	background-color: #ffffff;
 	width: 100%;
 	height: auto !important;
@@ -60,6 +59,9 @@ a:link,a {
 	z-index: 999;
 }
 
+#top-menu-div {
+	padding: 24px 0;
+}
 .user-menu-bar .navbar {
 	margin: 0px;
 	padding: 0px;

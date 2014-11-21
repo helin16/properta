@@ -8,7 +8,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">My logo</a>
+				<a class="navbar-brand" href="/" id="logo" title="<%$ AppTitle %>"><img src="/themes/default/images/logo.png" /></a>
 			</div>
 			<div class="collapse navbar-collapse" id="top-menu-div">
 				<ul class="nav navbar-nav navbar-right top-menu" >
