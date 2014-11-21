@@ -12,7 +12,7 @@ class Address extends BaseEntityAbstract
 	 * 
 	 * @var string
 	 */
-	private $key;
+	private $sKey;
 	/**
 	 * The street of the address
 	 * 
@@ -48,9 +48,9 @@ class Address extends BaseEntityAbstract
 	 *
 	 * @return string
 	 */
-	public function getKey() 
+	public function getSKey() 
 	{
-	    return $this->key;
+	    return $this->sKey;
 	}
 	/**
 	 * Setter for key
@@ -59,9 +59,9 @@ class Address extends BaseEntityAbstract
 	 *
 	 * @return Address
 	 */
-	public function setKey($value) 
+	public function setSKey($value) 
 	{
-	    $this->key = $value;
+	    $this->sKey = $value;
 	    return $this;
 	}
 	
@@ -184,9 +184,8 @@ class Address extends BaseEntityAbstract
 	 */
 	public function preSave()
 	{
-		parent::preSave();
-		$this->setKey(self::genKey($this->getStreet(), $this->getCity(), $this->getRegion(), $this->getCountry(), $this->getPostCode()));
-		return $this;
+		if(trim($this->getSKey()) === '')
+			$this->setSKey(trim(Address::genKey($this->street, $this->city, $this->region, $this->country, $this->postCode)));
 	}
 	/**
 	 * (non-PHPdoc)
@@ -209,7 +208,7 @@ class Address extends BaseEntityAbstract
 	{
 		DaoMap::begin($this, 'addr');
 	
-		DaoMap::setStringType('key','varchar', 32);
+		DaoMap::setStringType('sKey','varchar', 32);
 		DaoMap::setStringType('street','varchar', 100);
 		DaoMap::setStringType('city','varchar', 20);
 		DaoMap::setStringType('region','varchar', 20);
@@ -239,13 +238,16 @@ class Address extends BaseEntityAbstract
 	 */
 	public static function create($street, $city, $region, $country, $postCode)
 	{
-		$className = get_called_class();
-		$obj = new $className();
+		$key = Address::genKey($street, $city, $region, $country, $postCode);
+		if(Address::getByKey($key) instanceof Address)
+			throw new EntityException('Such an address exsits!');
+		$obj = new Address();
 		return $obj->setStreet($street)
 			->setCity($city)
 			->setRegion($region)
 			->setCountry($country)
 			->setPostCode($postCode)
+			->setSKey($key)
 			->save();
 	}
 	/**
@@ -272,7 +274,7 @@ class Address extends BaseEntityAbstract
 	 */
 	public static function getByKey($key)
 	{
-		$items = self::getAllByCriteria('`key` = ?', array(trim($key)), true, 1, 1);
+		$items = self::getAllByCriteria('`sKey` = ?', array(trim($key)), true, 1, 1);
 		return count($items) > 0 ? $items[0] : null;
 	}
 }

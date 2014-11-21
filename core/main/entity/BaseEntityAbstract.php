@@ -433,6 +433,7 @@ abstract class BaseEntityAbstract
      */
     protected static function addCache($key, $data)
     {
+    	$class = get_called_class();
     	BaseEntityAbstract::$_entityCache[$class][$key] = $data;
     	return BaseEntityAbstract::$_entityCache[$class][$key];
     }

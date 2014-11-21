@@ -1,5 +1,6 @@
 <com:TContent ID="MainContent">
 <com:TCallback ID="checkAddrBtn" onCallback="Page.checkAddr" />
+<com:TCallback ID="savePropertyBtn" onCallback="Page.saveProperty" />
 <com:Application.controls.googleMap.googleMap />
 <div class="container">
 	<div id="item-details-div"></div>

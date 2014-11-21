@@ -17,7 +17,9 @@ class Controller extends BackEndPageAbstract
 		$property = new Property();
 		$js = parent::_getEndJs();
 		$js .= "pageJs.setHTMLIDs(" . json_encode(array('itemDivId' => 'item-details-div')) . ")";
+		$js .= ".setPropRelTypes(" . Role::ID_TENANT . ", " . Role::ID_OWNER .", " . Role::ID_TENANT . ")";
 		$js .= ".setCallbackId('checkAddr', '" . $this->checkAddrBtn->getUniqueID() . "')";
+		$js .= ".setCallbackId('saveProperty', '" . $this->savePropertyBtn->getUniqueID() . "')";
 		$js .= ".load(" . json_encode($property->getJson()) . ");";
 		return $js;
 	}
@@ -50,6 +52,41 @@ class Controller extends BackEndPageAbstract
 		catch(Exception $ex)
 		{
 			$errors[] = $ex->getMessage();
+		}
+		$param->ResponseData = StringUtilsAbstract::getJson($results, $errors);
+		return $this;
+	}
+	/**
+	 * creating the property
+	 *
+	 * @param TCallback          $sender
+	 * @param TCallbackParameter $param
+	 *
+	 * @return Controller
+	 */
+	public function saveProperty($sender, $param)
+	{
+		$results = $errors = array();
+		try
+		{
+			Dao::beginTransaction();
+			if(!isset($param->CallbackParameter->relTypeId) || !($role = Role::get($param->CallbackParameter->relTypeId)) instanceof Role)
+				throw new Exception('System Error: Invalid rel type provided.');
+			$propertyObj = isset($param->CallbackParameter->newProperty) ? json_decode(json_encode($param->CallbackParameter->newProperty), true) : array();
+			if(!is_array($propertyObj) || count($propertyObj) === 0)
+				throw new Exception('System Error: can access provided information, insuffient data provided.');
+			$addressObj = $propertyObj['address'];
+			$address = Address::getByKey(Address::genKey($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']));
+			if(!$address instanceof Address)
+				$address = Address::create($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
+			$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']));
+			$results['url'] = '/property/' . $property->getId() . '.html';
+			Dao::commitTransaction();
+		}
+		catch(Exception $ex)
+		{
+			Dao::rollbackTransaction();
+			$errors[] = '<pre>' . $ex->getMessage(). "\n" . $ex->getTraceAsString() . '</pre>';
 		}
 		$param->ResponseData = StringUtilsAbstract::getJson($results, $errors);
 		return $this;

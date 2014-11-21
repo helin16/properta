@@ -32,7 +32,7 @@ CREATE TABLE `content` (
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`key` varchar(32) NOT NULL DEFAULT '',
+	`skey` varchar(32) NOT NULL DEFAULT '',
 	`street` varchar(100) NOT NULL DEFAULT '',
 	`city` varchar(20) NOT NULL DEFAULT '',
 	`region` varchar(20) NOT NULL DEFAULT '',
@@ -55,7 +55,7 @@ CREATE TABLE `address` (
 DROP TABLE IF EXISTS `property`;
 CREATE TABLE `property` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`pKey` varchar(32) NOT NULL DEFAULT '',
+	`sKey` varchar(32) NOT NULL DEFAULT '',
 	`description` text NOT NULL ,
 	`addressId` int(10) unsigned NULL DEFAULT NULL,
 	`noOfRooms` int(10) unsigned NOT NULL DEFAULT 0,

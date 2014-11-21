@@ -252,8 +252,8 @@ a.rel-type-selector:focus,
 	text-decoration: none;
 	outline: none;
 }
-.rel-type-selector:hover {
-	background-color: #73b819;
+.rel-type-selector .milstone-counter:hover {
+	background-color: #73b819 !important;
 	color: #fff !important;
 	border-radius: 4px;
 }

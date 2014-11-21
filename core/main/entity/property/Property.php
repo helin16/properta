@@ -92,7 +92,7 @@ class Property extends BaseEntityAbstract
 	 *
 	 * @return string
 	 */
-	public function getPkey() 
+	public function getPKey() 
 	{
 	    return $this->pKey;
 	}
@@ -103,7 +103,7 @@ class Property extends BaseEntityAbstract
 	 *
 	 * @return Property
 	 */
-	public function setpKey($value) 
+	public function setPKey($value) 
 	{
 	    $this->pKey = $value;
 	    return $this;
@@ -188,8 +188,8 @@ class Property extends BaseEntityAbstract
     public function preSave()
     {
     	parent::preSave();
-    	if(trim($this->getKey()) === '')
-    		$this->setKey(md5(trim($this->getAddress()) . microtime() . rand(0, PHP_INT_MAX)));
+    	if(trim($this->getPKey()) === '')
+    		$this->setPKey($this->getAddress());
     }
     /**
      * Getting the relationships for a user
@@ -231,6 +231,17 @@ class Property extends BaseEntityAbstract
         DaoMap::commit();
     }
     /**
+     * Generating the key for a property
+     *
+     * @param Address $address  The address of the property
+     *
+     * @return string
+     */
+    public static function genKey(Address $address)
+    {
+    	return md5(trim($address) . microtime() . rand(0, PHP_INT_MAX));
+    }
+    /**
      * Getting a property by key
      * 
      * @param string $key The unique key for a property
@@ -241,6 +252,26 @@ class Property extends BaseEntityAbstract
     {
     	$items = self::getAllByCriteria('`pKey` = ?', array(trim($key)), true, 1, 1);
     	return count($items) > 0 ? $items[0] : null;
+    }
+    /**
+     * creating a property
+     * 
+     * @param Address $address
+     * @param number  $noOfRooms
+     * @param number  $noOfBaths
+     * @param number  $noOfCars
+     * @param string  $description
+     * 
+     * @return Ambigous <BaseEntityAbstract, GenericDAO>
+     */
+    public static function create(Address $address, $noOfRooms = 1, $noOfBaths = 0, $noOfCars = 0, $description = '')
+    {
+    	$property = new Property();
+    	return $property->setAddress($address)
+    		->setNoOfRooms($noOfRooms)
+    		->setNoOfBaths($noOfBaths)
+    		->setNoOfCars($noOfCars)
+    		->save();
     }
 }
 ?>
