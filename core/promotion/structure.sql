@@ -32,6 +32,7 @@ CREATE TABLE `content` (
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`key` varchar(32) NOT NULL DEFAULT '',
 	`street` varchar(100) NOT NULL DEFAULT '',
 	`city` varchar(20) NOT NULL DEFAULT '',
 	`region` varchar(20) NOT NULL DEFAULT '',
@@ -49,6 +50,7 @@ CREATE TABLE `address` (
 	,INDEX (`region`)
 	,INDEX (`country`)
 	,INDEX (`postCode`)
+	,INDEX (`key`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `property`;
 CREATE TABLE `property` (

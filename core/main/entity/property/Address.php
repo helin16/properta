@@ -8,6 +8,12 @@
 class Address extends BaseEntityAbstract
 {
 	/**
+	 * The key of the address
+	 * 
+	 * @var string
+	 */
+	private $key;
+	/**
 	 * The street of the address
 	 * 
 	 * @var string
@@ -37,6 +43,28 @@ class Address extends BaseEntityAbstract
 	 * @var string
 	 */
 	private $country;
+	/**
+	 * Getter for key
+	 *
+	 * @return string
+	 */
+	public function getKey() 
+	{
+	    return $this->key;
+	}
+	/**
+	 * Setter for key
+	 *
+	 * @param string $value The key
+	 *
+	 * @return Address
+	 */
+	public function setKey($value) 
+	{
+	    $this->key = $value;
+	    return $this;
+	}
+	
 	/**
 	 * Getter for street
 	 *
@@ -143,34 +171,22 @@ class Address extends BaseEntityAbstract
 	    return $this;
 	}
 	/**
-	 * Creating a address object
-	 * 
-	 * @param string $street       The street line of the address
-	 * @param string $city         The city of the address
-	 * @param string $region       The region/state of the address
-	 * @param string $country      The country of the address
-	 * @param string $postCode     The postCode of the address
-	 * 
-	 * @return Address
-	 */
-	public static function create($street, $city, $region, $country, $postCode)
-	{
-		$className = get_called_class();
-		$obj = new $className();
-		return $obj->setStreet($street)
-			->setCity($city)
-			->setRegion($region)
-			->setCountry($country)
-			->setPostCode($postCode)
-			->save();
-	}
-	/**
 	 * (non-PHPdoc)
 	 * @see BaseEntityAbstract::__toString()
 	 */
 	public function __toString()
 	{
 		return trim($this->getStreet() . ', ' . $this->getCity() . ' ' . $this->getRegion() . ' ' . $this->getCountry() . ' ' . $this->getPostCode() );
+	}
+	/**
+	 * (non-PHPdoc)
+	 * @see BaseEntityAbstract::preSave()
+	 */
+	public function preSave()
+	{
+		parent::preSave();
+		$this->setKey(self::genKey($this->getStreet(), $this->getCity(), $this->getRegion(), $this->getCountry(), $this->getPostCode()));
+		return $this;
 	}
 	/**
 	 * (non-PHPdoc)
@@ -193,6 +209,7 @@ class Address extends BaseEntityAbstract
 	{
 		DaoMap::begin($this, 'addr');
 	
+		DaoMap::setStringType('key','varchar', 32);
 		DaoMap::setStringType('street','varchar', 100);
 		DaoMap::setStringType('city','varchar', 20);
 		DaoMap::setStringType('region','varchar', 20);
@@ -205,7 +222,57 @@ class Address extends BaseEntityAbstract
 		DaoMap::createIndex('region');
 		DaoMap::createIndex('country');
 		DaoMap::createIndex('postCode');
+		DaoMap::createIndex('key');
 	
 		DaoMap::commit();
+	}
+	/**
+	 * Creating a address object
+	 *
+	 * @param string $street       The street line of the address
+	 * @param string $city         The city of the address
+	 * @param string $region       The region/state of the address
+	 * @param string $country      The country of the address
+	 * @param string $postCode     The postCode of the address
+	 *
+	 * @return Address
+	 */
+	public static function create($street, $city, $region, $country, $postCode)
+	{
+		$className = get_called_class();
+		$obj = new $className();
+		return $obj->setStreet($street)
+			->setCity($city)
+			->setRegion($region)
+			->setCountry($country)
+			->setPostCode($postCode)
+			->save();
+	}
+	/**
+	 * Generating the key for an address
+	 * 
+	 * @param string $street       The street line of the address
+	 * @param string $city         The city of the address
+	 * @param string $region       The region/state of the address
+	 * @param string $country      The country of the address
+	 * @param string $postCode     The postCode of the address
+	 * 
+	 * @return string
+	 */
+	public static function genKey($street, $city, $region, $country, $postCode)
+	{
+		return md5(trim($street) . trim($city) . trim($region) . trim($country) . trim($postCode));
+	}
+	/**
+	 * Getting a address by key
+	 *
+	 * @param string $key The unique key for an address
+	 *
+	 * @return Ambigous <NULL, unknown>
+	 */
+	public static function getByKey($key)
+	{
+		$items = self::getAllByCriteria('`key` = ?', array(trim($key)), true, 1, 1);
+		return count($items) > 0 ? $items[0] : null;
 	}
 }
