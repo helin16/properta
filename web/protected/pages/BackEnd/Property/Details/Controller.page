@@ -1,0 +1,7 @@
+<com:TContent ID="MainContent">
+<com:TCallback ID="checkAddrBtn" onCallback="Page.checkAddr" />
+	<div class="container">
+		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+		<div id="item-details-div"></div>
+	</div>
+</com:TContent>

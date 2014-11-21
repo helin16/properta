@@ -1,0 +1,38 @@
+<com:TContent ID="MainContent">
+	<section class="parallax backend-home">
+		<div class="overlay">
+        	<div class="container">
+				<div class="stat f-container">
+					<div class="f-element col-lg-3 col-md-3 col-sm-6 col-xs-12">
+						<div class="milestone-counter">
+                        	<i class="glyphicon glyphicon-home icon-header blue"></i>
+                            <span class="stat-count highlight">122</span>
+                            <div class="milestone-details">Property</div>
+						</div>
+					</div>
+					<div class="f-element col-lg-3 col-md-3 col-sm-6 col-xs-12">
+						<div class="milestone-counter">
+                        	<i class="fa fa-files-o fa-5x icon-header red"></i>
+                            <span class="stat-count highlight">4226</span>
+                            <div class="milestone-details">Documents</div>
+						</div>
+					</div>
+					<div class="f-element col-lg-3 col-md-3 col-sm-6 col-xs-12">
+						<div class="milestone-counter">
+                        	<i class="glyphicon glyphicon-envelope icon-header green"></i>
+                            <span class="stat-count highlight">14</span>
+                            <div class="milestone-details">Messages</div>
+						</div>
+					</div>
+					<div class="f-element col-lg-3 col-md-3 col-sm-6 col-xs-12">
+						<div class="milestone-counter">
+                        	<i class="fa fa-calendar fa-5x icon-header orange"></i>
+                            <span class="stat-count highlight">232</span>
+                            <div class="milestone-details">Events</div>
+						</div>
+					</div>
+				</div><!-- stat -->
+            </div><!-- end container -->
+    	</div>
+	</section>
+</com:TContent>
