@@ -174,7 +174,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.newDiv = new Element('div', {'class': 'list-div'})
-			.insert({'bottom': new Element('div', {'class': 'item-row row'}) })
+			.insert({'bottom': new Element('h4', {'class': 'item-row row'}).update(title ? title : 'We found a couple of properties matched with the same address, please make a selection from them:') })
 		tmp.propCount = properties.size();
 		for(tmp.i = 0; tmp.i < tmp.propCount; tmp.i = (tmp.i * 1) + 1) {
 			tmp.property = properties[tmp.i];
