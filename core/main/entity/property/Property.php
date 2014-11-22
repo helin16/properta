@@ -13,13 +13,13 @@ class Property extends BaseEntityAbstract
 	 * 
 	 * @var string
 	 */
-	private $description;
+	private $description = '';
 	/**
 	 * The unique key of the property for loading from url
 	 * 
 	 * @var string
 	 */
-	private $pKey;
+	private $sKey;
 	/**
 	 * The number of rooms
 	 * 
@@ -92,9 +92,9 @@ class Property extends BaseEntityAbstract
 	 *
 	 * @return string
 	 */
-	public function getPKey() 
+	public function getSKey() 
 	{
-	    return $this->pKey;
+	    return $this->sKey;
 	}
 	/**
 	 * Setter for key
@@ -103,9 +103,9 @@ class Property extends BaseEntityAbstract
 	 *
 	 * @return Property
 	 */
-	public function setPKey($value) 
+	public function setSKey($value) 
 	{
-	    $this->pKey = $value;
+	    $this->sKey = $value;
 	    return $this;
 	}
 	/**
@@ -188,8 +188,8 @@ class Property extends BaseEntityAbstract
     public function preSave()
     {
     	parent::preSave();
-    	if(trim($this->getPKey()) === '')
-    		$this->setPKey($this->getAddress());
+    	if(trim($this->getSKey()) === '')
+    		$this->setSKey($this->getAddress());
     }
     /**
      * Getting the relationships for a user
@@ -216,7 +216,7 @@ class Property extends BaseEntityAbstract
     public function __loadDaoMap()
     {
         DaoMap::begin($this, 'pro');
-        DaoMap::setStringType('pKey', 'varchar', 32);
+        DaoMap::setStringType('sKey', 'varchar', 32);
         DaoMap::setStringType('description', 'text');
         DaoMap::setManyToOne('address', 'Address', 'pro_addr', true);
         DaoMap::setIntType('noOfRooms');
@@ -224,7 +224,7 @@ class Property extends BaseEntityAbstract
         DaoMap::setIntType('noOfBaths');
         parent::__loadDaoMap();
         
-        DaoMap::createUniqueIndex('pKey');
+        DaoMap::createIndex('sKey');
         DaoMap::createIndex('noOfRooms');
         DaoMap::createIndex('noOfCars');
         DaoMap::createIndex('noOfBaths');
@@ -250,7 +250,7 @@ class Property extends BaseEntityAbstract
      */
     public static function getPropertyByKey($key)
     {
-    	$items = self::getAllByCriteria('`pKey` = ?', array(trim($key)), true, 1, 1);
+    	$items = self::getAllByCriteria('`sKey` = ?', array(trim($key)), true, 1, 1);
     	return count($items) > 0 ? $items[0] : null;
     }
     /**

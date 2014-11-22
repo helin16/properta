@@ -184,8 +184,7 @@ class Address extends BaseEntityAbstract
 	 */
 	public function preSave()
 	{
-		if(trim($this->getSKey()) === '')
-			$this->setSKey(trim(Address::genKey($this->street, $this->city, $this->region, $this->country, $this->postCode)));
+		$this->setSKey(trim(Address::genKey($this->street, $this->city, $this->region, $this->country, $this->postCode)));
 	}
 	/**
 	 * (non-PHPdoc)
@@ -217,11 +216,11 @@ class Address extends BaseEntityAbstract
 	
 		parent::__loadDaoMap();
 	
+		DaoMap::createIndex('skey');
 		DaoMap::createIndex('city');
 		DaoMap::createIndex('region');
 		DaoMap::createIndex('country');
 		DaoMap::createIndex('postCode');
-		DaoMap::createIndex('key');
 	
 		DaoMap::commit();
 	}
@@ -238,8 +237,8 @@ class Address extends BaseEntityAbstract
 	 */
 	public static function create($street, $city, $region, $country, $postCode)
 	{
-		$key = Address::genKey($street, $city, $region, $country, $postCode);
-		if(Address::getByKey($key) instanceof Address)
+		$key = self::genKey($street, $city, $region, $country, $postCode);
+		if(self::getByKey($key) instanceof Address)
 			throw new EntityException('Such an address exsits!');
 		$obj = new Address();
 		return $obj->setStreet($street)
@@ -247,7 +246,6 @@ class Address extends BaseEntityAbstract
 			->setRegion($region)
 			->setCountry($country)
 			->setPostCode($postCode)
-			->setSKey($key)
 			->save();
 	}
 	/**

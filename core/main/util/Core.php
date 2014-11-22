@@ -74,7 +74,9 @@ abstract class Core
      */
 	public static function serialize()
 	{
-		return serialize(self::$_storage);
+		$array['userId'] = self::$_storage['user'] instanceof UserAccount ? self::$_storage['user']->getId() : null;
+		$array['roleId'] = self::$_storage['role'] instanceof UserAccount ? self::$_storage['role']->getId() : null;
+		return serialize($array);
 	}
 	/**
 	 * unserialize all the components and store them in Core
@@ -83,7 +85,9 @@ abstract class Core
 	 */
 	public static function unserialize($string)
 	{
-		self::$_storage = unserialize($string);
+		$array = unserialize($string);
+		self::$_storage['user'] = isset($array['userId']) ? UserAccount::get($array['userId']) : null;
+		self::$_storage['role'] = isset($array['roleId']) ? UserAccount::get($array['roleId']) : null;
 		Core::setUser(self::$_storage['user'], self::$_storage['role']);
 		return self::$_storage;
 	}

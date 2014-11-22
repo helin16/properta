@@ -261,16 +261,17 @@ abstract class BaseEntityAbstract
             }
             //if the property is one of these, as when we are trying to save them, we don't have the iniated value
             if (in_array($property, array('createdBy', 'updatedBy')))
-            $this->$property = Core::getUser();
+            	$this->$property = Core::getUser();
             else
-            throw new Exception('Property (' . get_class($this) . '::' . $property . ') must be initialised to integer or proxy prior to lazy loading.', 1);
+            	throw new EntityException('Property (' . get_class($this) . '::' . $property . ') must be initialised to integer or proxy prior to lazy loading.', 1);
         }
          
         // Load the DAO map for this entity
         $cls = DaoMap::$map[strtolower(get_class($this))][$property]['class'];
         if (!$this->$property instanceof BaseEntityAbstract)
-        throw new DaoException('The property(' . $property . ') for "' . get_class($this) . '" is NOT a BaseEntity!');
-        $this->$property = Dao::findById(new DaoQuery($cls), $this->$property->getId());
+        	throw new DaoException('The property(' . $property . ') for "' . get_class($this) . '" is NOT a BaseEntity!');
+        if($this->$property->getProxyMode())
+        	$this->$property = Dao::findById(new DaoQuery($cls), $this->$property->getId());
         return $this;
     }
     /**

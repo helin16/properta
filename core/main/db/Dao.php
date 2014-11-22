@@ -281,6 +281,7 @@ abstract class Dao
     private static function _getParams(BaseEntityAbstract $entity)
     {
         $params = array();
+        DaoMap::loadMap(strtolower(get_class($entity)));
         foreach (DaoMap::$map[strtolower(get_class($entity))] as $field => $properties)
         {
             //ignore metadata
@@ -299,7 +300,7 @@ abstract class Dao
                 else if ($properties['nullable'] === true)
                     $params[$field] = null;
                 else
-                    throw new DaoException('The field(' . $field . ') for "' . get_class($entity) . '" is NOT a BaseEntity!');
+                    throw new DaoException('The field(' . $field . ') for "' . get_class($entity) . '" is NOT a BaseEntity.' );
             }
         }
         return $params;
@@ -406,7 +407,7 @@ abstract class Dao
      */
     private static function _setProperty(BaseEntityAbstract $entity, $field, $value)
     {
-        $method = 'set' . ucwords($field);
+        $method = 'set' . strtoupper(substr($field, 0, 1)) . substr($field, 1);
         if (method_exists($entity, $method))
         {
             $entity->$method($value);
@@ -426,9 +427,9 @@ abstract class Dao
      */
     private static function _getProperty(BaseEntityAbstract $entity, $field)
     {
-        $method = 'get' . ucwords($field);
+        $method = 'get' . strtoupper(substr($field, 0, 1)) . substr($field, 1);
         if (method_exists($entity, $method))
-        return $entity->$method();
+        	return $entity->$method();
         $property = strtolower(substr($field, 0, 1)) . substr($field, 1);
         return $entity->$property;
     }
