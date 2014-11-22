@@ -189,7 +189,7 @@ class Property extends BaseEntityAbstract
     {
     	parent::preSave();
     	if(trim($this->getSKey()) === '')
-    		$this->setSKey($this->getAddress());
+    		$this->setSKey(self::genKey($this->getAddress()));
     }
     /**
      * Getting the relationships for a user

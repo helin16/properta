@@ -170,6 +170,20 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			});
 		return tmp.newDiv;
 	}
+	,getAllPropertiesPanel: function(properties, title) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newDiv = new Element('div', {'class': 'list-div'})
+			.insert({'bottom': new Element('div', {'class': 'item-row row'}) })
+		tmp.propCount = properties.size();
+		for(tmp.i = 0; tmp.i < tmp.propCount; tmp.i = (tmp.i * 1) + 1) {
+			tmp.property = properties[tmp.i];
+			tmp.newDiv.insert({'bottom': new Element('div', {'class': 'item-row row'})
+				.store('data', tmp.property)
+			});
+		}
+		return tmp.newDiv;
+	}
 	/**
 	 * checking whether the backend has such an address or not
 	 */
@@ -203,7 +217,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					}
 					$(tmp.me._htmlIDs.addrSearchTxtBox).value = tmp.me._item.address.street + ', ' + tmp.me._item.address.city + ', ' + tmp.me._item.address.region + ' ' + tmp.me._item.address.country + ' ' + tmp.me._item.address.postCode;
 					if(tmp.result.properties && tmp.result.properties.size() >0) {
-						tmp.me.showAllProperties(tmp.result.properties);
+						tmp.editView.update(tmp.me.getAllPropertiesPanel(tmp.result.properties));
 					} else {
 						tmp.editView.update(tmp.me.getPropertyEditPanel('Lucky you! you are the first person to add this property.'));
 					}

@@ -72,7 +72,7 @@ class Controller extends BackEndPageAbstract
 			Dao::beginTransaction();
 			if(!isset($param->CallbackParameter->relTypeId) || !($role = Role::get($param->CallbackParameter->relTypeId)) instanceof Role)
 				throw new Exception('System Error: Invalid rel type provided.');
-			var_dump(Core::getUser());
+			
 			$propertyObj = isset($param->CallbackParameter->newProperty) ? json_decode(json_encode($param->CallbackParameter->newProperty), true) : array();
 			if(!is_array($propertyObj) || count($propertyObj) === 0)
 				throw new Exception('System Error: can access provided information, insuffient data provided.');
@@ -81,7 +81,8 @@ class Controller extends BackEndPageAbstract
 			if(!($address = Address::getByKey($addrKey)) instanceof Address)
 				$address = Address::create($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
 			$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']));
-			$results['url'] = '/property/' . $property->getId() . '.html';
+			$results['url'] = '/property/' . $property->getSKey() . '.html';
+			
 			Dao::commitTransaction();
 		}
 		catch(Exception $ex)
