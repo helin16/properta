@@ -6,7 +6,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	_pagination: {'pageNo': 1, 'pageSize': 30} //the pagination details
 	,_searchCriteria: {} //the searching criteria
 	
-	,getResults: function(reset, pageSize) {
+	,getResults: function(reset, pageSize, completeFunc) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.reset = (reset === true ? true : false);
@@ -52,7 +52,10 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					tmp.resultDiv.insert({'bottom': tmp.me.getAlertBox('Error', e).addClassName('alert-danger') });
 				}
 			}
-			,'onComplete': function() {}
+			,'onComplete': function() {
+				if(typeof(completeFunc) === 'function')
+					completeFunc();
+			}
 		});
 	}
 	
@@ -60,12 +63,15 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		var tmp = {}
 		tmp.me = this;
 		return new Element('div')
-			.insert({'bottom': new Element('td', {'colspan': '5', 'class': 'text-center'})
-				.insert({'bottom': new Element('span', {'class': 'btn btn-primary', 'data-loading-text':"Fetching more results ..."}).update('Show More')
-					.observe('click', function() {
-						tmp.me._pagination.pageNo = tmp.me._pagination.pageNo*1 + 1;
-						tmp.me.getResults();
-					})
+			.insert({'bottom': new Element('span', {'class': 'btn btn-primary btn-lg col-xs-12', 'data-loading-text':"Fetching more results ..."}).update('Show More')
+				.observe('click', function() {
+					tmp.btn = $(this);
+					tmp.me._signRandID(tmp.btn);
+					jQuery('#' + tmp.btn.id).button('loading');
+					tmp.me._pagination.pageNo = tmp.me._pagination.pageNo*1 + 1;
+					tmp.me.getResults(false, tmp.me._pagination.pageSize, function() {
+						jQuery('#' + tmp.btn.id).button('reset');
+					});
 				})
 			});
 	}
@@ -79,15 +85,35 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		return new Element('div', {'class': 'row'}).store(property)
 			.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-push-4'})
 				.insert({'bottom': new Element('div', {'class': 'row'})
-					.insert({'bottom': new Element('h4').update(property.address.full) })
+					.insert({'bottom': new Element('div', {'class': 'col-sm-8'})
+						.insert({'bottom': new Element('a', {'href': '/property/' + property.sKey + '.html'})
+							.insert({'bottom': new Element('h4').update(property.address.full) })
+						})
+					})
+					.insert({'bottom': new Element('div', {'class': 'col-sm-4 text-right'})
+						.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'col-xs-4', 'title': property.noOfRooms + ' Bedrooms'})
+							.insert({'bottom': new Element('span', {'class': 'fa fa-users'}) })
+							.insert({'bottom': new Element('span').update(' ' + property.noOfRooms) })
+						})
+						.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'col-xs-4', 'title': property.noOfBaths + ' Bathrooms'})
+							.insert({'bottom': new Element('span', {'class': 'fa fa-cogs'}) })
+							.insert({'bottom': new Element('span').update(' ' + property.noOfBaths) })
+						})
+						.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'col-xs-4', 'title': property.noOfCars + ' Car Spaces'})
+							.insert({'bottom': new Element('span', {'class': 'fa fa-car'}) })
+							.insert({'bottom': new Element('span').update(' ' + property.noOfCars) })
+						})
+					})
 				})
-				.insert({'bottom': new Element('div', {'class': 'row'})
-					.insert({'bottom': new Element('small') 
-						.insert({'bottom': new Element('em').update(property.description)  })
+				.insert({'bottom': new Element('div', {'class': 'row hidden-xs'})
+					.insert({'bottom': new Element('div', {'class': 'col-sm-12'}) 
+						.insert({'bottom': new Element('small') 
+							.insert({'bottom': new Element('em').update(property.description)  })
+						})
 					})
 				})
 			})
-			.insert({'bottom': new Element('div', {'class': 'col-sm-4 col-sm-pull-8'})
+			.insert({'bottom': new Element('div', {'class': 'col-sm-4 col-sm-pull-8  hidden-xs'})
 				.insert({'bottom': new Element('a', {'class': 'thumbnail', 'href': 'comgooglemaps://maps.googleapis.com/maps/api/staticmap?center=' + property.address.full})
 					.insert({'bottom': new Element('img', {'src': '//maps.googleapis.com/maps/api/staticmap?center=' + property.address.full + '&zoom=15&size=300x200&markers=color:red|label:P|' + property.address.full + '', 'class': 'img-responsive', 'alt': property.address.full})})
 				})

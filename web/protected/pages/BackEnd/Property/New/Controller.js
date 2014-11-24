@@ -42,7 +42,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.typeId = $(btn).readAttribute('prop-rel-type');
-		console.debug($(btn));
 		tmp.hasErr = false;
 		tmp.loadingDiv = tmp.me._getLoadingDiv();
 		$$('.prop-edit-panel [prop-edit]').each(function(item) {

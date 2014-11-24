@@ -17,7 +17,7 @@ class Controller extends BackEndPageAbstract
 		$js = parent::_getEndJs();
 		$js .= "pageJs.setHTMLIDs(" . json_encode(array('resultDivId' => 'result-div', 'totalNoOfItemsId' => 'totalNoOfItemsId')) . ")";
 		$js .= ".setCallbackId('getItems', '" . $this->getItemsBtn->getUniqueID() . "')";
-		$js .= ".getResults(true, 30);";
+		$js .= ".getResults(true, 10);";
 		return $js;
 	}
 	/**

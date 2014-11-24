@@ -7,6 +7,7 @@
  */
 class Log extends BaseEntityAbstract
 {
+	const TYPE_SYS = 'SYSTEM';
 	/**
 	 * caching the transid
 	 * 
@@ -25,12 +26,6 @@ class Log extends BaseEntityAbstract
 	 * @var string
 	 */
 	private $entityName;
-	/**
-	 * The content of the log
-	 * 
-	 * @var string
-	 */
-	private $msg;
 	/**
 	 * The comments of the log
 	 * 
@@ -55,12 +50,6 @@ class Log extends BaseEntityAbstract
 	 * @var string
 	 */
 	private $funcName = '';
-	/**
-	 * The library this log is for
-	 * 
-	 * @var Library
-	 */
-	protected $library;
 	/**
 	 * Getter for entityId
 	 */
@@ -99,27 +88,6 @@ class Log extends BaseEntityAbstract
 	public function setEntityName($value) 
 	{
 	    $this->entityName = $value;
-	    return $this;
-	}
-	/**    
-	 * Getter for the Msg
-	 * 
-	 * @return string
-	 */
-	public function getMsg() 
-	{
-	    return $this->msg;
-	}
-	/**
-	 * Setter for the msg
-	 * 
-	 * @param string $value The log content
-	 * 
-	 * @return Log
-	 */
-	public function setMsg($value) 
-	{
-	    $this->msg = $value;
 	    return $this;
 	}
 	/**
@@ -207,31 +175,41 @@ class Log extends BaseEntityAbstract
 	    return $this;
 	}
 	/**
-	 * Getter for Library
-	 * 
-	 * @return Library
+	 * (non-PHPdoc)
+	 * @see BaseEntityAbstract::__toString()
 	 */
-	public function getLibrary() 
+	public function __toString()
 	{
-		$this->loadManyToOne('library');
-	    return $this->library;
+		return $this->getFuncName() . ': ' . $this->getMsg();
 	}
 	/**
-	 * Setter for library
-	 * 
-	 * @param Library $value The library
-	 * 
-	 * @return Log
+	 * (non-PHPdoc)
+	 * @see BaseEntity::__loadDaoMap()
 	 */
-	public function setLibrary(Library $value) 
+	public function __loadDaoMap()
 	{
-	    $this->library = $value;
-	    return $this;
+		DaoMap::begin($this, 'log');
+	
+		DaoMap::setStringType('transId','varchar', 32);
+		DaoMap::setStringType('type','varchar', 20);
+		DaoMap::setIntType('entityId');
+		DaoMap::setStringType('entityName','varchar', 100);
+		DaoMap::setStringType('funcName','varchar', 100);
+		DaoMap::setStringType('comments','varchar', 255);
+	
+		parent::__loadDaoMap();
+	
+		DaoMap::createIndex('transId');
+		DaoMap::createIndex('entityId');
+		DaoMap::createIndex('entityName');
+		DaoMap::createIndex('type');
+		DaoMap::createIndex('funcName');
+	
+		DaoMap::commit();
 	}
 	/**
 	 * Logging
 	 * 
-	 * @param Library $lib        Which library the log is for
 	 * @param int     $entityId
 	 * @param string  $entityName
 	 * @param string  $msg
@@ -241,15 +219,13 @@ class Log extends BaseEntityAbstract
 	 * 
 	 * @return string The transId
 	 */
-	public static function logging(Library $lib, $entityId, $entityName, $msg, $type, $comments = '', $funcName = '')
+	public static function logging($entityId, $entityName, $type, $comments = '', $funcName = '')
 	{
 		$className = __CLASS__;
 		$log = new $className();
-		$log->setLibrary($lib)
-			->setTransId(self::getTransKey())
+		$log->setTransId(self::getTransKey())
 			->setEntityId($entityId)
 			->setEntityName($entityName)
-			->setMsg($msg)
 			->setType($type)
 			->setComments($comments)
 			->setFuncName($funcName)
@@ -285,7 +261,6 @@ class Log extends BaseEntityAbstract
 	/**
 	 * Logging the entity
 	 * 
-	 * @param Library            $lib       Which library the log is for
 	 * @param BaseEntityAbstract $entity
 	 * @param string             $msg
 	 * @param string             $type
@@ -293,43 +268,8 @@ class Log extends BaseEntityAbstract
 	 * 
 	 * @return string The transId
 	 */
-	public static function LogEntity(Library $lib, BaseEntityAbstract $entity, $msg, $type, $comments = '', $funcName = '')
+	public static function LogEntity(BaseEntityAbstract $entity, $type, $comments = '', $funcName = '')
 	{
-		return self::logging($lib, $entity->getId(), get_class($entity), $msg, $type, $comments, $funcName);
-	}
-	/**
-	 * (non-PHPdoc)
-	 * @see BaseEntityAbstract::__toString()
-	 */
-	public function __toString()
-	{
-		return $this->getFuncName() . ': ' . $this->getMsg();
-	}
-	/**
-	 * (non-PHPdoc)
-	 * @see BaseEntity::__loadDaoMap()
-	 */
-	public function __loadDaoMap()
-	{
-		DaoMap::begin($this, 'log');
-		
-		DaoMap::setManyToOne('library', 'Library');
-		DaoMap::setStringType('transId','varchar', 100);
-		DaoMap::setStringType('type','varchar', 100);
-		DaoMap::setIntType('entityId');
-		DaoMap::setStringType('entityName','varchar', 100);
-		DaoMap::setStringType('funcName','varchar', 100);
-		DaoMap::setStringType('msg','LONGTEXT');
-		DaoMap::setStringType('comments','varchar', 255);
-		
-		parent::__loadDaoMap();
-		
-		DaoMap::createIndex('transId');
-		DaoMap::createIndex('entityId');
-		DaoMap::createIndex('entityName');
-		DaoMap::createIndex('type');
-		DaoMap::createIndex('funcName');
-		
-		DaoMap::commit();
+		return self::logging($entity->getId(), get_class($entity), $type, $comments, $funcName);
 	}
 }

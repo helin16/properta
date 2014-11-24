@@ -76,6 +76,7 @@ class Controller extends BackEndPageAbstract
 			$propertyObj = isset($param->CallbackParameter->newProperty) ? json_decode(json_encode($param->CallbackParameter->newProperty), true) : array();
 			if(!is_array($propertyObj) || count($propertyObj) === 0)
 				throw new Exception('System Error: can access provided information, insuffient data provided.');
+			
 			$addressObj = $propertyObj['address'];
 			$addrKey = Address::genKey($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
 			if(!($address = Address::getByKey($addrKey)) instanceof Address)
