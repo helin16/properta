@@ -181,4 +181,10 @@ FrontPageJs.prototype = {
 	    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);
 	} 
+	/**
+	 * Getting a loading image div
+	 */
+	,_getLoadingDiv: function() {
+		return new Element('div', {'class': 'text-center', 'style': 'padding: 100px 0;'}).insert({'bottom': new Element('span', {'class': 'fa fa-refresh fa-5x fa-spin'}) });
+	}
 };

@@ -9,7 +9,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,getResults: function(reset, pageSize) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.reset = (reset || false);
+		tmp.reset = (reset === true ? true : false);
 		tmp.resultDiv = $(tmp.me._htmlIDs.resultDivId);
 		
 		if(tmp.reset === true)
@@ -19,7 +19,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			'onLoading': function () {
 				//reset div
 				if(tmp.reset === true) {
-					tmp.resultDiv.update( new Element('tr').update( new Element('td').update( tmp.me.getLoadingImg() ) ) );
+					tmp.resultDiv.update( tmp.me._getLoadingDiv() );
 				}
 			}
 			,'onSuccess': function(sender, param) {
@@ -34,7 +34,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 							return;
 						}
 						$(tmp.me._htmlIDs.totalNoOfItemsId).update(tmp.result.pageStats.totalRows);
-						tmp.resultDiv.update(tmp.me._getResultRow(tmp.me._getTitleRowData(), true).wrap(new Element('thead')));
+						tmp.resultDiv.update('');
 					}
 					//remove next page button
 					tmp.resultDiv.getElementsBySelector('.paginWrapper').each(function(item){
@@ -42,11 +42,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					});
 					
 					//show all items
-					tmp.tbody = $(tmp.resultDiv).down('tbody');
-					if(!tmp.tbody)
-						$(tmp.resultDiv).insert({'bottom': tmp.tbody = new Element('tbody') });
 					tmp.result.items.each(function(item) {
-						tmp.tbody.insert({'bottom': tmp.me._getResultRow(item).addClassName('item_row').writeAttribute('item_id', item.id) });
+						$(tmp.resultDiv).insert({'bottom': tmp.me._getResultRow(item).addClassName('item_row').writeAttribute('item_id', item.id) });
 					});
 					//show the next page button
 					if(tmp.result.pageStats.pageNumber < tmp.result.pageStats.totalPages)
@@ -62,14 +59,12 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,_getNextPageBtn: function() {
 		var tmp = {}
 		tmp.me = this;
-		return new Element('tfoot')
-			.insert({'bottom': new Element('tr')
-				.insert({'bottom': new Element('td', {'colspan': '5', 'class': 'text-center'})
-					.insert({'bottom': new Element('span', {'class': 'btn btn-primary', 'data-loading-text':"Fetching more results ..."}).update('Show More')
-						.observe('click', function() {
-							tmp.me._pagination.pageNo = tmp.me._pagination.pageNo*1 + 1;
-							tmp.me.getResults();
-						})
+		return new Element('div')
+			.insert({'bottom': new Element('td', {'colspan': '5', 'class': 'text-center'})
+				.insert({'bottom': new Element('span', {'class': 'btn btn-primary', 'data-loading-text':"Fetching more results ..."}).update('Show More')
+					.observe('click', function() {
+						tmp.me._pagination.pageNo = tmp.me._pagination.pageNo*1 + 1;
+						tmp.me.getResults();
 					})
 				})
 			});
@@ -79,8 +74,23 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		return {};
 	}
 	
-	,_getResultRow: function() {
-		return new Element('tr');
+	,_getResultRow: function(property) {
+		console.debug(property);
+		return new Element('div', {'class': 'row'}).store(property)
+			.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-push-4'})
+				.insert({'bottom': new Element('div', {'class': 'row'})
+					.insert({'bottom': new Element('h4').update(property.address.full) })
+				})
+				.insert({'bottom': new Element('div', {'class': 'row'})
+					.insert({'bottom': new Element('small') 
+						.insert({'bottom': new Element('em').update(property.description)  })
+					})
+				})
+			})
+			.insert({'bottom': new Element('div', {'class': 'col-sm-4 col-sm-pull-8'})
+				.insert({'bottom': new Element('img', {'src': '//maps.googleapis.com/maps/api/staticmap?center=' + property.address.full + '&zoom=15&size=300x200&markers=color:red|label:P|' + property.address.full + '', 'class': 'img-responsive', 'alt': property.address.full})})
+			})
+		;
 	}
 	
 	,_getNoResultDiv: function() {

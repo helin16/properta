@@ -6,12 +6,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	_item: {} //the item entity that we are dealing with
 	,_propRelTypeIds: {}
 	/**
-	 * Getting a loading image div
-	 */
-	,_getLoadingDiv: function() {
-		return new Element('div', {'class': 'text-center', 'style': 'padding: 100px 0;'}).insert({'bottom': new Element('span', {'class': 'fa fa-refresh fa-5x fa-spin'}) });
-	}
-	/**
 	 * Setting the property user relationship
 	 */
 	,setPropRelTypes: function (tenantId, agentId, ownerId) {
@@ -97,7 +91,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.newDiv = new Element('div')
 			.insert({'bottom': new Element('h3').update(title ? title : 'Adding a property:') })
 			.insert({'bottom': new Element('div', {'class': 'row'})
-				.insert({'bottom': new Element('div', {'class': 'form-group col-sm-8'})
+				.insert({'bottom': new Element('div', {'class': 'form-group col-sm-9'})
 					.insert({'bottom': new Element('div', {'class': 'prop-edit-panel'})
 						.insert({'bottom': new Element('div', {'class': 'form-group col-sm-4'})
 							.insert({'bottom': new Element('div', {'class': 'input-group'})
@@ -131,8 +125,13 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						})
 					})
 				})
-				.insert({'bottom': new Element('div', {'class': 'form-group col-sm-4'})
-					.insert({'bottom': new Element('img', {'src': 'https://maps.googleapis.com/maps/api/staticmap?center=' + tmp.addrString + '&zoom=15&size=400x400&markers=color:red|label:P|' + tmp.addrString + ''}) })
+				.insert({'bottom': new Element('div', {'class': 'form-group col-sm-3'})
+					.insert({'bottom': new Element('a', {'class': 'thumbnail fancybox fancy.iframe', 'href': 'https://www.google.com/maps/embed?q='  + tmp.addrString, 'target': '__blank'})
+						.insert({'bottom': new Element('img', {'data-src': 'holder.js/100%x300', 'src': '//maps.googleapis.com/maps/api/staticmap?center=' + tmp.addrString + '&zoom=15&size=300x300&markers=color:red|label:P|' + tmp.addrString + ''}) })
+					})
+					.insert({'bottom': new Element('a', {'class': 'thumbnail fancy.iframe', 'href': '', 'target': '__blank'})
+						.insert({'bottom': new Element('img', {'data-src': 'holder.js/100%x300', 'src': '//maps.googleapis.com/maps/api/streetview?size=300x300&location=' + tmp.addrString + ''}) })
+					})
 				})
 			})
 			.insert({'bottom': new Element('h3').update('I am the ...') })
@@ -220,6 +219,17 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						tmp.editView.update(tmp.me.getAllPropertiesPanel(tmp.result.properties));
 					} else {
 						tmp.editView.update(tmp.me.getPropertyEditPanel('Lucky you! you are the first person to add this property.'));
+						jQuery('.fancybox').fancybox({
+							maxWidth	: 800,
+							maxHeight	: 600,
+							fitToView	: false,
+							width		: '70%',
+							height		: '70%',
+							autoSize	: false,
+							closeClick	: false,
+							openEffect	: 'none',
+							closeEffect	: 'none'
+						});
 					}
 				} catch (e) {
 					tmp.editView.update(tmp.me.getAlertBox('ERROR', e).addClassName('alert-danger'));
