@@ -50,7 +50,7 @@ CREATE TABLE `address` (
 	,INDEX (`region`)
 	,INDEX (`country`)
 	,INDEX (`postCode`)
-	,INDEX (`key`)
+	,INDEX (`skey`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `property`;
 CREATE TABLE `property` (
@@ -73,7 +73,7 @@ CREATE TABLE `property` (
 	,INDEX (`noOfRooms`)
 	,INDEX (`noOfCars`)
 	,INDEX (`noOfBaths`)
-	,UNIQUE INDEX (`pKey`)
+	,INDEX (`sKey`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `propertyrel`;
 CREATE TABLE `propertyrel` (
