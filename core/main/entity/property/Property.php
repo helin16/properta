@@ -41,8 +41,15 @@ class Property extends BaseEntityAbstract
 	/**
 	 * The address of the property
 	 * 
+	 * @var Address
 	 */
 	protected $address = null;
+	/**
+	 * The property relationship
+	 * 
+	 * @var array()
+	 */
+	protected $rels = array();
 	/**
 	 * Getter for description
 	 *
@@ -171,6 +178,28 @@ class Property extends BaseEntityAbstract
 	    $this->noOfBaths = $value;
 	    return $this;
 	}
+	/**
+	 * Getting the relationships
+	 * 
+	 * @return array()
+	 */
+	public function getRels()
+	{
+		$this->loadOneToMany('rels');
+		return $this->rels;
+	}
+	/**
+	 * Setter for rels
+	 * 
+	 * @param array $value The new PropertyRels
+	 * 
+	 * @return Property
+	 */
+	public function setRels($value)
+	{
+		$this->rels = $value;
+		return $this;
+	}
     /**
      * (non-PHPdoc)
      * @see BaseEntity::__toString()
@@ -223,6 +252,31 @@ class Property extends BaseEntityAbstract
     	return parent::getJson($array, $reset);
     }
     /**
+     * adding a user to the property
+     * 
+     * @param UserAccount $user
+     * @param Role        $role
+     * 
+     * @return Property
+     */
+    public function addUser(UserAccount $user, Role $role)
+    {
+    	PropertyRel::create($this, $user, $role);
+    	return $this;
+    }
+    /**
+     * removing the property from the user
+     * 
+     * @param UserAccount $user The user
+     * @param Role        $role If empty, then delete all from this user
+     * @return Property
+     */
+    public function rmUser(UserAccount $user, Role $role = null)
+    {
+    	PropertyRel::delete($this, $user, $role);
+    	return $this;
+    }
+    /**
      * (non-PHPdoc)
      * @see BaseEntity::__loadDaoMap()
      */
@@ -235,6 +289,7 @@ class Property extends BaseEntityAbstract
         DaoMap::setIntType('noOfRooms');
         DaoMap::setIntType('noOfCars');
         DaoMap::setIntType('noOfBaths');
+        DaoMap::setOneToMany('rels', 'PropertyRel', 'pro_rel');
         parent::__loadDaoMap();
         
         DaoMap::createIndex('sKey');
@@ -275,7 +330,7 @@ class Property extends BaseEntityAbstract
      * @param number  $noOfCars
      * @param string  $description
      * 
-     * @return Ambigous <BaseEntityAbstract, GenericDAO>
+     * @return Property
      */
     public static function create(Address $address, $noOfRooms = 1, $noOfBaths = 0, $noOfCars = 0, $description = '')
     {

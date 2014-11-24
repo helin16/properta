@@ -81,8 +81,9 @@ class Controller extends BackEndPageAbstract
 			$addrKey = Address::genKey($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
 			if(!($address = Address::getByKey($addrKey)) instanceof Address)
 				$address = Address::create($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
-			$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']));
-			$results['url'] = '/property/' . $property->getSKey() . '.html';
+			$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']))
+				->addUser(Core::getUser(), $role);
+			$results['url'] = '/backend/property/' . $property->getSKey() . '.html';
 			
 			Dao::commitTransaction();
 		}

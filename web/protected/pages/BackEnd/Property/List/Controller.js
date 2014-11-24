@@ -86,7 +86,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-push-4'})
 				.insert({'bottom': new Element('div', {'class': 'row'})
 					.insert({'bottom': new Element('div', {'class': 'col-sm-8'})
-						.insert({'bottom': new Element('a', {'href': '/property/' + property.sKey + '.html'})
+						.insert({'bottom': new Element('a', {'href': '/backend/property/' + property.sKey + '.html'})
 							.insert({'bottom': new Element('h4').update(property.address.full) })
 						})
 					})

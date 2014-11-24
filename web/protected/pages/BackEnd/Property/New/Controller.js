@@ -218,17 +218,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						tmp.editView.update(tmp.me.getAllPropertiesPanel(tmp.result.properties));
 					} else {
 						tmp.editView.update(tmp.me.getPropertyEditPanel('Lucky you! you are the first person to add this property.'));
-						jQuery('.fancybox').fancybox({
-							maxWidth	: 800,
-							maxHeight	: 600,
-							fitToView	: false,
-							width		: '70%',
-							height		: '70%',
-							autoSize	: false,
-							closeClick	: false,
-							openEffect	: 'none',
-							closeEffect	: 'none'
-						});
 					}
 				} catch (e) {
 					tmp.editView.update(tmp.me.getAlertBox('ERROR', e).addClassName('alert-danger'));

@@ -145,5 +145,45 @@ class PropertyRel extends BaseEntityAbstract
     	}
     	return self::getAllByCriteria(implode(' AND ', $where), $param, $activeOnly, $pageNo, $pageSize, $orderBy, $stats);
     }
+    /**
+     * Creating a propertrel to a user
+     * 
+     * @param Property    $property
+     * @param UserAccount $user
+     * @param Role        $role
+     * 
+     * @return PropertyRel
+     */
+    public static function create(Property $property, UserAccount $user, Role $role)
+    {
+    	$exsitingRels = self::getAllByCriteria('propertyId = ? and userAccountId = ? and roleId = ?', array($property->getId(), $user->getId(), $role->getId()), true, 1, 1);
+    	if(count($exsitingRels) > 0)
+    		return $exsitingRels[0];
+    	$rel = new PropertyRel();
+    	$rel->setProperty($property)
+    		->setUserAccount($user)
+    		->setRole($role)
+    		->save();
+    	Log::LogEntity($rel, Log::TYPE_SYS, 'User(' . $user->getEmail() . ') is now a ' . $role->getName() . ' of Property(ID=' . $property->getSKey() . ').', __CLASS__ . '::' . __FUNCTION__);
+    	return $rel;
+    }
+    /**
+     * deleting the property relationships
+     * 
+     * @param Property    $property
+     * @param UserAccount $user
+     * @param Role        $role
+     */
+    public static function delete(Property $property, UserAccount $user, Role $role = null)
+    {
+    	$where = 'propertyId = ? and userAccountId = ?';
+    	$params = array($property->getId(), $user->getId());
+    	if($role instanceof Role)
+    	{
+    		$where .= ' AND roleId = ?';
+    		$params[] = $role->getId();
+    	}
+    	self::updateByCriteria('active = 0', $where, $params);
+    }
 }
 ?>
