@@ -22,7 +22,7 @@ class FancyBox extends TClientScript
 			// Add mousewheel plugin (this is optional)
 			$clientScript->registerHeadScriptFile('jquery.mousewheel', $folder . '/lib/jquery.mousewheel-3.0.6.pack.js');
 			// Add fancyBox main JS and CSS files
-			$clientScript->registerHeadScriptFile('jquery.fancybox',  $folder . '/source/jquery.fancybox.js');
+			$clientScript->registerHeadScriptFile('jquery.fancybox',  $folder . '/source/jquery.fancybox.pack.js');
 			$clientScript->registerStyleSheetFile('jquery.fancybox.css', $folder . '/source/jquery.fancybox.css', 'screen');
 			
 			// Add fancyBox Button helper
