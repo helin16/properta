@@ -24,7 +24,6 @@ html,body,#main-form {
 
 #main-form>#mainbody {
 	min-height: 70%;
-	padding: 50px 0 100px 0;
 }
 
 #main-form>#mainbody .page-header {
@@ -373,4 +372,8 @@ a.rel-type-selector:hover,a.rel-type-selector:active,a.rel-type-selector:focus,.
 
 .period-tl-div .direction-r .flag:before {
 	right: 100%;
+}
+
+.backend-div-wrapper {
+	padding: 50px 0 100px 0;
 }

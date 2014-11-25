@@ -3,7 +3,7 @@
 <com:TCallback ID="savePropertyBtn" onCallback="Page.saveProperty" />
 <com:Application.controls.FancyBox.FancyBox />
 <com:Application.controls.googleMap.googleMap />
-<div class="container">
+<div class="container backend-div-wrapper">
 	<div id="item-details-div"></div>
 </div>
 </com:TContent>

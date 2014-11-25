@@ -179,7 +179,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				})
 			})
 			.insert({'bottom': new Element('div', {'class': 'row'})
-				.insert({'bottom': new Element('div', {'class': 'col-sm-4 col-sm-push-8'})
+				.insert({'bottom': new Element('div', {'class': 'col-sm-8'}).update(tmp.me._getTabPanels(tmp.me._item)) })
+				.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
 					.insert({'bottom': new Element('div', {'class': 'panel panel-default'})
 						.insert({'bottom': new Element('div', {'class': 'panel-body'})
 							.insert({'bottom': new Element('div', {'class': 'col-sm-12', 'id': tmp.me._htmlIDs.mapViewer, 'style': 'height: 200px;'}) })
@@ -202,7 +203,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						})
 					})
 				})
-				.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-pull-4'}).update(tmp.me._getTabPanels(tmp.me._item)) })
 			})
 		$(tmp.me._htmlIDs.itemDivId).update(tmp.newDiv);
 		tmp.me._showMap();
