@@ -16,7 +16,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			tmp.geoLocation = data.results[0].geometry.location;
 			tmp.map = new google.maps.Map($(tmp.me._htmlIDs.mapViewer), {center: data.results[0].geometry.location, zoom: 13});
 			
-			tmp.infowindow = new google.maps.InfoWindow();
 			tmp.marker = new google.maps.Marker({
 				map : tmp.map,
 				anchorPoint : new google.maps.Point(0, -29)
@@ -28,10 +27,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		    tmp.marker.setPosition(data.results[0].geometry.location);
 		    tmp.marker.setVisible(true);
 		    tmp.markerMinWidth = (jQuery( document ).width() / 5);
-		    tmp.infowindow.setContent('<div class="my-marker-div" style="min-width: ' + (tmp.markerMinWidth > 200 ? tmp.markerMinWidth : 200) + 'px;">'
-		    		+ '<div>' + tmp.me._item.address.full + '</div>'
-		    		+ '</div>');
-		    tmp.infowindow.open(tmp.map, tmp.marker);
 		});
 		return tmp.me;
 	}
@@ -65,6 +60,50 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			});
 		return tmp.newDiv;
 	}
+	,_getMainPanel: function(property) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newDiv = new Element('div')
+			.insert({'bottom': new Element('ul', {'class': 'nav nav-tabs', 'role': 'tablist'})
+				.insert({'bottom': new Element('li', {'role': 'presentation', 'class': 'active'})
+					.insert({'bottom': new Element('a', {}).update('Description') })
+				})
+				.insert({'bottom': new Element('li', {'role': 'presentation'})
+					.insert({'bottom': new Element('a', {}).update('History') })
+				})
+			})
+			.insert({'bottom': new Element('div', {'class': 'tab-content'})
+				.insert({'bottom': new Element('div', {'class': 'tab-pane active'})
+					.insert({'bottom': new Element('div', {'class': 'panel-body'})
+						.insert({'bottom': new Element('div', {'class': 'row'})
+							.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
+								.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bedrooms'})
+									.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
+									.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfRooms) })
+								})
+							})
+							.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
+								.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bathrooms:'})
+								.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
+									.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfBaths) })
+								})
+							})
+							.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
+								.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Car Spaces'})
+									.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Carspaces:') })
+									.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfCars) })
+								})
+							})
+						})
+						.insert({'bottom': new Element('div', {'class': 'form-group'})
+							.insert({'bottom': new Element('label').update('Description:') })
+							.insert({'bottom': new Element('textarea', {'class': 'form-control', 'rows': 5}).update(property.description) })
+						})
+					})
+				})
+			})
+		return tmp.newDiv;
+	}
 	/**
 	 * Showing the editing panel
 	 */
@@ -76,24 +115,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				.insert({'bottom': new Element('div', {'class': 'row'})
 					.insert({'bottom': new Element('h4', {'class': 'col-sm-8'}).update(tmp.me._item.address.full) })
 					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
-						.insert({'bottom': new Element('div', {'class': 'col-xs-4'})
-							.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bedrooms'})
-								.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update(new Element('span', {'class': 'fa fa-users'})) })
-								.insert({'bottom': new Element('span', {'class': 'form-control'}).update(' ' + tmp.me._item.noOfRooms) })
-							})
-						})
-						.insert({'bottom': new Element('div', {'class': 'col-xs-4'})
-							.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bathrooms'})
-							.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update(new Element('span', {'class': 'fa fa-cogs'})) })
-								.insert({'bottom': new Element('span', {'class': 'form-control'}).update(' ' + tmp.me._item.noOfBaths) })
-							})
-						})
-						.insert({'bottom': new Element('div', {'class': 'col-xs-4'})
-							.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Car Spaces'})
-								.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update(new Element('span', {'class': 'fa fa-car'})) })
-								.insert({'bottom': new Element('span', {'class': 'form-control'}).update(' ' + tmp.me._item.noOfCars) })
-							})
-						})
 					})
 				})
 			})
@@ -101,7 +122,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				.insert({'bottom': new Element('div', {'class': 'col-sm-4 col-sm-push-8'})
 					.insert({'bottom': new Element('div', {'class': 'panel panel-default'})
 						.insert({'bottom': new Element('div', {'class': 'panel-body'})
-							.insert({'bottom': new Element('div', {'class': 'col-sm-12'}).update(tmp.me._item.description) })
+							.insert({'bottom': new Element('div', {'class': 'col-sm-12', 'id': tmp.me._htmlIDs.mapViewer, 'style': 'height: 200px;'}) })
 						})
 					})
 					.insert({'bottom': new Element('div', {'class': 'row'})
@@ -131,7 +152,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						})
 					})
 				})
-				.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-pull-4', 'id': tmp.me._htmlIDs.mapViewer, 'style': 'height: 400px;'}) })
+				.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-pull-4'}).update(tmp.me._getMainPanel(tmp.me._item)) })
 			})
 		$(tmp.me._htmlIDs.itemDivId).update(tmp.newDiv);
 		tmp.me._showMap();
