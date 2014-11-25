@@ -371,6 +371,38 @@ abstract class BaseEntityAbstract
         return get_class($this) . ' (#' . $this->getId() . ')';
     }
     /**
+     * Adding logs to this entity
+     * 
+     * @param string $type
+     * @param string $comments
+     * @param string $funcName
+     * 
+     * @return BaseEntityAbstract
+     */
+    public function addLog($type, $comments = '', $funcName = '')
+    {
+    	Log::LogEntity($this, $type, $comments, $funcName);
+    	return $this;
+    }
+    /**
+     * Getting the logs for this entity
+     * 
+     * @param string $type       The type of the logs
+     * @param bool   $activeOnly
+     * @param int    $pageNo
+     * @param int    $pageSize
+     * @param array  $orderBy
+     * @param array  $stats
+     * 
+     * @return Ambigous <Ambigous, multitype:, multitype:BaseEntityAbstract >
+     */
+    public function getLogs($type = null, $activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+    {
+    	if(count($orderBy) === 0)
+    		$orderBy = array('log.id' => 'desc');
+    	return Log::getAllByCriteria('entityId = ? AND entityName = ?', array($this->getId(), trim(get_class($this))), $activeOnly, $pageNo, $pageSize, $orderBy, $stats);
+    }
+    /**
      * load the default elments of the base entity
      */
     protected function __loadDaoMap()

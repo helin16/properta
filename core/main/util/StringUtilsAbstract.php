@@ -192,4 +192,15 @@ abstract class StringUtilsAbstract
 	
 		return "unknown/" . trim($fileSuffix[0], ".");
 	}
+	/**
+	 * return a encripted name for displaying
+	 * 
+	 * @param string $string The fullname string
+	 * 
+	 * @return string
+	 */
+	public static function encriptedName($string)
+	{
+		return substr($string, 0, 1) . str_repeat('*', strlen($string) >= 2 ? (strlen($string) - 2) : 2) . substr($string, -1, 1);
+	}
 }

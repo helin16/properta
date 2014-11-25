@@ -160,12 +160,11 @@ class PropertyRel extends BaseEntityAbstract
     	if(count($exsitingRels) > 0)
     		return $exsitingRels[0];
     	$rel = new PropertyRel();
-    	$rel->setProperty($property)
+    	return $rel->setProperty($property)
     		->setUserAccount($user)
     		->setRole($role)
-    		->save();
-    	Log::LogEntity($rel, Log::TYPE_SYS, 'User(' . $user->getEmail() . ') is now a ' . $role->getName() . ' of Property(ID=' . $property->getSKey() . ').', __CLASS__ . '::' . __FUNCTION__);
-    	return $rel;
+    		->save()
+    		->addLog(Log::TYPE_SYS, 'User(' . $user->getEmail() . ') is now a ' . $role->getName() . ' of Property(ID=' . $property->getSKey() . ').', __CLASS__ . '::' . __FUNCTION__);
     }
     /**
      * deleting the property relationships

@@ -168,7 +168,7 @@ abstract class Dao
     {
         self::connect();
         DaoMap::loadMap($qry->getFocusClass());
-        $results = self::findByCriteria($qry, '`' . DaoMap::$map[strtolower($qry->getFocusClass())]['_']['alias'] . '`.`id`=?', array($id), null, DaoQuery::DEFAUTL_PAGE_SIZE, array(), $outputFormat);
+        $results = self::findByCriteria($qry->setSelectActiveOnly(false), '`' . DaoMap::$map[strtolower($qry->getFocusClass())]['_']['alias'] . '`.`id`=?', array($id), null, DaoQuery::DEFAUTL_PAGE_SIZE, array(), $outputFormat);
         if (is_array($results) && sizeof($results) > 0)
         	return $results[0];
         if ($results instanceof SimpleXMLElement)

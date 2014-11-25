@@ -1,6 +1,6 @@
 <com:TContent ID="MainContent">
 <com:Application.controls.googleMap.googleMap />
-<com:TCallback ID="checkAddrBtn" onCallback="Page.checkAddr" />
+<com:TCallback ID="getHistoryBtn" onCallback="Page.getHistory" />
 <div class="container">
 	<div id="item-details-div"></div>
 </div>

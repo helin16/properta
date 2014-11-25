@@ -4,6 +4,9 @@
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	_item: {} //the item entity that we are dealing with
+	/**
+	 * Showing the google map
+	 */
 	,_showMap: function() {
 		var tmp = {};
 		tmp.me = this;
@@ -30,78 +33,135 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		});
 		return tmp.me;
 	}
-	,_getTimeLineUL: function() {
+	/**
+	 * Showing the history of the property
+	 */
+	,_showHistory: function(panel, pageNo, pageSize, succFunc, completeFunc) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.newDiv = new Element('div', {'class': 'period-tl-div'})
-			.insert({'bottom': new Element('ul', {'class': 'period-tl'})
-				.insert({'bottom': new Element('li')
-					.insert({'bottom': new Element('div', {'class': 'direction-r'})
-						.insert({'bottom': new Element('div', {'class': 'flag-wrapper'})
-							.insert({'bottom': new Element('span', {'class': 'flag'}).update('') })
-							.insert({'bottom': new Element('div', {'class': 'time-wrapper'})
-								.insert({'bottom': new Element('span', {'class': 'time'}).update('May 2011 - Present') })
+		tmp.historyListDiv = panel.down('.period-tl');
+		if(pageNo <= 1 && tmp.historyListDiv)
+			return tmp.me;
+		tmp.me.postAjax(tmp.me.getCallbackId('getHistory'), {'propertyId': tmp.me._item.sKey, 'pageNo': pageNo, 'pageSize': pageSize}, {
+			'onLoading': function() {}
+			,'onSuccess': function(sender, param) {
+				try{
+					tmp.result = tmp.me.getResp(param, false, true);
+					if(!tmp.result || !tmp.result.items)
+						return;
+					
+					if(!tmp.historyListDiv) {
+						panel.update('').insert({'bottom': new Element('div', {'class': 'period-tl-div'})
+							.insert({'bottom': tmp.historyListDiv = new Element('ul', {'class': 'period-tl'}) })
+						});
+					}
+					tmp.result.items.each(function(item){
+						tmp.historyListDiv.insert({'bottom': new Element('li') 
+							.insert({'bottom': new Element('div', {'class': 'direction-r'}) 
+								.insert({'bottom': new Element('div', {'class': 'flag-wrapper'}) 
+									.insert({'bottom': new Element('div', {'class': 'flag'}).update(item.by) })
+									.insert({'bottom': new Element('div', {'class': 'time-wrapper'}).update(tmp.me.loadUTCTime(item.whenUTC).toLocaleString()) })
+								})
+								.insert({'bottom': new Element('div', {'class': 'desc'}).update(item.comments) })
 							})
+						});
+					});
+					if(pageNo * 1 < tmp.result.pagination.totalPages) {
+						tmp.historyListDiv.insert({'after': new Element('span', {'class': 'btn btn-success btn-sm', 'data-loading-text':"Getting More ..."})
+							.update('Get More')
+							.observe('click', function() {
+								tmp.btn = $(this);
+								tmp.me._signRandID(tmp.btn);
+								jQuery('#' + tmp.btn.id).button('loading');
+								tmp.me._showHistory(panel, (pageNo * 1 + 1), pageSize, function() {
+									$(tmp.btn).remove();
+								}, function () {
+									jQuery('#' + tmp.btn.id).button('reset');
+								});
+							})
+						});
+					}
+					if(typeof(succFunc) === 'function')
+						succFunc();
+				} catch (e) {
+					tmp.me.showModalBox('<h4 class="text-danger">Error</h4>', e, true);
+				}
+			}
+			,'onComplete': function() {
+				if(typeof(completeFunc) === 'function')
+					completeFunc();
+			}
+		})
+		return tmp.me;
+	}
+	/***
+	 * Getting the description tab panel
+	 */
+	,_getDescriptionTabPanel: function(property) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newDiv = new Element('div', {'class': 'tab-pane'})
+			.insert({'bottom': new Element('div', {'class': 'panel-body'})
+				.insert({'bottom': new Element('div', {'class': 'row'})
+					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
+						.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bedrooms'})
+							.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
+							.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfRooms) })
 						})
-						.insert({'bottom': new Element('div', {'class': 'desc'}).update('Joined themeforest, the best place to sell your work arround the world') })
+					})
+					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
+						.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bathrooms:'})
+						.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
+							.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfBaths) })
+						})
+					})
+					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
+						.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Car Spaces'})
+							.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Carspaces:') })
+							.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfCars) })
+						})
 					})
 				})
-				.insert({'bottom': new Element('li')
-					.insert({'bottom': new Element('div', {'class': 'direction-r'})
-						.insert({'bottom': new Element('div', {'class': 'flag-wrapper'})
-							.insert({'bottom': new Element('span', {'class': 'flag'}).update('') })
-							.insert({'bottom': new Element('div', {'class': 'time-wrapper'})
-								.insert({'bottom': new Element('span', {'class': 'time'}).update('May 2011 - Present') })
-							})
-						})
-						.insert({'bottom': new Element('div', {'class': 'desc'}).update('Joined themeforest, the best place to sell your work arround the world') })
+				.insert({'bottom': new Element('div', {'class': 'row'})
+					.insert({'bottom': new Element('label', {'class': 'col-sm-12'}).update('Description:') 
+						.insert({'bottom': new Element('small').update( new Element('em', {'class': 'text-danger pull-right'}).update('Description will be viewed by other users') ) }) 
 					})
+					.insert({'bottom': new Element('textarea', {'class': 'form-control', 'rows': 5}).update(property.description) })
 				})
 			});
 		return tmp.newDiv;
 	}
-	,_getMainPanel: function(property) {
+	/**
+	 * Getting the group of tab panels
+	 */
+	,_getTabPanels: function(property) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.newDiv = new Element('div')
+		tmp.newDiv = new Element('div', {'class': 'tab-panels'})
 			.insert({'bottom': new Element('ul', {'class': 'nav nav-tabs', 'role': 'tablist'})
 				.insert({'bottom': new Element('li', {'role': 'presentation', 'class': 'active'})
-					.insert({'bottom': new Element('a', {}).update('Description') })
+					.insert({'bottom': new Element('a', {'href': '#tab-description', 'data-toggle': "tab", 'aria-controls': "tab-description", 'role': "tab"}).update('Description') })
 				})
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
-					.insert({'bottom': new Element('a', {}).update('History') })
+					.insert({'bottom': new Element('a', {'href': '#tab-people', 'data-toggle': "tab", 'aria-controls': "tab-people", 'role': "tab"}).update('People') })
 				})
-			})
-			.insert({'bottom': new Element('div', {'class': 'tab-content'})
-				.insert({'bottom': new Element('div', {'class': 'tab-pane active'})
-					.insert({'bottom': new Element('div', {'class': 'panel-body'})
-						.insert({'bottom': new Element('div', {'class': 'row'})
-							.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
-								.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bedrooms'})
-									.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
-									.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfRooms) })
-								})
-							})
-							.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
-								.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bathrooms:'})
-								.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
-									.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfBaths) })
-								})
-							})
-							.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
-								.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Car Spaces'})
-									.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Carspaces:') })
-									.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfCars) })
-								})
-							})
-						})
-						.insert({'bottom': new Element('div', {'class': 'form-group'})
-							.insert({'bottom': new Element('label').update('Description:') })
-							.insert({'bottom': new Element('textarea', {'class': 'form-control', 'rows': 5}).update(property.description) })
+				.insert({'bottom': new Element('li', {'role': 'presentation'})
+					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"}).update('Files') })
+				})
+				.insert({'bottom': new Element('li', {'role': 'presentation'})
+					.insert({'bottom': new Element('a', {'href': '#tab-history', 'data-toggle': "tab", 'aria-controls': "tab-history", 'role': "tab"}).update('History')
+						.observe('click', function() {
+							tmp.me._showHistory($($(this).readAttribute('aria-controls')).down('.panel-body'), 1, 10);
 						})
 					})
 				})
 			})
+			.insert({'bottom': new Element('div', {'class': 'tab-content'})
+				.insert({'bottom': tmp.me._getDescriptionTabPanel(property).addClassName('active').writeAttribute('id', 'tab-description') })
+				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-people'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
+				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-files'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
+				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-history'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
+			});
 		return tmp.newDiv;
 	}
 	/**
@@ -127,32 +187,22 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					})
 					.insert({'bottom': new Element('div', {'class': 'row'})
 						.insert({'bottom': new Element('div', {'class': 'col-sm-12'})
-							.insert({'bottom': new Element('div', {'class': 'panel-group', 'id': 'accordion'})
+							.insert({'bottom': new Element('div', {'class': 'panel-group', 'id': 'left-pane-group'})
 								.insert({'bottom': new Element('div', {'class': 'panel panel-default'})
 									.insert({'bottom': new Element('div', {'class': 'panel-heading'})
 										.insert({'bottom': new Element('h4', {'class': 'panel-title'})
-											.insert({'bottom': new Element('a', {'data-toggle':"collapse", 'data-parent': "#accordion", 'href':"#timeline-div", 'aria-expanded':"true"}).update('Time Line:') })
+											.insert({'bottom': new Element('a', {'data-toggle':"collapse", 'data-parent': "#left-pane-group", 'href':"#timeline-div", 'aria-expanded':"true"}).update('Messages:') })
 										})
 									})
-									.insert({'bottom': new Element('div', {'id': "timeline-div", 'class': "panel-collapse collapse", 'role': "tabpanel", 'aria-labelledby': "headingOne"})
-										.insert({'bottom': new Element('div', {'class': 'panel-body'}).update(tmp.me._getTimeLineUL()) })
-									})
-								})
-								.insert({'bottom': new Element('div', {'class': 'panel panel-default'})
-									.insert({'bottom': new Element('div', {'class': 'panel-heading'})
-										.insert({'bottom': new Element('h4', {'class': 'panel-title'})
-											.insert({'bottom': new Element('a', {'data-toggle':"collapse", 'data-parent': "#accordion", 'href':"#timeline-div1", 'aria-expanded':"true"}).update('Time Line:') })
-										})
-									})
-									.insert({'bottom': new Element('div', {'id': "timeline-div1", 'class': "panel-collapse collapse", 'role': "tabpanel", 'aria-labelledby': "headingOne"})
-										.insert({'bottom': new Element('div', {'class': 'panel-body'}).update(tmp.me._getTimeLineUL()) })
+									.insert({'bottom': new Element('div', {'id': "timeline-div", 'class': "panel-collapse collapse in", 'role': "tabpanel", 'aria-labelledby': "headingOne"})
+										.insert({'bottom': new Element('div', {'class': 'panel-body'}).update('') })
 									})
 								})
 							})
 						})
 					})
 				})
-				.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-pull-4'}).update(tmp.me._getMainPanel(tmp.me._item)) })
+				.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-pull-4'}).update(tmp.me._getTabPanels(tmp.me._item)) })
 			})
 		$(tmp.me._htmlIDs.itemDivId).update(tmp.newDiv);
 		tmp.me._showMap();

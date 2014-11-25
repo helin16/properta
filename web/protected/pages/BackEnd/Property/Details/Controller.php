@@ -20,35 +20,40 @@ class Controller extends BackEndPageAbstract
 			throw new Exception('Access Denied: requested property is NOT related to you');
 		$js = parent::_getEndJs();
 		$js .= "pageJs.setHTMLIDs(" . json_encode(array('itemDivId' => 'item-details-div')) . ")";
-		$js .= ".setCallbackId('checkAddr', '" . $this->checkAddrBtn->getUniqueID() . "')";
+		$js .= ".setCallbackId('getHistory', '" . $this->getHistoryBtn->getUniqueID() . "')";
 		$js .= ".load(" . json_encode($property->getJson()) . ");";
 		return $js;
 	}
 	/**
-	 * checking the address
+	 * get history
 	 *
 	 * @param TCallback          $sender
 	 * @param TCallbackParameter $param
 	 *
 	 * @return Controller
 	 */
-	public function checkAddr($sender, $param)
+	public function getHistory($sender, $param)
 	{
 		$results = $errors = array();
 		try
 		{
-			$addressObj = isset($param->CallbackParameter->checkAddr) ? json_decode(json_encode($param->CallbackParameter->checkAddr), true) : array();
-			if(!is_array($addressObj) || count($addressObj) === 0)
-				throw new Exception('System Error: can NOT check on provided address, insuffient data provided.');
-			$address = Address::getByKey(Address::genKey($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']));
-			$results['address'] = array();
-			$results['properties'] = array();
-			if($address instanceof Address)
+			if(!isset($param->CallbackParameter->propertyId) || !($property = Property::getPropertyByKey(trim($param->CallbackParameter->propertyId))) instanceof Property)
+				throw new Exception('Invalid Property.');
+			$pageNo = isset($param->CallbackParameter->pageNo) ? trim($param->CallbackParameter->pageNo) : 1;
+			$pageSize = isset($param->CallbackParameter->pageSize) ? trim($param->CallbackParameter->pageSize) : DaoQuery::DEFAUTL_PAGE_SIZE;
+			
+			$stats = $items = array();
+			foreach($property->getLogs(null, true, $pageNo, $pageSize, array(), $stats) as $log)
 			{
-				$results['address'] = $address->getJson();
-				foreach(Property::getAllByCriteria('addressId = ?', array($address->getId())) as $property)
-					$results['properties'][] = $property->getJson();
+				$fullName = $log->getCreatedBy() instanceof UserAccount ? ($log->getCreatedBy()->getFirstName() . ' ' . $log->getCreatedBy()->getLastName()) : '';
+				$array = array('comments' => $log->getComments(), 
+						'by' => trim($fullName) === '' ? '' : (trim($log->getCreatedBy()->getId()) === trim(Core::getUser()->getId()) ? $fullName : StringUtilsAbstract::encriptedName($fullName)),
+						'whenUTC' => trim($log->getCreated())
+				);
+				$items[] = $array;
 			}
+			$results['items'] = $items;
+			$results['pagination'] = $stats;
 		}
 		catch(Exception $ex)
 		{

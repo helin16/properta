@@ -223,7 +223,7 @@ class UserAccount extends BaseEntityAbstract
     public static function getUserByEmailAndPassword($email, $password, $noHashPass = false)
     {
     	$query = self::getQuery();
-    	$userAccounts = self::getAllByCriteria("`email` = :email AND `Password` = :password", array('email' => $email, 'password' => ($noHashPass === true ? $password : sha1($password))), false, 1, 1);
+    	$userAccounts = self::getAllByCriteria("`email` = :email AND `Password` = :password", array('email' => $email, 'password' => ($noHashPass === true ? $password : sha1($password))), true, 1, 1);
     	if(count($userAccounts) > 0)
     		return $userAccounts[0];
     	return null;

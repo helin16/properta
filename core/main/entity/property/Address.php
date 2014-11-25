@@ -246,7 +246,8 @@ class Address extends BaseEntityAbstract
 			->setRegion($region)
 			->setCountry($country)
 			->setPostCode($postCode)
-			->save();
+			->save()
+			->addLog(Log::TYPE_SYS, 'Created (' . trim($obj) . ') with ID=' . $obj->getSKey() . '.', __CLASS__ . '::' . __FUNCTION__);
 	}
 	/**
 	 * Generating the key for an address

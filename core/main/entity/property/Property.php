@@ -335,14 +335,13 @@ class Property extends BaseEntityAbstract
     public static function create(Address $address, $noOfRooms = 1, $noOfBaths = 0, $noOfCars = 0, $description = '')
     {
     	$property = new Property();
-    	$property = $property->setAddress($address)
+    	return $property->setAddress($address)
     		->setNoOfRooms($noOfRooms)
     		->setNoOfBaths($noOfBaths)
     		->setNoOfCars($noOfCars)
     		->setDescription(trim($description))
-    		->save();
-    	Log::LogEntity($property, Log::TYPE_SYS, 'Property Created with ' . $noOfRooms . ' bedrooms, ' . $noOfBaths . ' bathrooms and ' . $noOfCars . ' carspaces', __CLASS__ . '::' . __FUNCTION__);
-    	return $property;
+    		->save()
+    		->addLog(Log::TYPE_SYS, 'Property Created with ' . $noOfRooms . ' bedrooms, ' . $noOfBaths . ' bathrooms and ' . $noOfCars . ' carspaces', __CLASS__ . '::' . __FUNCTION__);
     }
 }
 ?>
