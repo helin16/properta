@@ -142,27 +142,31 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			,'onSuccess': function(sender, param) {
 				try{
 					tmp.result = tmp.me.getResp(param, false, true);
-					if(!tmp.result || !tmp.result.items)
+					if(!tmp.result || !tmp.result.items || !tmp.result.roles)
 						return;
 					tmp.table = new Element('table', {'class': 'table'})
 						.insert({'bottom': new Element('thead')
-							.insert({'bottom': new Element('tr')
-								.insert({'bottom': new Element('th', {'data-field': 'user', 'data-sortable': 'true'}).update('User') })
-								.insert({'bottom': new Element('th', {'data-field': 'role', 'data-sortable': 'true'}).update('Role') })
-								.insert({'bottom': new Element('th', {'data-field': 'whenUTC', 'data-sortable': 'true'}).update('Created @') })
+							.insert({'bottom': tmp.theadTR = new Element('tr')
+								.insert({'bottom': new Element('th').update('User') })
 							})
 						})
 						.insert({'bottom': tmp.tbody = new Element('tbody') });
-					tmp.result.items.each(function(item){
-						tmp.tbody.insert({'bottom': new Element('tr')
-							.insert({'bottom': new Element('td').update(item.user) })
-							.insert({'bottom': new Element('td').update(item.role) })
-							.insert({'bottom': new Element('td').update(tmp.me.loadUTCTime(item.whenUTC).toLocaleString()) })
-						})
+					tmp.result.roles.each(function(role){
+						tmp.theadTR.insert({'bottom': new Element('th').update(role.name) });
+					});
+					
+					$H(tmp.result.items).each(function(item){
+						tmp.tbody.insert({'bottom': tmp.tr = new Element('tr')
+							.insert({'bottom': new Element('td').update(item.value.name) })
+						});
+						tmp.result.roles.each(function(role){
+							tmp.hasRole = (item.value.roleIds.indexOf(role.id) > -1);
+							tmp.tr.insert({'bottom': new Element('td')
+								.insert({'bottom': new Element('span', {'class': (tmp.hasRole === true ? 'text-success': '')}).update(new Element('span', {'class': (tmp.hasRole === true ? 'glyphicon glyphicon-ok-sign' : '') })) })
+							});
+						});
 					});
 					panel.update(tmp.table).addClassName('loaded');
-					tmp.me._signRandID(tmp.table);
-					jQuery('#' + tmp.table.id).bootstrapTable();
 				} catch (e) {
 					tmp.me.showModalBox('<h4 class="text-danger">Error</h4>', e, true);
 				}

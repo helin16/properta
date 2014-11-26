@@ -85,14 +85,26 @@ class Controller extends BackEndPageAbstract
 			foreach(PropertyRel::getAllByCriteria('userAccountId = ? and propertyId = ?', array(Core::getUser()->getId(), $property->getId())) as $ref)
 			{
 				$fullName = $ref->getUserAccount() instanceof UserAccount ? ($ref->getUserAccount()->getFirstName() . ' ' . $ref->getUserAccount()->getLastName()) : '';
-				$array = array(
-						'user' => trim($fullName) === '' ? '' : (trim($ref->getUserAccount()->getId()) === trim(Core::getUser()->getId()) ? $fullName : StringUtilsAbstract::encriptedName($fullName)),
-						'role' => trim($ref->getRole()->getName()),
-						'whenUTC' => trim($ref->getCreated())
-				);
-				$items[] = $array;
+				$userId = $ref->getUserAccount() instanceof UserAccount ? $ref->getUserAccount()->getId() : '';
+				if(!isset($items[$userId]))
+				{
+					$items[$userId] = array(
+						'id' => $userId,
+						'name' => trim($fullName) === '' ? '' : (trim($ref->getUserAccount()->getId()) === trim(Core::getUser()->getId()) ? $fullName : StringUtilsAbstract::encriptedName($fullName)),
+						'roleIds' => array()
+					);
+				}
+				$items[$userId]['roleIds'][] = $ref->getRole()->getId();
 			}
 			$results['items'] = $items;
+			$results['roles'] = array();
+			foreach(Role::getAll() as $role)
+			{
+				$results['roles'][] = array (
+					'name' => $role->getName(),
+					'id' => $role->getId()
+				);
+			}
 		}
 		catch(Exception $ex)
 		{

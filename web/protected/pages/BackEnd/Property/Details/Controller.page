@@ -1,6 +1,5 @@
 <com:TContent ID="MainContent">
 <com:Application.controls.googleMap.googleMap />
-<com:Application.controls.bootstrapTable.bootstrapTable />
 <com:TCallback ID="getHistoryBtn" onCallback="Page.getHistory" />
 <com:TCallback ID="getPeopleBtn" onCallback="Page.getPeople" />
 <div class="container backend-div-wrapper">
