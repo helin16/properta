@@ -4,6 +4,7 @@
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	_item: {} //the item entity that we are dealing with
+	,_counts: {} //the counts of the attributes
 	/**
 	 * Showing the google map
 	 */
@@ -91,7 +92,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				if(typeof(completeFunc) === 'function')
 					completeFunc();
 			}
-		})
+		});
 		return tmp.me;
 	}
 	/***
@@ -131,6 +132,45 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			});
 		return tmp.newDiv;
 	}
+	,_showPeople: function(panel) {
+		var tmp = {};
+		tmp.me = this;
+		if(panel.hasClassName('loaded'))
+			return tmp.me;
+		tmp.me.postAjax(tmp.me.getCallbackId('getPeople'), {'propertyId': tmp.me._item.sKey}, {
+			'onLoading': function() {}
+			,'onSuccess': function(sender, param) {
+				try{
+					tmp.result = tmp.me.getResp(param, false, true);
+					if(!tmp.result || !tmp.result.items)
+						return;
+					tmp.table = new Element('table', {'class': 'table'})
+						.insert({'bottom': new Element('thead')
+							.insert({'bottom': new Element('tr')
+								.insert({'bottom': new Element('th', {'data-field': 'user', 'data-sortable': 'true'}).update('User') })
+								.insert({'bottom': new Element('th', {'data-field': 'role', 'data-sortable': 'true'}).update('Role') })
+								.insert({'bottom': new Element('th', {'data-field': 'whenUTC', 'data-sortable': 'true'}).update('Created @') })
+							})
+						})
+						.insert({'bottom': tmp.tbody = new Element('tbody') });
+					tmp.result.items.each(function(item){
+						tmp.tbody.insert({'bottom': new Element('tr')
+							.insert({'bottom': new Element('td').update(item.user) })
+							.insert({'bottom': new Element('td').update(item.role) })
+							.insert({'bottom': new Element('td').update(tmp.me.loadUTCTime(item.whenUTC).toLocaleString()) })
+						})
+					});
+					panel.update(tmp.table).addClassName('loaded');
+					tmp.me._signRandID(tmp.table);
+					jQuery('#' + tmp.table.id).bootstrapTable();
+				} catch (e) {
+					tmp.me.showModalBox('<h4 class="text-danger">Error</h4>', e, true);
+				}
+			}
+			,'onComplete': function() {}
+		});
+		return tmp.me;
+	}
 	/**
 	 * Getting the group of tab panels
 	 */
@@ -140,13 +180,22 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.newDiv = new Element('div', {'class': 'tab-panels'})
 			.insert({'bottom': new Element('ul', {'class': 'nav nav-tabs', 'role': 'tablist'})
 				.insert({'bottom': new Element('li', {'role': 'presentation', 'class': 'active'})
-					.insert({'bottom': new Element('a', {'href': '#tab-description', 'data-toggle': "tab", 'aria-controls': "tab-description", 'role': "tab"}).update('Description') })
+					.insert({'bottom': new Element('a', {'href': '#tab-description', 'data-toggle': "tab", 'aria-controls': "tab-description", 'role': "tab"}).update('Overview') })
 				})
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
-					.insert({'bottom': new Element('a', {'href': '#tab-people', 'data-toggle': "tab", 'aria-controls': "tab-people", 'role': "tab"}).update('People') })
+					.insert({'bottom': new Element('a', {'href': '#tab-people', 'data-toggle': "tab", 'aria-controls': "tab-people", 'role': "tab"})
+						.update('People ') 
+						.insert({'bottom': (tmp.me._counts.people !== undefined ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.people) : null) })
+						.observe('click', function() {
+							tmp.me._showPeople($($(this).readAttribute('aria-controls')).down('.panel-body'));
+						})
+					})
 				})
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
-					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"}).update('Files') })
+					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"})
+						.update('Files ') 
+						.insert({'bottom': (tmp.me._counts.files !== undefined ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) })
+					})
 				})
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
 					.insert({'bottom': new Element('a', {'href': '#tab-history', 'data-toggle': "tab", 'aria-controls': "tab-history", 'role': "tab"}).update('History')
@@ -214,7 +263,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,load: function(item) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.me._item = item;
+		tmp.me._item = item.item;
+		tmp.me._counts = item.counts;
 		tmp.me._htmlIDs.mapViewer = 'map-viewer';
 		tmp.me._showEditPanel();
 		return tmp.me;
