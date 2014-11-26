@@ -5,6 +5,8 @@ var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	_item: {} //the item entity that we are dealing with
 	,_counts: {} //the counts of the attributes
+	,_roles: [] //the roles
+	,_can: {} //whether this user can do something
 	/**
 	 * Showing the google map
 	 */
@@ -107,27 +109,31 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
 						.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bedrooms'})
 							.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
-							.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfRooms) })
+							.insert({'bottom': new Element('span', {'class': 'form-control save-field', 'type': 'number', 'data-save-field': 'noOfRooms', 'data-type': 'input'}).update(tmp.me._item.noOfRooms) 	})
 						})
 					})
 					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
 						.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Bathrooms:'})
-						.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
-							.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfBaths) })
+							.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Bedrooms:') })
+							.insert({'bottom': new Element('span', {'class': 'form-control save-field', 'type': 'number', 'data-save-field': 'noOfBaths', 'data-type': 'input'}).update(tmp.me._item.noOfBaths) })
 						})
 					})
 					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
 						.insert({'bottom': new Element('div', {'class': 'input-group input-group-sm', 'title': 'No. Of Car Spaces'})
 							.insert({'bottom': new Element('span', {'class': 'input-group-addon'}).update('No. Of Carspaces:') })
-							.insert({'bottom': new Element('span', {'class': 'form-control', 'type': 'number'}).update(' ' + tmp.me._item.noOfCars) })
+							.insert({'bottom': new Element((tmp.me._can.changeDetails === true ? 'input' : 'span'), {'class': 'form-control save-field', 'type': 'number', 'data-save-field': 'noOfCars', 'data-type': 'input'}).update(tmp.me._item.noOfCars) })
 						})
 					})
 				})
 				.insert({'bottom': new Element('div', {'class': 'row'})
 					.insert({'bottom': new Element('label', {'class': 'col-sm-12'}).update('Description:') 
-						.insert({'bottom': new Element('small').update( new Element('em', {'class': 'text-danger pull-right'}).update('Description will be viewed by other users') ) }) 
+						.insert({'bottom': tmp.me._can.changeDetails !== true ? '' : new Element('small').update( new Element('em', {'class': 'text-danger pull-right'}).update('Description will be viewed by other users') ) }) 
 					})
-					.insert({'bottom': new Element('textarea', {'class': 'form-control', 'rows': 5}).update(property.description) })
+					.insert({'bottom': new Element('label', {'class': 'col-sm-12'})
+						.insert({'bottom': new Element('div', {'class': 'save-field', 'rows': '5', 'data-save-field': 'description', 'data-type': 'textarea'})
+							.update( new Element('div', {'style': 'min-height: 100px;border: 1px #ccc solid; padding: 8px; border-radius: 4px;'}).update(tmp.me._item.description) )  
+						})
+					})
 				})
 			});
 		return tmp.newDiv;
@@ -142,7 +148,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			,'onSuccess': function(sender, param) {
 				try{
 					tmp.result = tmp.me.getResp(param, false, true);
-					if(!tmp.result || !tmp.result.items || !tmp.result.roles)
+					if(!tmp.result || !tmp.result.items)
 						return;
 					tmp.table = new Element('table', {'class': 'table'})
 						.insert({'bottom': new Element('thead')
@@ -151,7 +157,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 							})
 						})
 						.insert({'bottom': tmp.tbody = new Element('tbody') });
-					tmp.result.roles.each(function(role){
+					tmp.me._roles.each(function(role){
 						tmp.theadTR.insert({'bottom': new Element('th').update(role.name) });
 					});
 					
@@ -159,7 +165,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						tmp.tbody.insert({'bottom': tmp.tr = new Element('tr')
 							.insert({'bottom': new Element('td').update(item.value.name) })
 						});
-						tmp.result.roles.each(function(role){
+						tmp.me._roles.each(function(role){
 							tmp.hasRole = (item.value.roleIds.indexOf(role.id) > -1);
 							tmp.tr.insert({'bottom': new Element('td')
 								.insert({'bottom': new Element('span', {'class': (tmp.hasRole === true ? 'text-success': '')}).update(new Element('span', {'class': (tmp.hasRole === true ? 'glyphicon glyphicon-ok-sign' : '') })) })
@@ -189,7 +195,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
 					.insert({'bottom': new Element('a', {'href': '#tab-people', 'data-toggle': "tab", 'aria-controls': "tab-people", 'role': "tab"})
 						.update('People ') 
-						.insert({'bottom': (tmp.me._counts.people !== undefined ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.people) : null) })
+						.insert({'bottom': (tmp.me._counts.people ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.people) : null) })
 						.observe('click', function() {
 							tmp.me._showPeople($($(this).readAttribute('aria-controls')).down('.panel-body'));
 						})
@@ -198,22 +204,51 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
 					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"})
 						.update('Files ') 
-						.insert({'bottom': (tmp.me._counts.files !== undefined ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) })
+						.insert({'bottom': (tmp.me._counts.files ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) })
 					})
 				})
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
+					.insert({'bottom': new Element('a', {'href': '#tab-leases', 'data-toggle': "tab", 'aria-controls': "tab-leases", 'role': "tab"})
+						.update('Leases ')
+						.insert({'bottom': (tmp.me._counts.leases ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.leases) : null) })
+					})
+				})
+				.insert({'bottom': tmp.me._can.changeDetails !== true ? '' : new Element('li', {'role': 'presentation'})
+					.insert({'bottom': new Element('a', {'href': '#tab-leger', 'data-toggle': "tab", 'aria-controls': "tab-leger", 'role': "tab"}).update('Inspections') })
+				})
+				.insert({'bottom': tmp.me._can.changeDetails !== true ? '' : new Element('li', {'role': 'presentation'})
 					.insert({'bottom': new Element('a', {'href': '#tab-history', 'data-toggle': "tab", 'aria-controls': "tab-history", 'role': "tab"}).update('History')
 						.observe('click', function() {
 							tmp.me._showHistory($($(this).readAttribute('aria-controls')).down('.panel-body'), 1, 10);
 						})
 					})
 				})
+				.insert({'bottom': new Element('li', {'role': 'presentation'})
+					.insert({'bottom': new Element('a', {'href': '#tab-leger', 'data-toggle': "tab", 'aria-controls': "tab-leger", 'role': "tab"}).update('Leger') })
+				})
 			})
 			.insert({'bottom': new Element('div', {'class': 'tab-content'})
 				.insert({'bottom': tmp.me._getDescriptionTabPanel(property).addClassName('active').writeAttribute('id', 'tab-description') })
 				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-people'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
 				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-files'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
+				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-leases'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
 				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-history'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
+				.insert({'bottom': new Element('div', {'class': 'tab-pane', 'id': 'tab-leger'}).update ( new Element('div', {'class': 'panel-body'}).update(tmp.me._getLoadingDiv()) ) })
+			});
+		return tmp.newDiv;
+	}
+	/**
+	 * Getting the rental coverage bar
+	 */
+	,_rentalCoverageBar: function(property) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newDiv = new Element('div')
+			.insert({"bottom": new Element('div').update('<strong>Rental Coverage:</strong>') })
+			.insert({"bottom": new Element('div', {'class': 'progress rental-cover-bar'})
+				.insert({'bottom': new Element('div', {'class': 'progress-bar progress-bar-success', 'role': 'progress-bar', 'aria-valuenow': '40', 'aria-valuemin': '0', 'aria-valuemax': '100', 'style': 'width: 40%'})
+					.insert({'bottom': new Element('div', {'class': 'sr-only1'}).update('40%') })
+				}) 
 			});
 		return tmp.newDiv;
 	}
@@ -227,13 +262,16 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			.insert({'bottom': new Element('div', {'class': 'page-header'})
 				.insert({'bottom': new Element('div', {'class': 'row'})
 					.insert({'bottom': new Element('h4', {'class': 'col-sm-8'}).update(tmp.me._item.address.full) })
-					.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
-					})
+					.insert({'bottom': new Element('div', {'class': 'col-sm-4'}) })
 				})
 			})
+			.insert({'bottom': new Element('div', {'class': 'row'}).update( new Element('div', {'class': 'col-sm-12','id': tmp.me._htmlIDs.msgDiv}) ) })
 			.insert({'bottom': new Element('div', {'class': 'row'})
 				.insert({'bottom': new Element('div', {'class': 'col-sm-8'}).update(tmp.me._getTabPanels(tmp.me._item)) })
 				.insert({'bottom': new Element('div', {'class': 'col-sm-4'})
+					.insert({'bottom': new Element('div', {'class': 'panel panel-default'})
+						.insert({'bottom': new Element('div', {'class': 'panel-body'}).update(tmp.me._rentalCoverageBar(tmp.me._item))	})
+					})
 					.insert({'bottom': new Element('div', {'class': 'panel panel-default'})
 						.insert({'bottom': new Element('div', {'class': 'panel-body'})
 							.insert({'bottom': new Element('div', {'class': 'col-sm-12', 'id': tmp.me._htmlIDs.mapViewer, 'style': 'height: 200px;'}) })
@@ -256,9 +294,43 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						})
 					})
 				})
-			})
+			});
 		$(tmp.me._htmlIDs.itemDivId).update(tmp.newDiv);
 		tmp.me._showMap();
+		return tmp.me;
+	}
+	,_updateDetails: function(field, data) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.me.postAjax(tmp.me.getCallbackId('updateDetails'), {'propertyId': tmp.me._item.sKey, 'field': field, 'data': data}, {
+			'onSuccess': function(sender, param) {
+				try {
+					tmp.result = tmp.me.getResp(param, false, true);
+					if(!tmp.result || !tmp.result.item)
+						return;
+					tmp.me._item = tmp.result.item;
+					$(tmp.me._htmlIDs.msgDiv).update(tmp.me.getAlertBox('Success: ', field + ' is now: ' + data).addClassName('alert-success'));
+				} catch (e) {
+					$(tmp.me._htmlIDs.msgDiv).update(tmp.me.getAlertBox('ERROR: ', e).addClassName('alert-danger'));
+				}
+			}
+		})
+		return tmp.me;
+	}
+	,_loadFormForDetails: function() {
+		var tmp = {};
+		tmp.me = this;
+		jQuery.each(jQuery('.save-field[data-save-field]'), function(index, element){
+			tmp.newElement = jQuery('<' + (jQuery(element).attr('data-type') ? jQuery(element).attr('data-type') : 'input') + '/>');
+			jQuery.each(jQuery(element)[0].attributes, function(i, attrib){
+				tmp.newElement.attr(attrib.name, attrib.value);
+			});
+			tmp.newElement.addClass('form-control').val(jQuery(element).text());
+			jQuery(element).replaceWith(tmp.newElement);
+			tmp.newElement.change(function() {
+				tmp.me._updateDetails(jQuery(element).attr('data-save-field'), jQuery(this).val());
+			});
+		});
 		return tmp.me;
 	}
 	/**
@@ -267,10 +339,24 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,load: function(item) {
 		var tmp = {};
 		tmp.me = this;
+		tmp.me._htmlIDs.mapViewer = 'map-viewer';
+		tmp.me._htmlIDs.msgDiv = 'msg-div';
+		
 		tmp.me._item = item.item;
 		tmp.me._counts = item.counts;
-		tmp.me._htmlIDs.mapViewer = 'map-viewer';
+		tmp.me._roles = item.roles;
+		tmp.me._can.changeDetails = false;
+		for(tmp.i = 0; tmp.i < tmp.me._roles.size(); tmp.i++) {
+			if(item.curRoleIds.indexOf(tmp.me._roles[tmp.i].id) > -1 && tmp.me._roles[tmp.i].changeDetails === true) {
+				tmp.me._can.changeDetails = true;
+				break;
+			}
+		}
+		
 		tmp.me._showEditPanel();
+		if(tmp.me._can.changeDetails === true) {
+			tmp.me._loadFormForDetails()
+		}
 		return tmp.me;
 	}
 });

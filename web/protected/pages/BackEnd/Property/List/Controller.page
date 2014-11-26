@@ -17,6 +17,6 @@
 			</div>
 		</div>
 	</div>
-	<div id="result-div"></div>
+	<div id="result-div" class="property-list"></div>
 </div>
 </com:TContent>

@@ -377,3 +377,11 @@ a.rel-type-selector:hover,a.rel-type-selector:active,a.rel-type-selector:focus,.
 .backend-div-wrapper {
 	padding: 50px 0 100px 0;
 }
+
+.property-list .row.item_row {
+	border-bottom: 1px #eee solid;
+	margin-bottom: 18px;
+}
+.property-list .row.item_row:last-child {
+	border-bottom: none;
+}

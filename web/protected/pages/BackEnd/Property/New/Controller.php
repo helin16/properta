@@ -17,7 +17,7 @@ class Controller extends BackEndPageAbstract
 		$property = new Property();
 		$js = parent::_getEndJs();
 		$js .= "pageJs.setHTMLIDs(" . json_encode(array('itemDivId' => 'item-details-div')) . ")";
-		$js .= ".setPropRelTypes(" . Role::ID_TENANT . ", " . Role::ID_OWNER .", " . Role::ID_TENANT . ")";
+		$js .= ".setPropRelTypes(" . Role::ID_TENANT . ", " . Role::ID_AGENT .", " . Role::ID_OWNER . ")";
 		$js .= ".setCallbackId('checkAddr', '" . $this->checkAddrBtn->getUniqueID() . "')";
 		$js .= ".setCallbackId('saveProperty', '" . $this->savePropertyBtn->getUniqueID() . "')";
 		$js .= ".load(" . json_encode($property->getJson()) . ");";
