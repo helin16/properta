@@ -17,6 +17,7 @@ class Controller extends BackEndPageAbstract
 		$js = parent::_getEndJs();
 		$js .= "pageJs.setHTMLIDs(" . json_encode(array('resultDivId' => 'result-div', 'totalNoOfItemsId' => 'totalNoOfItemsId')) . ")";
 		$js .= ".setCallbackId('getItems', '" . $this->getItemsBtn->getUniqueID() . "')";
+		$js .= ".setPropRelTypes(" . Role::ID_TENANT . ", " . Role::ID_AGENT .", " . Role::ID_OWNER . ")";
 		$js .= ".getResults(true, 10);";
 		return $js;
 	}
@@ -51,7 +52,11 @@ class Controller extends BackEndPageAbstract
 			$results['pageStats'] = $stats;
 			$results['items'] = array();
 			foreach($objects as $obj)
-				$results['items'][] = $obj->getJson();
+			{
+				$array = $obj->getJson();
+				$array['curRoleIds'] = array_map(create_function('$a', 'return intval($a->getId());'), Role::getPropertyRoles($obj, Core::getUser()));
+				$results['items'][] = $array;
+			}
 		}
 		catch(Exception $ex)
 		{

@@ -5,7 +5,14 @@ var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	_pagination: {'pageNo': 1, 'pageSize': 30} //the pagination details
 	,_searchCriteria: {} //the searching criteria
-	
+	,_propRelTypeIds: {}
+	/**
+	 * Setting the property user relationship
+	 */
+	,setPropRelTypes: function (tenantId, agentId, ownerId) {
+		this._propRelTypeIds = {'tenant': tenantId, 'agent': agentId, 'owner': ownerId};
+		return this;
+	}
 	,getResults: function(reset, pageSize, completeFunc) {
 		var tmp = {};
 		tmp.me = this;
@@ -81,6 +88,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	}
 	
 	,_getResultRow: function(property) {
+		var tmp = {};
+		tmp.me = this;
 		return new Element('div', {'class': 'row'}).store(property)
 			.insert({'bottom': new Element('div', {'class': 'col-sm-8 col-sm-push-4'})
 				.insert({'bottom': new Element('div', {'class': 'row'})
@@ -114,19 +123,19 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				.insert({'bottom': new Element('div', {'class': 'row '})
 					.insert({'bottom': new Element('h3', {'class': 'col-sm-3'}).update('I am: ') })
 					.insert({'bottom': new Element('h3', {'class': 'col-sm-3 col-xs-4'})
-						.insert({'bottom': new Element('label', {'class': 'label label-primary'})
+						.insert({'bottom': property.curRoleIds.indexOf(tmp.me._propRelTypeIds.agent) < 0 ? '' : new Element('label', {'class': 'label label-primary'})
 							.update(' Agent')
 							.insert({'top': new Element('icon', {'class': 'fa fa-calendar'}) })
 						}) 
 					})
 					.insert({'bottom': new Element('h3', {'class': 'col-sm-3  col-xs-4'})
-						.insert({'bottom': new Element('label', {'class': 'label label-success'})
+						.insert({'bottom': property.curRoleIds.indexOf(tmp.me._propRelTypeIds.owner) < 0 ? '' :  new Element('label', {'class': 'label label-success'})
 							.update(' Owner')
 							.insert({'top': new Element('icon', {'class': 'fa fa-map-marker'}) })
 						}) 
 					})
 					.insert({'bottom': new Element('h3', {'class': 'col-sm-3  col-xs-4'})
-						.insert({'bottom': new Element('label', {'class': 'label label-warning'})
+						.insert({'bottom': property.curRoleIds.indexOf(tmp.me._propRelTypeIds.tenant) < 0 ? '' : new Element('label', {'class': 'label label-warning'})
 							.update(' Tenant')
 							.insert({'top': new Element('icon', {'class': 'fa fa-key'}) })
 						}) 

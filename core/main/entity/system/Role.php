@@ -87,5 +87,18 @@ class Role extends BaseEntityAbstract
     		self::addCache($id, parent::get($id));
     	return self::getCache($id);
     }
+    /**
+     * Get Roles for a property
+     * 
+     * @param Property    $property
+     * @param UserAccount $user
+     * 
+     * @return multitype:Role
+     */
+    public static function getPropertyRoles(Property $property, UserAccount $user)
+    {
+    	$rels = PropertyRel::getRelationships($property, $user);
+    	return array_map(create_function('$a', 'return $a->getRole();'), $rels);
+    }
 }
 ?>
