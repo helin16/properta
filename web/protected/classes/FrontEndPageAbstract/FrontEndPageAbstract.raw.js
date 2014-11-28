@@ -165,6 +165,15 @@ FrontPageJs.prototype = {
 		return tmp.me;
 	}
 	/**
+	 * hiding the modal box
+	 */
+	,hideModalBox: function() {
+		var tmp = {};
+		tmp.me = this;
+		jQuery('#' + tmp.me.modalId).modal('hide');
+		return this;
+	}
+	/**
 	 * Load the mysql utc time into Date object
 	 */
 	,loadUTCTime: function (utcString) {

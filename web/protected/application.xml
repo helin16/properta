@@ -55,7 +55,7 @@
 		</service>
 
 		<service id="asset" class="Application.pages.FrontEnd.Asset.AssetController"></service>
-		<service id="reauth" class="Application.pages.FrontEnd.ReAuth.ReAuthController"></service>
+		<service id="ajax" class="Application.pages.BackEnd.Ajax.Controller"></service>
 		<service id="soap" class="System.Web.Services.TSoapService">
 			<soap id="webauth" provider="Application.classes.Soap.WebAuth" />
 		</service>

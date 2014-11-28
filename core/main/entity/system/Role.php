@@ -98,7 +98,7 @@ class Role extends BaseEntityAbstract
     public static function getPropertyRoles(Property $property, UserAccount $user)
     {
     	$rels = PropertyRel::getRelationships($property, $user);
-    	return array_map(create_function('$a', 'return $a->getRole();'), $rels);
+    	return array_unique(array_map(create_function('$a', 'return $a->getRole();'), $rels));
     }
 }
 ?>

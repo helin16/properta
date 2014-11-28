@@ -168,6 +168,14 @@ class UserAccount extends BaseEntityAbstract
         return $this->getEmail();
     }
     /**
+     * Getting the full name of the user
+     * @return string
+     */
+    public function getFullName()
+    {
+    	return trim(trim($this->getFirstName()) . ' ' . trim($this->getLastName()));
+    }
+    /**
      * (non-PHPdoc)
      * @see BaseEntityAbstract::getJson()
      */
@@ -276,6 +284,19 @@ class UserAccount extends BaseEntityAbstract
     	return $userAccount->setUserName($username)
     		->setPassword($password)
     		->save();
+    }
+    /**
+     * Getting all the users for this property
+     * 
+     * @param Property $property
+     * @param Role     $role
+     * 
+     * @return multitype:UserAccount
+     */
+    public static function getUsersForProperty(Property $property, Role $role = null)
+    {
+    	$rels = PropertyRel::getRelationships($property, null, $role);
+    	return array_unique(array_map(create_function('$a', 'return $a->getUserAccount();'), $rels));
     }
 }
 

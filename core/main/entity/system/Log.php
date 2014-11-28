@@ -184,6 +184,15 @@ class Log extends BaseEntityAbstract
 	}
 	/**
 	 * (non-PHPdoc)
+	 * @see BaseEntityAbstract::preSave()
+	 */
+	public function preSave()
+	{
+		if(trim($this->getTransId()) === '')
+			$this->setTransId(self::getTransKey());
+	}
+	/**
+	 * (non-PHPdoc)
 	 * @see BaseEntity::__loadDaoMap()
 	 */
 	public function __loadDaoMap()
@@ -223,8 +232,7 @@ class Log extends BaseEntityAbstract
 	{
 		$className = __CLASS__;
 		$log = new $className();
-		$log->setTransId(self::getTransKey())
-			->setEntityId($entityId)
+		$log->setEntityId($entityId)
 			->setEntityName($entityName)
 			->setType($type)
 			->setComments($comments)

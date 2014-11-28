@@ -32,7 +32,7 @@ CREATE TABLE `content` (
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`skey` varchar(32) NOT NULL DEFAULT '',
+	`sKey` varchar(32) NOT NULL DEFAULT '',
 	`street` varchar(100) NOT NULL DEFAULT '',
 	`city` varchar(20) NOT NULL DEFAULT '',
 	`region` varchar(20) NOT NULL DEFAULT '',
@@ -46,11 +46,11 @@ CREATE TABLE `address` (
 	PRIMARY KEY (`id`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
+	,INDEX (`skey`)
 	,INDEX (`city`)
 	,INDEX (`region`)
 	,INDEX (`country`)
 	,INDEX (`postCode`)
-	,INDEX (`skey`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `property`;
 CREATE TABLE `property` (
@@ -70,10 +70,10 @@ CREATE TABLE `property` (
 	,INDEX (`addressId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
+	,INDEX (`sKey`)
 	,INDEX (`noOfRooms`)
 	,INDEX (`noOfCars`)
 	,INDEX (`noOfBaths`)
-	,INDEX (`sKey`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `propertyrel`;
 CREATE TABLE `propertyrel` (
@@ -96,13 +96,11 @@ CREATE TABLE `propertyrel` (
 DROP TABLE IF EXISTS `log`;
 CREATE TABLE `log` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`libraryId` int(10) unsigned NOT NULL DEFAULT 0,
-	`transId` varchar(100) NOT NULL DEFAULT '',
-	`type` varchar(100) NOT NULL DEFAULT '',
+	`transId` varchar(32) NOT NULL DEFAULT '',
+	`type` varchar(20) NOT NULL DEFAULT '',
 	`entityId` int(10) unsigned NOT NULL DEFAULT 0,
 	`entityName` varchar(100) NOT NULL DEFAULT '',
 	`funcName` varchar(100) NOT NULL DEFAULT '',
-	`msg` LONGTEXT NOT NULL ,
 	`comments` varchar(255) NOT NULL DEFAULT '',
 	`active` bool NOT NULL DEFAULT 1,
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -110,7 +108,6 @@ CREATE TABLE `log` (
 	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
-	,INDEX (`libraryId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
 	,INDEX (`transId`)
@@ -118,6 +115,29 @@ CREATE TABLE `log` (
 	,INDEX (`entityName`)
 	,INDEX (`type`)
 	,INDEX (`funcName`)
+) ENGINE=innodb DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`toId` int(10) unsigned NOT NULL DEFAULT 0,
+	`fromId` int(10) unsigned NOT NULL DEFAULT 0,
+	`type` varchar(10) NOT NULL DEFAULT '',
+	`subject` varchar(100) NOT NULL DEFAULT '',
+	`body` longtext NOT NULL ,
+	`transId` varchar(32) NOT NULL DEFAULT '',
+	`active` bool NOT NULL DEFAULT 1,
+	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
+	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+	,INDEX (`toId`)
+	,INDEX (`fromId`)
+	,INDEX (`createdById`)
+	,INDEX (`updatedById`)
+	,INDEX (`transId`)
+	,INDEX (`type`)
+	,INDEX (`subject`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (

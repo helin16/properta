@@ -43,8 +43,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.historyListDiv = panel.down('.period-tl');
-		if(pageNo <= 1 && tmp.historyListDiv)
-			return tmp.me;
 		tmp.me.postAjax(tmp.me.getCallbackId('getHistory'), {'propertyId': tmp.me._item.sKey, 'pageNo': pageNo, 'pageSize': pageSize}, {
 			'onLoading': function() {}
 			,'onSuccess': function(sender, param) {
@@ -53,7 +51,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					if(!tmp.result || !tmp.result.items)
 						return;
 					
-					if(!tmp.historyListDiv) {
+					if(pageNo <= 1) {
 						panel.update('').insert({'bottom': new Element('div', {'class': 'period-tl-div'})
 							.insert({'bottom': tmp.historyListDiv = new Element('ul', {'class': 'period-tl'}) })
 						});
@@ -138,11 +136,97 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			});
 		return tmp.newDiv;
 	}
+	,_getUserRow: function(item) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.tr = new Element('tr', {'class': 'prop-rel-row', 'user-id': item.id}).store('data', item)
+			.insert({'bottom': new Element('td').update(item.name) });
+		tmp.me._roles.each(function(role){
+			tmp.hasRole = (item.roleIds.indexOf(role.id) > -1);
+			tmp.tr.insert({'bottom': new Element('td')
+				.insert({'bottom': tmp.me._can.changeDetails !== true ? 
+					new Element('span', {'class': (tmp.hasRole === true ? 'text-success': '')}).update(new Element('span', {'class': (tmp.hasRole === true ? 'glyphicon glyphicon-ok-sign' : '') }))
+					:
+					new Element('input', {'type': 'checkbox', 'checked': tmp.hasRole })
+						.observe('click', function() {
+							tmp.me._confirmRel(item, role, $(this), $(this).checked ? 'create' : 'delete');
+						})
+				})
+			});
+		});
+		return tmp.tr;
+	}
+	/**
+	 * Ajax: creating PropertyRef
+	 */
+	,_submitRel: function (btn, user, role, action) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.btn = btn;
+		tmp.me._signRandID(tmp.btn);
+		tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'propertyId': tmp.me._item.sKey, 'userId': user.id, 'roleId': role.id, 'action': action}, {
+			'onLoading': function() {
+				tmp.btn.up('.update-rel-panel').down('.msg-panel').update('');
+				jQuery('#' + tmp.btn.id).button('loading');
+			}
+			,'onSuccess': function (sender, param) {
+				try {
+					tmp.result = tmp.me.getResp(param, false, true);
+					if(!tmp.result || !tmp.result.item)
+						return;
+					tmp.row = $$('.prop-rel-row[user-id=' + tmp.result.item.id + ']');
+					if(tmp.row.size() > 0)
+						tmp.row.first().replace(tmp.me._getUserRow(tmp.result.item));
+					tmp.btn.up('.update-rel-panel').down('.msg-panel').update(tmp.me.getAlertBox('Success: ', 'Saved successfully.').addClassName('alert-success'));
+					tmp.me.hideModalBox();
+				} catch(e) {
+					tmp.btn.up('.update-rel-panel').down('.msg-panel').update(tmp.me.getAlertBox('Error: ', e).addClassName('alert-danger'));
+				}
+			}
+			,'onComplete': function() {
+				jQuery('#' + tmp.btn.id).button('reset');
+			}
+		});
+		return tmp.me;
+	}
+	/**
+	 * show the panel of displaying the confirmation box for adding a propertyrel
+	 */
+	,_confirmRel: function (user, role, btn, action) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newDiv = new Element('div', {'class': 'update-rel-panel'})
+			.insert({'bottom': new Element('div').update('You are about to ' + (action.strip() === 'create' ? 'add' : 'remove') + ' user(' + user.name + ') to the ' + role.name + ' of this property.')})
+			.insert({'bottom': new Element('div').update('Countinue?')})
+			.insert({'bottom': new Element('div', {'class': 'msg-panel'}) })
+			.insert({'bottom': new Element('div', {'class': 'row'})
+				.insert({'bottom': new Element('span', {'class': 'col-sm-4 btn btn-' + (action.strip()  === 'create' ? 'primary' : 'danger'), 'data-loading-text': "Saving ..."})
+					.update('YES')
+					.observe('click', function(){
+						tmp.me._submitRel(this, user, role, action);
+					})
+				})
+				.insert({'bottom': new Element('span', {'class': 'col-sm-4 col-sm-offset-4 btn btn-default'})
+					.update('NO')
+					.observe('click', function(){
+						if($(btn) && $(btn).readAttribute('type') === 'checkbox')
+							$(btn).checked = false;
+						tmp.me.hideModalBox();
+					})
+				})
+			});
+		tmp.me.showModalBox('Confirm', tmp.newDiv, false);
+		return tmp.me;
+	}
+	/**
+	 * getting the list of people for this property
+	 */
 	,_showPeople: function(panel) {
 		var tmp = {};
 		tmp.me = this;
 		if(panel.hasClassName('loaded'))
 			return tmp.me;
+		
 		tmp.me.postAjax(tmp.me.getCallbackId('getPeople'), {'propertyId': tmp.me._item.sKey}, {
 			'onLoading': function() {}
 			,'onSuccess': function(sender, param) {
@@ -160,17 +244,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					tmp.me._roles.each(function(role){
 						tmp.theadTR.insert({'bottom': new Element('th').update(role.name) });
 					});
-					
 					$H(tmp.result.items).each(function(item){
-						tmp.tbody.insert({'bottom': tmp.tr = new Element('tr')
-							.insert({'bottom': new Element('td').update(item.value.name) })
-						});
-						tmp.me._roles.each(function(role){
-							tmp.hasRole = (item.value.roleIds.indexOf(role.id) > -1);
-							tmp.tr.insert({'bottom': new Element('td')
-								.insert({'bottom': new Element('span', {'class': (tmp.hasRole === true ? 'text-success': '')}).update(new Element('span', {'class': (tmp.hasRole === true ? 'glyphicon glyphicon-ok-sign' : '') })) })
-							});
-						});
+						tmp.tbody.insert({'bottom': tmp.me._getUserRow(item.value) });
 					});
 					panel.update(tmp.table).addClassName('loaded');
 				} catch (e) {
@@ -201,7 +276,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						})
 					})
 				})
-				.insert({'bottom': new Element('li', {'role': 'presentation'})
+				.insert({'bottom': tmp.me._can.changeDetails !== true ? '' :  new Element('li', {'role': 'presentation'})
 					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"})
 						.update('Files ') 
 						.insert({'bottom': (tmp.me._counts.files ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) })

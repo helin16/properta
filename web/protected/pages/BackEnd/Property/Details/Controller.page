@@ -3,6 +3,7 @@
 <com:TCallback ID="getHistoryBtn" onCallback="Page.getHistory" />
 <com:TCallback ID="getPeopleBtn" onCallback="Page.getPeople" />
 <com:TCallback ID="updateDetailsBtn" onCallback="Page.updateDetails" />
+<com:TCallback ID="saveRelBtn" onCallback="Page.saveRel" />
 <div class="container backend-div-wrapper">
 	<div id="item-details-div"></div>
 </div>
