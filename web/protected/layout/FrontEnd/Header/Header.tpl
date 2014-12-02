@@ -35,10 +35,11 @@
            </com:TPanel><!-- end top-bar-menu -->
        	   <com:TPanel ID="user_menu_login" CssClass="top-bar-menu pull-right" Visible='false'>
       	   		<ul class="nav nav-pills" role="tablist">
-      	   			<li><a href="/backend/properties.html" title="Properties"><i class="glyphicon glyphicon-th-list"></i> Properties</a></li>
+      	   			<li><a href="/backend.html" title="Home"><i class="glyphicon glyphicon-home"></i><span class="hidden-xs hidden-sm"> Home</span></a></li>
+      	   			<li><a href="/backend/properties.html" title="Properties"><i class="glyphicon glyphicon-th-list"></i><span class="hidden-xs hidden-sm"> Properties</span></a></li>
       	   			<li><a href="/" title="Messages"><i class="glyphicon glyphicon-envelope"></i></a></li>
       	   			<li class="dropdown visible-xs visible-md visible-sm visible-lg">
-      	   				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-cog"></i> <%= Core::getUser()->getFirstName() %> <span class="caret"></span></a>
+      	   				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-cog"></i><span class="hidden-xs hidden-sm"> <%= Core::getUser()->getFirstName() %></span><span class="caret"></span></a>
       	   				<ul class="dropdown-menu" role="menu">
 							<li><a href="#">Separated link</a></li>
 							<li><a href="#">Another action</a></li>

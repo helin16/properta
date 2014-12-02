@@ -119,6 +119,8 @@ CREATE TABLE `log` (
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`isRead` bool NOT NULL DEFAULT 0,
+	`sendType` varchar(10) NOT NULL DEFAULT '',
 	`toId` int(10) unsigned NOT NULL DEFAULT 0,
 	`fromId` int(10) unsigned NOT NULL DEFAULT 0,
 	`type` varchar(10) NOT NULL DEFAULT '',
@@ -135,6 +137,8 @@ CREATE TABLE `message` (
 	,INDEX (`fromId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
+	,INDEX (`isRead`)
+	,INDEX (`sendType`)
 	,INDEX (`transId`)
 	,INDEX (`type`)
 	,INDEX (`subject`)

@@ -3,6 +3,9 @@ class Message extends BaseEntityAbstract
 {
 	const TYPE_SYS = 'SYSTEM';
 	const TYPE_USER = 'USER';
+	const SENT_TYPE_NEW = 'NEW';
+	const SENT_TYPE_SENDING = 'SENDING';
+	const SENT_TYPE_SENT = 'SENT';
 	/**
 	 * caching the transid
 	 *
@@ -14,13 +17,13 @@ class Message extends BaseEntityAbstract
 	 * 
 	 * @var UserAccount
 	 */
-	private $to;
+	protected $to;
 	/**
 	 * UserAccount the message is send from
 	 * 
 	 * @var UserAccount
 	 */
-	private $from;
+	protected $from;
 	/**
 	 * Type of the message: system or user
 	 * 
@@ -39,6 +42,18 @@ class Message extends BaseEntityAbstract
 	 * @var string
 	 */
 	private $body;
+	/**
+	 * Whether the message has been read by the user
+	 * 
+	 * @var string
+	 */
+	private $isRead = false;
+	/**
+	 * The messge sending type: NEW, SENDING and SENT
+	 * 
+	 * @var string
+	 */
+	private $sendType = self::SENT_TYPE_NEW;
 	/**
 	 * The identifier of that transation
 	 *
@@ -166,12 +181,63 @@ class Message extends BaseEntityAbstract
 	 *
 	 * @param string $value The transId
 	 *
-	 * @return Log
+	 * @return Message
 	 */
 	public function setTransId($value)
 	{
 		$this->transId = $value;
 		return $this;
+	}
+	/**
+	 * Getter for the isRead
+	 *
+	 * @return bool
+	 */
+	public function getIsRead()
+	{
+		return $this->isRead;
+	}
+	/**
+	 * Setter for the isRead
+	 *
+	 * @param bool $value The isRead
+	 *
+	 * @return Message
+	 */
+	public function setIsRead($value)
+	{
+		$this->isRead = $value;
+		return $this;
+	}
+	/**
+	 * Getter for the sendType
+	 *
+	 * @return string
+	 */
+	public function getSendType()
+	{
+		return $this->sendType;
+	}
+	/**
+	 * Setter for the sendType
+	 *
+	 * @param bool $value The sendType
+	 *
+	 * @return Message
+	 */
+	public function setSendType($value)
+	{
+		$this->sendType = $value;
+		return $this;
+	}
+	/**
+	 * (non-PHPdoc)
+	 * @see BaseEntityAbstract::preSave()
+	 */
+	public function preSave()
+	{
+		if(trim($this->getTransId()) === '')
+			$this->setTransId(self::getTransKey());
 	}
 	/**
 	 * (non-PHPdoc)
@@ -189,6 +255,8 @@ class Message extends BaseEntityAbstract
 	{
 		DaoMap::begin($this, 'msg');
 	
+		DaoMap::setBoolType('isRead');
+		DaoMap::setStringType('sendType','varchar', 10);
 		DaoMap::setManyToOne('to', 'UserAccount');
 		DaoMap::setManyToOne('from', 'UserAccount');
 		DaoMap::setStringType('type','varchar', 10);
@@ -198,6 +266,8 @@ class Message extends BaseEntityAbstract
 	
 		parent::__loadDaoMap();
 	
+		DaoMap::createIndex('isRead');
+		DaoMap::createIndex('sendType');
 		DaoMap::createIndex('transId');
 		DaoMap::createIndex('type');
 		DaoMap::createIndex('subject');
