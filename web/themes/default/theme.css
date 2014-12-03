@@ -61,7 +61,7 @@ a:link,a {
 }
 
 #top-menu-div {
-	padding: 24px 0;
+	padding: 18px 0 5px 0;
 }
 
 .user-menu-bar .navbar {
@@ -147,6 +147,9 @@ a:link,a {
 	font-size: 20px;
 }
 
+.nav.navbar-nav.top-menu{
+	margin-top: 10px;
+}
 .top-menu .dropdown {
 	position: static;
 }
@@ -384,4 +387,18 @@ a.rel-type-selector:hover,a.rel-type-selector:active,a.rel-type-selector:focus,.
 }
 .property-list .row.item_row:last-child {
 	border-bottom: none;
+}
+
+#logo {
+	background: #fff url(images/logo.png) bottom left no-repeat;
+	background-size: 100% auto;
+	-webkit-background-size: 100% auto;
+	-moz-background-size: 100% auto;
+	-moz-background-size: 100% auto;
+	-webkit-background-size: 100% auto;
+	-o-background-size: 100% auto;
+	margin: 10px 0 0 0;
+	min-width: 200px;
+	max-width: 238px;
+	min-height: 70px;
 }
