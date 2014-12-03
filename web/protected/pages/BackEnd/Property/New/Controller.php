@@ -81,12 +81,15 @@ class Controller extends BackEndPageAbstract
 			if(!is_array($propertyObj) || count($propertyObj) === 0)
 				throw new Exception('System Error: can access provided information, insuffient data provided.');
 			
-// 			$addressObj = $propertyObj['address'];
-// 			$addrKey = Address::genKey($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
-// 			if(!($address = Address::getByKey($addrKey)) instanceof Address)
-// 				$address = Address::create($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
-// 			$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']))
-// 				->addUser(Core::getUser(), $role);
+			if(!isset($propertyObj['sKey']) || !($property = Property::getPropertyByKey(trim($propertyObj['sKey']))) instanceof Property)
+			{
+				$addressObj = $propertyObj['address'];
+				$addrKey = Address::genKey($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
+				if(!($address = Address::getByKey($addrKey)) instanceof Address)
+					$address = Address::create($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
+				$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']));
+			}
+			$property->addUser(Core::getUser(), $role);
 			$results['url'] = '/backend/property/' . $property->getSKey() . '.html';
 			
 			Dao::commitTransaction();

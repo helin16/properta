@@ -69,7 +69,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					tmp.result = tmp.me.getResp(param, false, true);
 					if(!tmp.result || !tmp.result.url) 
 						throw 'System Error: no returns';
-//					window.location = tmp.result.url;
+					window.location = tmp.result.url;
 				} catch (e) {
 					tmp.me.showModalBox('<h4 class="text-danger">ERROR</h4>', e, false);
 					$(tmp.me._htmlIDs.itemDivId).show();
