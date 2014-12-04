@@ -10,7 +10,7 @@ class SchemaGenerator
 {
 	private $isVersioned = array();
 	const MAP_FILE="Map.txt";
-	const EXCLUDING_FILES="BaseEntityAbstract.php;TreeEntityAbstract.php;.svn";
+	const EXCLUDING_FILES="BaseEntityAbstract.php;ConfirmEntityAbstract.php;.svn";
 	
 	const DB_DRIVER="mysql";
 	const DB_PORT="3306";

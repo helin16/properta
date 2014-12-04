@@ -90,6 +90,12 @@ class Controller extends BackEndPageAbstract
 				$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']));
 			}
 			$property->addUser(Core::getUser(), $role);
+			foreach(PropertyRel::getRelationships($property, null, Role::get(Role::ID_AGENT)) as $rel)
+			{
+				if(trim($rel->getUserAccount()->getId()) === trim(Core::getUser()->getId()))
+					continue;
+				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $rel->getUserAccount(), Message::TYPE_SYS, $subject, $body)
+			}
 			$results['url'] = '/backend/property/' . $property->getSKey() . '.html';
 			
 			Dao::commitTransaction();

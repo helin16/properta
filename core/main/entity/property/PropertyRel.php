@@ -6,7 +6,7 @@
  * @subpackage Entity
  * @author     lhe<helin16@gmail.com>
  */
-class PropertyRel extends BaseEntityAbstract
+class PropertyRel extends ConfirmEntityAbstract
 {
 	/**
 	 * The property for this relationship

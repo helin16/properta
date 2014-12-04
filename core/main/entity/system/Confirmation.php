@@ -9,11 +9,11 @@ class Confirmation extends BaseEntityAbstract
 {
 	const TYPE_SYS = 'SYSTEM';
 	/**
-	 * caching the transid
+	 * How many hours before this confirmation expiries
 	 * 
-	 * @var string
+	 * @var int
 	 */
-	private static $_transId = '';
+	const EXPIRY_HOURS = 48;
 	/**
 	 * The id of the entity
 	 * 
@@ -27,24 +27,29 @@ class Confirmation extends BaseEntityAbstract
 	 */
 	private $entityName;
 	/**
-	 * The comments of the log
+	 * The comments of the confirmation
 	 * 
 	 * @var string
 	 */
 	private $comments;
 	/**
-	 * The type of the log
+	 * The type of the confirmation
 	 * 
 	 * @var string
 	 */
 	private $type;
 	/**
-	 * The identifier of that transation
+	 * The identifier of that confirmation
 	 * 
 	 * @var string
 	 */
-	private $transId;
-	
+	private $sKey;
+	/**
+	 * The expiry time
+	 * 
+	 * @var UDate
+	 */
+	private $expiryTime;
 	/**
 	 * Getter for entityId
 	 */
@@ -132,20 +137,43 @@ class Confirmation extends BaseEntityAbstract
 	 * 
 	 * @return string
 	 */
-	public function getTransId() 
+	public function getSKey() 
 	{
-	    return $this->transId;
+	    return $this->sKey;
 	}
 	/**
-	 * Setter for the transId
+	 * Setter for the SKey
 	 * 
-	 * @param string $value The transId
+	 * @param string $value The skey
 	 * 
 	 * @return Confirmation
 	 */
-	public function setTransId($value) 
+	public function setSKey($value) 
 	{
-	    $this->transId = $value;
+	    $this->sKey = $value;
+	    return $this;
+	}
+	/**
+	 * Getter for expiryTime
+	 *
+	 * @return UDate
+	 */
+	public function getExpiryTime() 
+	{
+		if (is_string($this->expiryTime))
+			$this->expiryTime = new UDate($this->expiryTime);
+	    return $this->expiryTime;
+	}
+	/**
+	 * Setter for expiryTime
+	 *
+	 * @param string $value The expiryTime
+	 *
+	 * @return Confirmation
+	 */
+	public function setExpiryTime($value) 
+	{
+	    $this->expiryTime = $value;
 	    return $this;
 	}
 	/**
@@ -155,7 +183,13 @@ class Confirmation extends BaseEntityAbstract
 	public function preSave()
 	{
 		if(trim($this->getTransId()) === '')
-			$this->setTransId(self::getTransKey());
+			$this->setTransId(StringUtilsAbstract::getRandKey(trim($this->getEntityName()) . trim($this->getEntityId()) . trim(new UDate())));
+		if(trim($this->getExpiryTime()) === '')
+		{
+			$expiryTime = new UDate();
+			$expiryTime->modify('+' . self::EXPIRY_HOURS . ' hour');
+			$this->setExpiryTime(trim($expiryTime));
+		}
 	}
 	/**
 	 * (non-PHPdoc)
@@ -165,34 +199,69 @@ class Confirmation extends BaseEntityAbstract
 	{
 		DaoMap::begin($this, 'log');
 	
-		DaoMap::setStringType('transId','varchar', 32);
+		DaoMap::setStringType('sKey','varchar', 32);
 		DaoMap::setStringType('type','varchar', 20);
 		DaoMap::setIntType('entityId');
 		DaoMap::setStringType('entityName','varchar', 100);
-		DaoMap::setStringType('funcName','varchar', 100);
 		DaoMap::setStringType('comments','varchar', 255);
+		DaoMap::setDateType('expiryTime');
 	
 		parent::__loadDaoMap();
 	
-		DaoMap::createIndex('transId');
+		DaoMap::createIndex('sKey');
 		DaoMap::createIndex('entityId');
 		DaoMap::createIndex('entityName');
 		DaoMap::createIndex('type');
-		DaoMap::createIndex('funcName');
 	
 		DaoMap::commit();
 	}
 	/**
-	 * Getting the transid
+	 * confirming the entity
 	 * 
-	 * @param string $salt The salt of making the trans id
+	 * @throws EntityException
 	 * 
-	 * @return string
+	 * @return ConfirmEntityAbstract
 	 */
-	public static function getTransKey($salt = '')
+	public function confirm()
 	{
-		if(trim(self::$_transId) === '')
-			self::$_transId = StringUtilsAbstract::getRandKey($salt);
-		return self::$_transId;
+		$class = trim($this->getEntityName());
+		if(!($entity = $class::get(trim($this->getEntityId()))) instanceof ConfirmEntityAbstract || !($confirm = $entity->getConfirmation()) instanceof Confirmation)
+			throw new EntityException('The entity you are trying to confirm is not found.');
+		if(trim($confirm->getId()) === trim($this->getId()))
+			throw new EntityException('The entity you are trying to confirm is invalid.');
+		$entity->setConfirmation(null)
+			->setActive(true)
+			->save()
+			->addLog(Log::TYPE_SYS, 'Confirmed(=' . $this->getSKey() . ') ' . $class . '(ID=' . trim($this->getEntityId()) . ').');
+		$this->setActive(false)->save();
+		return $entity;
+	}
+	/**
+	 * creating a confirmation
+	 * 
+	 * @param ConfirmEntityAbstract  $entityId
+	 * @param string                 $msg
+	 * @param string                 $type
+	 * @param string                 $comments
+	 * 
+	 * @return Confirmation
+	 */
+	public static function create(ConfirmEntityAbstract &$entity, $type, $comments = '')
+	{
+		$entityName = get_class($entity);
+		$entityId = trim($entity->getId());
+		$msg = 'Confirmation for ' . $entityName . '(ID=' . $entityId . ') is created with expiry:' . trim($entity->getExpiryTime()) . '(UTC)';
+		$confirm = new Confirmation();
+		$confirm->setEntityId($entityId)
+			->setEntityName($entityName)
+			->setType($type)
+			->setComments($comments)
+			->save()
+			->addLog(Log::TYPE_SYS, $msg);
+		$entity->setConfirmation($confirm)
+			->setActive(false)
+			->save()
+			->addLog(Log::TYPE_SYS, $msg);
+		return $entity;
 	}
 }

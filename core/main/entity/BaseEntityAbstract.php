@@ -92,7 +92,7 @@ abstract class BaseEntityAbstract
     public function getCreated()
     {
         if (is_string($this->created))
-        $this->created = new UDate($this->created);
+        	$this->created = new UDate($this->created);
         return $this->created;
     }
     /**

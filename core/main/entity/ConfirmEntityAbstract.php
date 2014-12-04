@@ -8,30 +8,66 @@
 abstract class ConfirmEntityAbstract extends BaseEntityAbstract
 {
 	/**
-	 * B
-	 * @var unknown
+	 * The comfirmation for this entity
+	 * 
+	 * @var Confirmation
 	 */
-	private $confirmedLog = false;
+	private $confirmation = null;
 	/**
-	 * Getter for isConfirmed
+	 * Getter for confirmation
 	 *
-	 * @return bool
+	 * @return Confirmation
 	 */
-	public function getIsConfirmed() 
+	public function getConfirmation() 
 	{
-	    return $this->isConfirmed;
+		$this->loadManyToOne('confirmation');
+	    return $this->confirmation;
 	}
 	/**
-	 * Setter for isConfirmed
+	 * Setter for confirmation
 	 *
-	 * @param bool $value The isConfirmed
+	 * @param Confirmation $value The confirmation
 	 *
 	 * @return ConfirmEntityAbstract
 	 */
-	public function setIsConfirmed($value) 
+	public function setConfirmation($value = null) 
 	{
-	    $this->isConfirmed = $value;
+	    $this->confirmation = $value;
 	    return $this;
+	}
+	/**
+	 * mark an entity to be confimed
+	 * 
+	 * @param string $comments The comments to go to the confirmation
+	 * 
+	 * @throws EntityException
+	 * @return Confirmation
+	 */
+	public function needToConfirm($comments = '')
+	{
+		if(!trim($this->getId()) === '')
+			throw new EntityException('Entity needs to be saved before calling:' . __CLASS__ . '::' . __FILE__ . '().');
+		return Confirmation::create($this, Confirmation::TYPE_SYS, $comments);
+	}
+	/**
+	 * confirming a entity
+	 * 
+	 * @return ConfirmEntityAbstract
+	 */
+	public function confirm()
+	{
+		if(!$this->getConfirmation() instanceof Confirmation)
+			throw new EntityException('Nothing to confirm for ' . get_class($this) . '(ID=' . $this->getId() . ').');
+		return $this->getConfirmation()->confirm();
+	}
+	/**
+	 * (non-PHPdoc)
+	 * @see BaseEntity::__loadDaoMap()
+	 */
+	public function __loadDaoMap()
+	{
+		DaoMap::setManyToOne('confirmation', 'Confirmation', 'comf', true);
+		parent::__loadDaoMap();
 	}
 }
 

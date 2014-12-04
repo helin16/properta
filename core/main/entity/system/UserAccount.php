@@ -6,7 +6,7 @@
  * @subpackage Entity
  * @author     lhe<helin16@gmail.com>
  */
-class UserAccount extends BaseEntityAbstract
+class UserAccount extends ConfirmEntityAbstract
 {
     /**
      * The id of the GUEST account

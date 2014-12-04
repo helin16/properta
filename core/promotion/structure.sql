@@ -81,6 +81,7 @@ CREATE TABLE `propertyrel` (
 	`propertyId` int(10) unsigned NOT NULL DEFAULT 0,
 	`roleId` int(10) unsigned NOT NULL DEFAULT 0,
 	`userAccountId` int(10) unsigned NOT NULL DEFAULT 0,
+	`confirmationId` int(10) unsigned NULL DEFAULT NULL,
 	`active` bool NOT NULL DEFAULT 1,
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
 	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
@@ -90,8 +91,31 @@ CREATE TABLE `propertyrel` (
 	,INDEX (`propertyId`)
 	,INDEX (`roleId`)
 	,INDEX (`userAccountId`)
+	,INDEX (`confirmationId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
+) ENGINE=innodb DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `confirmation`;
+CREATE TABLE `confirmation` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`sKey` varchar(32) NOT NULL DEFAULT '',
+	`type` varchar(20) NOT NULL DEFAULT '',
+	`entityId` int(10) unsigned NOT NULL DEFAULT 0,
+	`entityName` varchar(100) NOT NULL DEFAULT '',
+	`comments` varchar(255) NOT NULL DEFAULT '',
+	`expiryTime` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+	`active` bool NOT NULL DEFAULT 1,
+	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
+	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+	,INDEX (`createdById`)
+	,INDEX (`updatedById`)
+	,INDEX (`sKey`)
+	,INDEX (`entityId`)
+	,INDEX (`entityName`)
+	,INDEX (`type`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `log`;
 CREATE TABLE `log` (
@@ -195,12 +219,14 @@ CREATE TABLE `useraccount` (
 	`password` varchar(40) NOT NULL DEFAULT '',
 	`firstName` varchar(50) NOT NULL DEFAULT '',
 	`lastName` varchar(50) NOT NULL DEFAULT '',
+	`confirmationId` int(10) unsigned NULL DEFAULT NULL,
 	`active` bool NOT NULL DEFAULT 1,
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
 	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
 	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
+	,INDEX (`confirmationId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
 	,INDEX (`password`)
