@@ -34,7 +34,7 @@
 				<div class="panel panel-success signup-form" role="form" id="signup-form">
 					<div class="panel-body">
 						<h4 class="form-signin-heading">New? One Step Signup.</h4>
-						<p>An email will be sent to provided email address with the initial password. Please remember to change it.
+						<div class="msg-div"></div>
 						<div class="form-group">
 							<label for="email">Email:</label>
 							<div class="input-group">
@@ -42,7 +42,6 @@
 								<input id="signup-email" type="email" class="form-control email" placeholder="Your email" onclick="$(this).select();" onkeydown="pageJs.keydown(event, function(){ $('signup-form').down('.signup-btn').click(); });" required autofocus/>
 							</div>
 						</div>
-						<div class="msg-div"></div>
 						<span class="btn btn-lg btn-success pull-right signup-btn" onclick="pageJs.signUp(this);" data-loading-text="Processing ...">Sign me up</span>
 					</div>
 				</div>

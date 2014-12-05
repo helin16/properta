@@ -93,6 +93,11 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 			,'onSuccess': function(sender, param) {
 				try {
 					tmp.result = tmp.me.getResp(param, false, true);
+					if(!tmp.result || !tmp.result.confirmEmail)
+						return;
+					tmp.msg = '<p>An email will be sent to <em><u>' + tmp.result.confirmEmail + '</u></em> with the initial password soon. Please use that to login and change the initial password after you logged in.</p>';
+					tmp.panel.down('.msg-div').update(tmp.me.getAlertBox(tmp.msg).addClassName('alert-success'));
+					tmp.panel.down('input.email').clear();
 				} catch(e) {
 					tmp.panel.down('.msg-div').update(tmp.me.getAlertBox(e).addClassName('alert-danger'));
 				}

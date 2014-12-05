@@ -3,6 +3,7 @@ class Message extends BaseEntityAbstract
 {
 	const TYPE_SYS = 'SYSTEM';
 	const TYPE_USER = 'USER';
+	
 	const SENT_TYPE_NEW = 'NEW';
 	const SENT_TYPE_SENDING = 'SENDING';
 	const SENT_TYPE_SENT = 'SENT';

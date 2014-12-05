@@ -131,6 +131,16 @@ abstract class FrontEndPageAbstract extends TPage
 	    return $array;
 	}
 	/**
+	 * Getting the application name
+	 *
+	 * @return string
+	 */
+	public function getAppName()
+	{
+		$array = Core::getAppMetaInfo();
+		return isset($array['name']) ? trim($array['name']) : '';
+	}
+	/**
 	 * Getting the 404 page
 	 * 
 	 * @param string $title   The title of the page

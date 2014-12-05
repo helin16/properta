@@ -93,6 +93,15 @@ abstract class Core
 			Core::setUser(self::$_storage['user'], self::$_storage['role']);
 		return self::$_storage;
 	}
+	/**
+	 * Getting the application's meta information
+	 * 
+	 * @return multitype:Mixed
+	 */
+	public static function getAppMetaInfo()
+	{
+		return array('name' => Config::get('Application', 'name'), 'version' => Config::get('Application', 'version'));
+	}
 }
 
 ?>

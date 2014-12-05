@@ -8,7 +8,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/" id="logo" title="<%$ AppTitle %>"></a>
+				<a class="navbar-brand" href="/" id="logo" title="<%= $this->getPage()->getAppName() %>"></a>
 			</div>
 			<div class="collapse navbar-collapse" id="top-menu-div">
 				<ul class="nav navbar-nav navbar-right top-menu" >

@@ -137,10 +137,10 @@ class UserAccount extends ConfirmEntityAbstract
      */
     public function preSave()
     {
-    	if(trim($this->getEmail()) === '')
-    		throw new EntityException('Email can NOT be empty', 'exception_entity_useraccount_email_empty');
-    	if(self::getUserByUsername($this->getEmail()) instanceof UserAccount)
-    		throw new EntityException(array('email' => $this->getEmail()),  'exception_entity_useraccount_email_exsits');
+    	if(trim($this->getUsername()) === '')
+    		throw new EntityException('Username can NOT be empty', 'exception_entity_useraccount_username_empty');
+    	if(trim($this->getPassword()) === '')
+    		throw new EntityException('Password can NOT be empty', 'exception_entity_useraccount_password_empty');
     }
     /**
      * (non-PHPdoc)

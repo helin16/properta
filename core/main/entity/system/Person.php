@@ -136,7 +136,7 @@ class Person extends BaseEntityAbstract
         DaoMap::setStringType('lastName', 'varchar', 50);
         parent::__loadDaoMap();
         
-        DaoMap::createUniqueIndex('email');
+        DaoMap::createIndex('email');
         DaoMap::createIndex('firstName');
         DaoMap::createIndex('lastName');
         DaoMap::commit();
@@ -150,7 +150,7 @@ class Person extends BaseEntityAbstract
      * 
      * @return Person
      */
-    public function create($firstName, $lastName, $email)
+    public static function create($firstName, $lastName, $email)
     {
     	$entity = new Person();
     	return $entity->setFirstName(trim($firstName))

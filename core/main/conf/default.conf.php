@@ -7,6 +7,10 @@ return array(
 			'Username' => 'root',
 			'Password' => ''
 		)
+	,'Application' => array(
+		'name' => 'PropertA'
+		,'version' => '1.0.0'
+	)
 );
 
 ?>

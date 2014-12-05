@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<com:THead ID="titleHeader" Title="">
+<com:THead ID="titleHeader" Title="<%= $this->getPage()->getAppName() %>">
 	<meta charset="UTF-8" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="">
-	<meta name="keywords" content="">
+	<meta name="keywords" content="<%= $this->getPage()->getAppName() %>, Online Property Management, Online Property Management Platform">
+	<meta name="description" content="<%= $this->getPage()->getAppName() %> is a free Online Proeprty Management Platform, that allows Owners, Agents and Tenants to communicate, share documents and track issues with each other.">
 	<!-- Google Fonts -->
 	<link href='//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Lato:400,300,400italic,300italic,700,700italic,900' rel='stylesheet' type='text/css'>

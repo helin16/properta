@@ -133,7 +133,7 @@ class Confirmation extends BaseEntityAbstract
 	    return $this;
 	}
 	/**
-	 * Getter for the transId
+	 * Getter for the sKey
 	 * 
 	 * @return string
 	 */
@@ -182,8 +182,8 @@ class Confirmation extends BaseEntityAbstract
 	 */
 	public function preSave()
 	{
-		if(trim($this->getTransId()) === '')
-			$this->setTransId(StringUtilsAbstract::getRandKey(trim($this->getEntityName()) . trim($this->getEntityId()) . trim(new UDate())));
+		if(trim($this->getSKey()) === '')
+			$this->setSKey(StringUtilsAbstract::getRandKey(trim($this->getEntityName()) . trim($this->getEntityId()) . trim(new UDate())));
 		if(trim($this->getExpiryTime()) === '')
 		{
 			$expiryTime = new UDate();
@@ -250,14 +250,13 @@ class Confirmation extends BaseEntityAbstract
 	{
 		$entityName = get_class($entity);
 		$entityId = trim($entity->getId());
-		$msg = 'Confirmation for ' . $entityName . '(ID=' . $entityId . ') is created with expiry:' . trim($entity->getExpiryTime()) . '(UTC)';
 		$confirm = new Confirmation();
 		$confirm->setEntityId($entityId)
 			->setEntityName($entityName)
 			->setType($type)
 			->setComments($comments)
 			->save()
-			->addLog(Log::TYPE_SYS, $msg);
+			->addLog(Log::TYPE_SYS, ($msg = 'Confirmation for ' . $entityName . '(ID=' . $entityId . ') is created with expiry:' . trim($confirm->getExpiryTime()) . '(UTC)'));
 		$entity->setConfirmation($confirm)
 			->setActive(false)
 			->save()

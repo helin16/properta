@@ -181,9 +181,9 @@ CREATE TABLE `person` (
 	PRIMARY KEY (`id`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
+	,INDEX (`email`)
 	,INDEX (`firstName`)
 	,INDEX (`lastName`)
-	,UNIQUE INDEX (`email`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
