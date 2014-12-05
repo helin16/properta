@@ -159,6 +159,19 @@ class Person extends BaseEntityAbstract
     		->save()
     		->addLog(Log::TYPE_SYS, 'Person (' . $firstName . ' ' . $lastName . ') created now with an email address: ' . $email);
     }
+    /**
+     * Getting all the users for this property
+     *
+     * @param Property $property
+     * @param Role     $role
+     *
+     * @return multitype:UserAccount
+     */
+    public static function getUsersForProperty(Property $property, Role $role = null)
+    {
+    	$rels = PropertyRel::getRelationships($property, null, $role);
+    	return array_unique(array_map(create_function('$a', 'return $a->getPerson();'), $rels));
+    }
 }
 
 ?>

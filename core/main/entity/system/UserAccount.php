@@ -210,19 +210,6 @@ class UserAccount extends ConfirmEntityAbstract
     		->save()
     		->addLog(Log::TYPE_SYS, 'UserAccount updated with (username=' . $username . ') with person(id=' . $userAccount->getPerson()->getId() . ')' );
     }
-    /**
-     * Getting all the users for this property
-     * 
-     * @param Property $property
-     * @param Role     $role
-     * 
-     * @return multitype:UserAccount
-     */
-    public static function getUsersForProperty(Property $property, Role $role = null)
-    {
-    	$rels = PropertyRel::getRelationships($property, null, $role);
-    	return array_unique(array_map(create_function('$a', 'return $a->getUserAccount();'), $rels));
-    }
 }
 
 ?>

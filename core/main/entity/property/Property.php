@@ -261,7 +261,7 @@ class Property extends BaseEntityAbstract
      */
     public function addPerson(Person $person, Role $role)
     {
-    	PropertyRel::create($this, $user, $role);
+    	PropertyRel::create($this, $person, $role);
     	return $this;
     }
     /**

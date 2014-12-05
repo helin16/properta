@@ -89,13 +89,7 @@ class Controller extends BackEndPageAbstract
 					$address = Address::create($addressObj['street'], $addressObj['city'], $addressObj['region'], $addressObj['country'], $addressObj['postCode']);
 				$property = Property::create($address, trim($propertyObj['noOfRooms']), trim($propertyObj['noOfBaths']), trim($propertyObj['noOfCars']), trim($propertyObj['description']));
 			}
-			$property->addUser(Core::getUser(), $role);
-			foreach(PropertyRel::getRelationships($property, null, Role::get(Role::ID_AGENT)) as $rel)
-			{
-				if(trim($rel->getUserAccount()->getId()) === trim(Core::getUser()->getId()))
-					continue;
-				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $rel->getUserAccount(), Message::TYPE_SYS, 'A new user wants to ', $body)
-			}
+			$property->addPerson(Core::getUser()->getPerson(), $role);
 			$results['url'] = '/backend/property/' . $property->getSKey() . '.html';
 			
 			Dao::commitTransaction();

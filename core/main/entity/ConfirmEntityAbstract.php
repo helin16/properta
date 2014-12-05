@@ -12,7 +12,7 @@ abstract class ConfirmEntityAbstract extends BaseEntityAbstract
 	 * 
 	 * @var Confirmation
 	 */
-	private $confirmation = null;
+	protected $confirmation = null;
 	/**
 	 * Getter for confirmation
 	 *

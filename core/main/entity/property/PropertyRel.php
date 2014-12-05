@@ -92,6 +92,30 @@ class PropertyRel extends ConfirmEntityAbstract
 	    $this->person = $value;
 	    return $this;
 	}
+	public function postSave()
+	{
+		$message = 'Dear {roleName} of property: ' . $this->getProperty()->getAddress() . ', The user list is now changed by' . Core::getUser()->getFullName() . ':<br/><br />';
+		if($this->getActive())
+			$message .= 'A new User (' . $this->getPerson()->getFullName() . ', ' . $this->getPerson()->getEmail() . ') is now a ' . $this->getRole()->getName() . ' of this property';
+		else
+			$message .= 'User(' . $this->getPerson()->getFullName() . ', ' . $this->getPerson()->getFullName() . ') is no longer a ' . $this->getRole()->getName() . ' of this property.';
+		
+		//inform all the owners
+		$owners = Person::getUsersForProperty($this->getProperty(), Role::get(Role::ID_OWNER));
+		foreach($owners as $owner)
+		{
+			if($owner->getId() !== Core::getUser()->getId())
+				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $owner, Message::TYPE_SYS, 'Users changed for Property: ' . $property->getAddress(), str_replace('{roleName}', 'Owner', $message));
+		}
+			
+		//inform all the agents
+		$agents = Person::getUsersForProperty($this->getProperty(), Role::get(Role::ID_AGENT));
+		foreach($agents as $agent)
+		{
+			if($agent->getId() !== Core::getUser()->getId())
+				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $agent, Message::TYPE_SYS, 'Users changed for Property: ' . $property->getAddress(), str_replace('{roleName}', 'Agent', $message));
+		}
+	}
     /**
      * (non-PHPdoc)
      * @see BaseEntity::__loadDaoMap()
