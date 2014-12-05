@@ -21,11 +21,11 @@ class UserAccount extends ConfirmEntityAbstract
      */
     const ID_SYSTEM_ACCOUNT = 42;
     /**
-     * The email
+     * The username
      *
      * @var string
      */
-    private $email;
+    private $username;
     /**
      * The password
      *
@@ -33,80 +33,32 @@ class UserAccount extends ConfirmEntityAbstract
      */
     private $password;
     /**
-     * The first name of the user
+     * the person of the user account
      * 
-     * @var string
+     * @var Person
      */
-    private $firstName;
-    /**
-     * The last name of the user
-     * 
-     * @var string
-     */
-    private $lastName;
-    /**
-     * Getter for firstName
-     *
-     * @return string
-     */
-    public function getFirstName() 
-    {
-        return $this->firstName;
-    }
-    /**
-     * Setter for firstName
-     *
-     * @param string $value The firstName
-     *
-     * @return UserAccount
-     */
-    public function setFirstName($value) 
-    {
-        $this->firstName = $value;
-        return $this;
-    }
-    /**
-     * Getter for lastName
-     *
-     * @return 
-     */
-    public function getLastName() 
-    {
-        return $this->lastName;
-    }
-    /**
-     * Setter for lastName
-     *
-     * @param string $value The lastName
-     *
-     * @return UserAccount
-     */
-    public function setLastName($value) 
-    {
-        $this->lastName = $value;
-        return $this;
-    }
-    /**
-     * Getter for email
-     *
-     * @return 
-     */
-    public function getEmail() 
-    {
-        return $this->email;
-    }
-    /**
-     * Setter for email
-     *
-     * @param string $value The email
-     *
-     * @return UserAccount
-     */
-    public function setEmail($value)
-    {
-        $this->email = $value;
-        return $this;
-    }
+    protected $person;
+   	/**
+   	 * Getter for username
+   	 *
+   	 * @return string
+   	 */
+   	public function getUsername() 
+   	{
+   	    return $this->username;
+   	}
+   	/**
+   	 * Setter for username
+   	 *
+   	 * @param string $value The username
+   	 *
+   	 * @return UserAccount
+   	 */
+   	public function setUsername($value) 
+   	{
+   	    $this->username = $value;
+   	    return $this;
+   	}
     /**
      * getter Password
      *
@@ -139,15 +91,6 @@ class UserAccount extends ConfirmEntityAbstract
         return $this->person;
     }
     /**
-     * The username of the useraccount
-     * 
-     * @return string
-     */
-    public function getUsername()
-    {
-    	return trim($this->getEmail());
-    }
-    /**
      * Setter Person
      *
      * @param Person $Person The person that this useraccount belongs to
@@ -165,7 +108,7 @@ class UserAccount extends ConfirmEntityAbstract
      */
     public function __toString()
     {
-        return $this->getEmail();
+        return $this->getUsername();
     }
     /**
      * Getting the full name of the user
@@ -173,7 +116,7 @@ class UserAccount extends ConfirmEntityAbstract
      */
     public function getFullName()
     {
-    	return trim(trim($this->getFirstName()) . ' ' . trim($this->getLastName()));
+    	return trim($this->getPerson()->getFullName());
     }
     /**
      * (non-PHPdoc)
@@ -206,16 +149,13 @@ class UserAccount extends ConfirmEntityAbstract
     public function __loadDaoMap()
     {
         DaoMap::begin($this, 'ua');
-        DaoMap::setStringType('email', 'varchar', 100);
+        DaoMap::setStringType('username', 'varchar', 100);
         DaoMap::setStringType('password', 'varchar', 40);
-        DaoMap::setStringType('firstName', 'varchar', 50);
-        DaoMap::setStringType('lastName', 'varchar', 50);
+        DaoMap::setManyToOne('person', 'Person');
         parent::__loadDaoMap();
         
-        DaoMap::createUniqueIndex('email');
+        DaoMap::createIndex('username');
         DaoMap::createIndex('password');
-        DaoMap::createIndex('firstName');
-        DaoMap::createIndex('lastName');
         DaoMap::commit();
     }
     /**
@@ -228,47 +168,31 @@ class UserAccount extends ConfirmEntityAbstract
      * @throws Exception
      * @return Ambigous <BaseEntityAbstract>|NULL
      */
-    public static function getUserByEmailAndPassword($email, $password, $noHashPass = false)
+    public static function getUserByUsernameAndPassword($username, $password, $noHashPass = false)
     {
     	$query = self::getQuery();
-    	$userAccounts = self::getAllByCriteria("`email` = :email AND `Password` = :password", array('email' => $email, 'password' => ($noHashPass === true ? $password : sha1($password))), true, 1, 1);
+    	$userAccounts = self::getAllByCriteria("`username` = :username AND `Password` = :password", array('username' => $username, 'password' => ($noHashPass === true ? $password : sha1($password))), true, 1, 1);
     	if(count($userAccounts) > 0)
     		return $userAccounts[0];
     	return null;
-    }
-    /**
-     * Getting UserAccount by username
-     *
-     * @param string $email The email string
-     *
-     * @throws AuthenticationException
-     * @throws Exception
-     * @return Ambigous <BaseEntityAbstract>|NULL
-     */
-    public static function getUserByUsername($email)
-    {
-    	$query = self::getQuery();
-    	$userAccounts = self::getAllByCriteria("`email` = :email", array('email' => $email), false, 1, 1);
-    	if(count($userAccounts) > 0)
-    		return $userAccounts[0];
-    	else
-    		return null;
     }
     /**
      * Creating a new useraccount
      *
      * @param string $email
      * @param string $password
-     * @param Role   $role
+     * @param Person   $person
      *
      * @return UserAccount
      */
-    public static function createUser($email, $password)
+    public static function createUser($username, $password, Person $person)
     {
     	$userAccount = new UserAccount();
     	return $userAccount->setUserName($username)
     		->setPassword($password)
-    		->save();
+    		->setPerson($person)
+    		->save()
+    		->addLog(Log::TYPE_SYS, 'UserAccount created with (username=' . $username . ') with person(id=' . $person->getId() . ')');
     }
     /**
      * Updating an useraccount
@@ -283,7 +207,8 @@ class UserAccount extends ConfirmEntityAbstract
     {
     	return $userAccount->setUserName($username)
     		->setPassword($password)
-    		->save();
+    		->save()
+    		->addLog(Log::TYPE_SYS, 'UserAccount updated with (username=' . $username . ') with person(id=' . $userAccount->getPerson()->getId() . ')' );
     }
     /**
      * Getting all the users for this property

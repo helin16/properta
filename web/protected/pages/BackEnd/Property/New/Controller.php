@@ -94,7 +94,7 @@ class Controller extends BackEndPageAbstract
 			{
 				if(trim($rel->getUserAccount()->getId()) === trim(Core::getUser()->getId()))
 					continue;
-				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $rel->getUserAccount(), Message::TYPE_SYS, $subject, $body)
+				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $rel->getUserAccount(), Message::TYPE_SYS, 'A new user wants to ', $body)
 			}
 			$results['url'] = '/backend/property/' . $property->getSKey() . '.html';
 			

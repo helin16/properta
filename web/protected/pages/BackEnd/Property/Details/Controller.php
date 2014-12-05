@@ -81,7 +81,7 @@ class Controller extends BackEndPageAbstract
 			$stats = $items = array();
 			foreach($property->getLogs(null, true, $pageNo, $pageSize, array(), $stats) as $log)
 			{
-				$fullName = $log->getCreatedBy() instanceof UserAccount ? ($log->getCreatedBy()->getFirstName() . ' ' . $log->getCreatedBy()->getLastName()) : '';
+				$fullName = $log->getCreatedBy() instanceof UserAccount ? ($log->getCreatedBy()->getFullName()) : '';
 				$array = array('comments' => $log->getComments(), 
 						'by' => trim($fullName) === '' ? '' : (trim($log->getCreatedBy()->getId()) === trim(Core::getUser()->getId()) ? $fullName : StringUtilsAbstract::encriptedName($fullName)),
 						'whenUTC' => trim($log->getCreated())

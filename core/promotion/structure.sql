@@ -80,7 +80,7 @@ CREATE TABLE `propertyrel` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 	`propertyId` int(10) unsigned NOT NULL DEFAULT 0,
 	`roleId` int(10) unsigned NOT NULL DEFAULT 0,
-	`userAccountId` int(10) unsigned NOT NULL DEFAULT 0,
+	`personId` int(10) unsigned NOT NULL DEFAULT 0,
 	`confirmationId` int(10) unsigned NULL DEFAULT NULL,
 	`active` bool NOT NULL DEFAULT 1,
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -90,7 +90,7 @@ CREATE TABLE `propertyrel` (
 	PRIMARY KEY (`id`)
 	,INDEX (`propertyId`)
 	,INDEX (`roleId`)
-	,INDEX (`userAccountId`)
+	,INDEX (`personId`)
 	,INDEX (`confirmationId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
@@ -167,6 +167,24 @@ CREATE TABLE `message` (
 	,INDEX (`type`)
 	,INDEX (`subject`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `person`;
+CREATE TABLE `person` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`email` varchar(100) NOT NULL DEFAULT '',
+	`firstName` varchar(50) NOT NULL DEFAULT '',
+	`lastName` varchar(50) NOT NULL DEFAULT '',
+	`active` bool NOT NULL DEFAULT 1,
+	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
+	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+	,INDEX (`createdById`)
+	,INDEX (`updatedById`)
+	,INDEX (`firstName`)
+	,INDEX (`lastName`)
+	,UNIQUE INDEX (`email`)
+) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -215,10 +233,9 @@ CREATE TABLE `systemsettings` (
 DROP TABLE IF EXISTS `useraccount`;
 CREATE TABLE `useraccount` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`email` varchar(100) NOT NULL DEFAULT '',
+	`username` varchar(100) NOT NULL DEFAULT '',
 	`password` varchar(40) NOT NULL DEFAULT '',
-	`firstName` varchar(50) NOT NULL DEFAULT '',
-	`lastName` varchar(50) NOT NULL DEFAULT '',
+	`personId` int(10) unsigned NOT NULL DEFAULT 0,
 	`confirmationId` int(10) unsigned NULL DEFAULT NULL,
 	`active` bool NOT NULL DEFAULT 1,
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
@@ -226,13 +243,12 @@ CREATE TABLE `useraccount` (
 	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
+	,INDEX (`personId`)
 	,INDEX (`confirmationId`)
 	,INDEX (`createdById`)
 	,INDEX (`updatedById`)
+	,INDEX (`username`)
 	,INDEX (`password`)
-	,INDEX (`firstName`)
-	,INDEX (`lastName`)
-	,UNIQUE INDEX (`email`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 
 -- Completed CRUD Setup.

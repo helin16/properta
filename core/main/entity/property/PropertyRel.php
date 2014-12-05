@@ -21,11 +21,11 @@ class PropertyRel extends ConfirmEntityAbstract
 	 */
 	protected $role;
 	/**
-	 * The user of the UserAccount
+	 * The user of the person
 	 * 
-	 * @var UserAccount
+	 * @var Person
 	 */
-	protected $userAccount;
+	protected $person;
 	/**
 	 * Getter for property
 	 *
@@ -71,25 +71,25 @@ class PropertyRel extends ConfirmEntityAbstract
 	    return $this;
 	}
 	/**
-	 * Getter for userAccount
+	 * Getter for person
 	 *
-	 * @return UserAccount
+	 * @return Person
 	 */
-	public function getUserAccount() 
+	public function getPerson() 
 	{
-		$this->loadManyToOne('userAccount');
-	    return $this->userAccount;
+		$this->loadManyToOne('person');
+	    return $this->person;
 	}
 	/**
-	 * Setter for userAccount
+	 * Setter for person
 	 *
-	 * @param UserAccount $value The userAccount
+	 * @param Person $value The person
 	 *
 	 * @return PropertyRel
 	 */
-	public function setUserAccount(UserAccount $value) 
+	public function setPerson(Person $value) 
 	{
-	    $this->userAccount = $value;
+	    $this->person = $value;
 	    return $this;
 	}
     /**
@@ -102,7 +102,7 @@ class PropertyRel extends ConfirmEntityAbstract
         
         DaoMap::setManyToOne('property', 'Property');
         DaoMap::setManyToOne('role', 'Role');
-        DaoMap::setManyToOne('userAccount', 'UserAccount');
+        DaoMap::setManyToOne('person', 'Person');
         
         parent::__loadDaoMap();
         DaoMap::commit();
@@ -111,7 +111,7 @@ class PropertyRel extends ConfirmEntityAbstract
      * Getting the relationships for a user
      * 
      * @param Property    $property
-     * @param UserAccount $user
+     * @param Person      $person
      * @param Role        $role
      * @param bool        $activeOnly
      * @param int         $pageNo
@@ -122,9 +122,9 @@ class PropertyRel extends ConfirmEntityAbstract
      * @throws CoreException
      * @return Ambigous <Ambigous, multitype:, multitype:BaseEntityAbstract >
      */
-    public static function getRelationships(Property $property = null, UserAccount $user = null, Role $role = null, $activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+    public static function getRelationships(Property $property = null, Person $person = null, Role $role = null, $activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
     {
-    	if(!$property instanceof Property && !$user instanceof UserAccount)
+    	if(!$property instanceof Property && !$person instanceof Person)
     		throw new CoreException('At least one of the search criterial should be provided: property or user');
     	$where = array();
     	$param = array();
@@ -133,10 +133,10 @@ class PropertyRel extends ConfirmEntityAbstract
     		$where[]= 'propertyId = ?';
     		$param[] = $property->getId();
     	}
-    	if($user instanceof UserAccount)
+    	if($person instanceof Person)
     	{
-    		$where[] = 'userAccountId = ?';
-    		$param[] = $user->getId();
+    		$where[] = 'personId = ?';
+    		$param[] = $person->getId();
     	}
     	if($role instanceof Role)
     	{
@@ -149,20 +149,20 @@ class PropertyRel extends ConfirmEntityAbstract
      * Creating a propertrel to a user
      * 
      * @param Property    $property
-     * @param UserAccount $user
+     * @param Person      $person
      * @param Role        $role
      * 
      * @return PropertyRel
      */
-    public static function create(Property $property, UserAccount $user, Role $role)
+    public static function create(Property $property, Person $person, Role $role)
     {
-    	$exsitingRels = self::getAllByCriteria('propertyId = ? and userAccountId = ? and roleId = ?', array($property->getId(), $user->getId(), $role->getId()), true, 1, 1);
+    	$exsitingRels = self::getAllByCriteria('propertyId = ? and personId = ? and roleId = ?', array($property->getId(), $person->getId(), $role->getId()), true, 1, 1);
     	if(count($exsitingRels) > 0)
     		return $exsitingRels[0];
-    	$msg = 'User(' . $user->getFirstName() . ') is now a ' . $role->getName() . ' of Property(ID=' . $property->getSKey() . ').';
+    	$msg = 'User(' . $person->getFullName() . ') is now a ' . $role->getName() . ' of Property(ID=' . $property->getSKey() . ').';
     	$rel = new PropertyRel();
     	return $rel->setProperty($property->addLog(Log::TYPE_SYS, $msg, __CLASS__ . '::' . __FUNCTION__))
-    		->setUserAccount($user)
+    		->setPerson($person)
     		->setRole($role)
     		->save()
     		->addLog(Log::TYPE_SYS, $msg, __CLASS__ . '::' . __FUNCTION__);
@@ -171,13 +171,13 @@ class PropertyRel extends ConfirmEntityAbstract
      * deleting the property relationships
      * 
      * @param Property    $property
-     * @param UserAccount $user
+     * @param Person      $person
      * @param Role        $role
      */
-    public static function delete(Property $property, UserAccount $user, Role $role = null)
+    public static function delete(Property $property, Person $person, Role $role = null)
     {
-    	$where = 'propertyId = ? and userAccountId = ?';
-    	$params = array($property->getId(), $user->getId());
+    	$where = 'propertyId = ? and personId = ?';
+    	$params = array($property->getId(), $person->getId());
     	if($role instanceof Role)
     	{
     		$where .= ' AND roleId = ?';

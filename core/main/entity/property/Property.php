@@ -223,20 +223,20 @@ class Property extends BaseEntityAbstract
     /**
      * Getting the relationships for a user
      * 
-     * @param UserAccount $user
-     * @param Role        $role
-     * @param bool        $activeOnly
-     * @param int         $pageNo
-     * @param int         $pageSize
-     * @param array       $orderBy
-     * @param array       $stats
+     * @param Person $person
+     * @param Role   $role
+     * @param bool   $activeOnly
+     * @param int    $pageNo
+     * @param int    $pageSize
+     * @param array  $orderBy
+     * @param array  $stats
      * 
      * @throws CoreException
      * @return Ambigous <Ambigous, multitype:, multitype:BaseEntityAbstract >
      */
-    public function getRelationships(UserAccount $user, Role $role = null, $activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+    public function getRelationships(Person $person, Role $role = null, $activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
     {
-    	return PropertyRel::getRelationships($this, $user, $role, $activeOnly, $pageNo, $pageSize, $orderBy, $stats);
+    	return PropertyRel::getRelationships($this, $person, $role, $activeOnly, $pageNo, $pageSize, $orderBy, $stats);
     }
     /**
      * (non-PHPdoc)
@@ -252,14 +252,14 @@ class Property extends BaseEntityAbstract
     	return parent::getJson($array, $reset);
     }
     /**
-     * adding a user to the property
+     * adding a person to the property
      * 
-     * @param UserAccount $user
-     * @param Role        $role
+     * @param Person $person
+     * @param Role   $role
      * 
      * @return Property
      */
-    public function addUser(UserAccount $user, Role $role)
+    public function addPerson(Person $person, Role $role)
     {
     	PropertyRel::create($this, $user, $role);
     	return $this;
@@ -267,13 +267,13 @@ class Property extends BaseEntityAbstract
     /**
      * removing the property from the user
      * 
-     * @param UserAccount $user The user
-     * @param Role        $role If empty, then delete all from this user
+     * @param Person $person The user
+     * @param Role   $role   If empty, then delete all from this user
      * @return Property
      */
-    public function rmUser(UserAccount $user, Role $role = null)
+    public function rmPerson(Person $person, Role $role = null)
     {
-    	PropertyRel::delete($this, $user, $role);
+    	PropertyRel::delete($this, $person, $role);
     	return $this;
     }
     /**

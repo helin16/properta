@@ -13,15 +13,15 @@ class Message extends BaseEntityAbstract
 	 */
 	private static $_transId = '';
 	/**
-	 * UserAccount the message is send to
+	 * The message is send to
 	 * 
-	 * @var UserAccount
+	 * @var Person
 	 */
 	protected $to;
 	/**
-	 * UserAccount the message is send from
+	 * The message is send from
 	 * 
-	 * @var UserAccount
+	 * @var Person
 	 */
 	protected $from;
 	/**
@@ -63,7 +63,7 @@ class Message extends BaseEntityAbstract
 	/**
 	 * Getter for to
 	 *
-	 * @return UserAccount
+	 * @return Person
 	 */
 	public function getTo() 
 	{
@@ -73,11 +73,11 @@ class Message extends BaseEntityAbstract
 	/**
 	 * Setter for to
 	 *
-	 * @param UserAccount $value The to
+	 * @param Person $value The to
 	 *
 	 * @return Message
 	 */
-	public function setTo(UserAccount $value) 
+	public function setTo(Person $value) 
 	{
 	    $this->to = $value;
 	    return $this;
@@ -85,7 +85,7 @@ class Message extends BaseEntityAbstract
 	/**
 	 * Getter for from
 	 *
-	 * @return UserAccount
+	 * @return Person
 	 */
 	public function getFrom() 
 	{
@@ -95,11 +95,11 @@ class Message extends BaseEntityAbstract
 	/**
 	 * Setter for from
 	 *
-	 * @param UserAccount $value The from
+	 * @param Person $value The from
 	 *
 	 * @return Message
 	 */
-	public function setFrom(UserAccount $value) 
+	public function setFrom(Person $value) 
 	{
 	    $this->from = $value;
 	    return $this;
@@ -257,8 +257,8 @@ class Message extends BaseEntityAbstract
 	
 		DaoMap::setBoolType('isRead');
 		DaoMap::setStringType('sendType','varchar', 10);
-		DaoMap::setManyToOne('to', 'UserAccount');
-		DaoMap::setManyToOne('from', 'UserAccount');
+		DaoMap::setManyToOne('to', 'Person');
+		DaoMap::setManyToOne('from', 'Person');
 		DaoMap::setStringType('type','varchar', 10);
 		DaoMap::setStringType('subject','varchar', 100);
 		DaoMap::setStringType('body','longtext');
@@ -290,15 +290,15 @@ class Message extends BaseEntityAbstract
 	/**
 	 * creating a message
 	 * 
-	 * @param UserAccount $from
-	 * @param UserAccount $to
+	 * @param Person  $from
+	 * @param Person  $to
 	 * @param unknown $type
 	 * @param unknown $subject
 	 * @param unknown $body
 	 * 
 	 * @return Message
 	 */
-	public static function create(UserAccount $from, UserAccount $to, $type, $subject, $body)
+	public static function create(Person $from, Person $to, $type, $subject, $body)
 	{
 		$entity = new Message();
 		return $entity->setTo($to)
