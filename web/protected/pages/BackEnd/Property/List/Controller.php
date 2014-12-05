@@ -46,7 +46,7 @@ class Controller extends BackEndPageAbstract
 			$where = array(1);
 			$params = array();
 			$stats = array();
-			Property::getQuery()->eagerLoad('Property.rels', 'inner join', 'pro_rels', 'pro_rels.propertyId = pro.id AND pro_rels.userAccountId = ' . Core::getUser()->getId());
+			Property::getQuery()->eagerLoad('Property.rels', 'inner join', 'pro_rels', 'pro_rels.propertyId = pro.id AND pro_rels.personId = ' . Core::getUser()->getPerson()->getId());
 			$objects = Property::getAllByCriteria(implode(' AND ', $where), $params, false, $pageNo, $pageSize, array(), $stats);
 			
 			$results['pageStats'] = $stats;
@@ -54,7 +54,7 @@ class Controller extends BackEndPageAbstract
 			foreach($objects as $obj)
 			{
 				$array = $obj->getJson();
-				$array['curRoleIds'] = array_map(create_function('$a', 'return intval($a->getId());'), Role::getPropertyRoles($obj, Core::getUser()));
+				$array['curRoleIds'] = array_map(create_function('$a', 'return intval($a->getId());'), Role::getPropertyRoles($obj, Core::getUser()->getPerson()));
 				$results['items'][] = $array;
 			}
 		}
