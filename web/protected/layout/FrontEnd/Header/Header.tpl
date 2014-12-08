@@ -29,7 +29,7 @@
        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 user-menu-bar" >
        	   <com:TPanel ID="user_menu_not_login" CssClass="top-bar-menu pull-right">
       	   		<ul class="nav nav-pills" role="tablist">
-      	   			<li><a data-toggle="modal" href="/login.html"><i class="fa fa-user"></i> Member Login</a></li>
+      	   			<li><a href="/login.html"><i class="fa fa-user"></i> Member Login</a></li>
       	   			<li><a href="/login.html"><i class="fa fa-male"></i> Sign Up</a></li>
       	   		</ul>
            </com:TPanel><!-- end top-bar-menu -->
