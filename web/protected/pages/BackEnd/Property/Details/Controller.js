@@ -268,9 +268,10 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			tmp.hasRole = false;
 			tmp.tr.insert({'bottom': new Element('td', {'role': role.id})
 				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'visible-xs visible-sm visible-lg visible-md'})
-					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
-					.observe('click', function(){
-						tmp.me._getNewUserPanel(this);
+					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) 
+						.observe('click', function(){
+							tmp.me._getNewUserPanel(this);
+						})
 					})
 				})
 			});
@@ -397,7 +398,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 				.insert({'bottom': tmp.me._can.changeDetails !== true ? '' :  new Element('li', {'role': 'presentation'})
 					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"})
 						.update('Files ') 
-						.insert({'bottom': (tmp.me._counts.files ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) })
+						.insert({'bottom': (tmp.me._counts.files ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) 
+						})
 					})
 				})
 				.insert({'bottom': new Element('li', {'role': 'presentation'})
