@@ -1,0 +1,1 @@
+<com:TCallback ID="searchPersonBtn" onCallback="searchPerson" />
