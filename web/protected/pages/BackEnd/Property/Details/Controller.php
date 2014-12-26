@@ -33,6 +33,8 @@ class Controller extends BackEndPageAbstract
 		$js .= "pageJs.setHTMLIDs(" . json_encode(array('itemDivId' => 'item-details-div')) . ")";
 		$js .= ".setCallbackId('getHistory', '" . $this->getHistoryBtn->getUniqueID() . "')";
 		$js .= ".setCallbackId('getPeople', '" . $this->getPeopleBtn->getUniqueID() . "')";
+		$js .= ".setCallbackId('getNewPeople', '" . $this->getNewPeopleBtn->getUniqueID() . "')";
+		$js .= ".setCallbackId('addPerson', '" . $this->addPersonBtn->getUniqueID() . "')";
 		$js .= ".setCallbackId('updateDetails', '" . $this->updateDetailsBtn->getUniqueID() . "')";
 		$js .= ".setCallbackId('saveRel', '" . $this->saveRelBtn->getUniqueID() . "')";
 		$js .= ".load(" . json_encode($array) . ");";
@@ -98,6 +100,50 @@ class Controller extends BackEndPageAbstract
 		$param->ResponseData = StringUtilsAbstract::getJson($results, $errors);
 		return $this;
 	}
+	public function getNewPeople($sender, $param) 
+	{
+		$results = $errors = array();
+		try
+		{
+			$stats = $items = array();
+			$people = Person::getAllByCriteria('email like :searchTxt or firstName like :searchTxt or lastName like :searchTxt', array('searchTxt' => '%' . trim($param->CallbackParameter->searchText) . '%' ));
+			foreach($people as $person )
+			{
+				$items[] = $person->getJson();
+			}
+			$results['items'] = $items;
+		}
+		catch(Exception $ex)
+		{
+			$errors[] = $ex->getMessage();
+		}
+		$param->ResponseData = StringUtilsAbstract::getJson($results, $errors);
+		return $this;
+	}
+	public function addPerson($sender, $param) 
+	{
+		$results = $errors = array();
+		try
+		{
+			$stats = $items = array();
+			var_dump($param->CallbackParameter);
+			
+			$person = Person::get(trim($param->CallbackParameter->person->id));
+			if(!$person instanceof Person)
+				throw new Exception('Invalid Person passed in!');
+			$propterty = Property::get(trim($param->CallbackParameter->property->id));
+			if(!$propterty instanceof Property)
+				throw new Exception('Invalid Property passed in!');
+			PropertyRel::create($propterty, $person, $role);
+			$results['items'] = $items;
+		}
+		catch(Exception $ex)
+		{
+			$errors[] = $ex->getMessage();
+		}
+		$param->ResponseData = StringUtilsAbstract::getJson($results, $errors);
+		return $this;
+	}
 	/**
 	 * get people
 	 *
@@ -115,7 +161,7 @@ class Controller extends BackEndPageAbstract
 				throw new Exception('Invalid Property.');
 			
 			$stats = $items = array();
-			foreach(PropertyRel::getAllByCriteria('personId = ? and propertyId = ?', array(Core::getUser()->getPerson()->getId(), $property->getId())) as $ref)
+			foreach(PropertyRel::getAllByCriteria('personId = ? or propertyId = ?', array(Core::getUser()->getPerson()->getId(), $property->getId())) as $ref)
 			{
 				$fullName = $ref->getPerson() instanceof Person ? ($ref->getPerson()->getFullName()) : '';
 				$personId = $ref->getPerson() instanceof Person ? $ref->getPerson()->getId() : '';
@@ -196,6 +242,7 @@ class Controller extends BackEndPageAbstract
 		$results = $errors = array();
 		try
 		{
+			var_dump($param->CallbackParameter);
 			Dao::beginTransaction();
 			if(!isset($param->CallbackParameter->propertyId) || !($property = Property::getPropertyByKey(trim($param->CallbackParameter->propertyId))) instanceof Property)
 				throw new Exception('Invalid Property.');

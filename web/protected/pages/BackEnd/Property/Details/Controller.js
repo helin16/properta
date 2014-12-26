@@ -232,6 +232,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			,'onSuccess': function(sender, param) {
 				try{
 					tmp.result = tmp.me.getResp(param, false, true);
+					console.debug(tmp.result);
 					if(!tmp.result || !tmp.result.items)
 						return;
 					tmp.table = new Element('table', {'class': 'table'})
@@ -247,6 +248,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					$H(tmp.result.items).each(function(item){
 						tmp.tbody.insert({'bottom': tmp.me._getUserRow(item.value) });
 					});
+					tmp.tbody.insert({'top': tmp.me._getNewUserRow() });
 					panel.update(tmp.table).addClassName('loaded');
 				} catch (e) {
 					tmp.me.showModalBox('<h4 class="text-danger">Error</h4>', e, true);
@@ -255,6 +257,122 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			,'onComplete': function() {}
 		});
 		return tmp.me;
+	}
+	,_getNewUserRow: function() {
+		var tmp = {};
+		tmp.me = this;
+		tmp.tr = new Element('tr', {'class': 'prop-rel-row', 'user-id': 'new-user'})
+			.insert({'bottom': new Element('td')
+			});
+		tmp.me._roles.each(function(role){
+			tmp.hasRole = false;
+			tmp.tr.insert({'bottom': new Element('td', {'role': role.id})
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'visible-xs visible-sm visible-lg visible-md'})
+					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
+					.observe('click', function(){
+						tmp.me._getNewUserPanel(this);
+					})
+				})
+			});
+		});
+		return tmp.tr;
+	}
+	,_getNewUserPanel: function(btn) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.me._signRandID(btn);
+		if(!jQuery('#' + btn.id).hasClass('popover-loaded') ) {
+			jQuery('#' + btn.id).popover({
+				'title'    : function(){
+					return new Element('div', {'class': 'new-user-search-box-container', 'role': btn.up('td').readAttribute('role')})
+					.insert({'bottom': new Element('input', {'class': 'new-user-search-box'}) 
+						.observe('keyup', function(event){
+							Event.stop(event);
+							tmp.me.postAjax(tmp.me.getCallbackId('getNewPeople'), {'searchText': $F(this)}, {
+								'onLoading': function() {
+									$$('.new-user-search-box').first().button('loading');
+								}
+								,'onSuccess': function(sender, param) {
+									try{
+										tmp.result = tmp.me.getResp(param, false, true);
+										tmp.serchTxt = $F($$('.new-user-search-box').first());
+										if(tmp.serchTxt.length === 0)
+											$$('.new-user-search-result-container tbody').first().innerHTML = '';
+										tmp.result.items.each(function(user){
+											tmp.me.rowMatched = false;
+											$$('.new-user-search-result-container .new-user-result-row').each(function(item){
+												if(tmp.serchTxt.length && item.retrieve('data').id && item.retrieve('data').id != user.id) {
+													item.remove();
+												}
+												if(tmp.serchTxt.length && item.retrieve('data').id && item.retrieve('data').id == user.id) {
+													tmp.me.rowMatched = true;
+												}
+											});
+											if(tmp.me.rowMatched === false)
+												$$('.new-user-search-result-container tbody').first().insert({'bottom': tmp.me._getUserResultRow(user) });
+										});
+									} catch (e) {
+										tmp.me.showModalBox('<h4 class="text-danger">Error</h4>', e, true);
+									}
+								}
+								,'onComplete': function() {
+									$$('.new-user-search-box').first().button('reset');
+								}
+							});
+						})
+					})
+					.insert({'bottom': new Element('a', {'href': 'javascript: void(0);'})
+						.insert({'bottom': new Element('i', {'class': 'pull-right glyphicon glyphicon-remove'}) })
+						.observe('click', function(event){
+							Event.stop(event);
+							jQuery('#' + btn.id).popover('hide');
+						})
+					})
+					;
+				},
+				'html'     : true, 
+				'placement': 'bottom',
+				'container': 'body', 
+				'trigger'  : 'manual', 
+				'viewport' : {},
+				'content'  : function(){
+					return new Element('table', {'class': 'table table-striped table-hover new-user-search-result-container'})
+						.insert({'bottom': new Element('tbody') });
+				},
+				'template' : '<div class="popover" role="tooltip" style="max-width: none; z-index: 0;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+			})
+			.addClass('popover-loaded');
+		}
+		jQuery('#' + btn.id).popover('toggle');
+		return tmp.me;
+	}
+	,_getUserResultRow: function(row) {
+		var tmp = {};
+		tmp.me = this;
+		return new Element('tr', {'class': 'row container-fluid new-user-result-row'})
+			.store('data',row)
+			.insert({'bottom': new Element('td', {'class': ''}).update(row.firstName) })
+			.insert({'bottom': new Element('td', {'class': ''}).update(row.lastName) })
+			.insert({'bottom': new Element('td', {'class': ''}).update(row.email) })
+			.observe('click', function(event){
+				Event.stop(event);
+				tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'userId': this.retrieve('data').id, 'propertyId': tmp.me._item.sKey, 'roleId': this.up('.popover').down('.new-user-search-box-container').readAttribute('role'), 'action': 'create'}, {
+					'onLoading': function() {
+						$$('.new-user-search-box').first().button('loading');
+					}
+					,'onSuccess': function(sender, param) {
+						try{
+							tmp.result = tmp.me.getResp(param, false, true);
+						} catch (e) {
+							tmp.me.showModalBox('<h4 class="text-danger">Error</h4>', e, true);
+						}
+					}
+					,'onComplete': function() {
+						$$('.new-user-search-box').first().button('reset');
+					}
+				});
+			})
+			;
 	}
 	/**
 	 * Getting the group of tab panels
