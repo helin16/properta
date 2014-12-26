@@ -169,7 +169,7 @@ class Controller extends BackEndPageAbstract
 				{
 					$items[$personId] = array(
 						'id' => $personId,
-						'name' => trim($fullName) === '' ? '' : (trim($personId) === trim(Core::getUser()->getPerson()->getId()) ? $fullName : StringUtilsAbstract::encriptedName($fullName)),
+						'name' => trim($fullName) === '' ? '' : $fullName,
 						'roleIds' => array()
 					);
 				}

@@ -6,6 +6,8 @@
 <com:TCallback ID="addPersonBtn" onCallback="Page.addPerson" />
 <com:TCallback ID="updateDetailsBtn" onCallback="Page.updateDetails" />
 <com:TCallback ID="saveRelBtn" onCallback="Page.saveRel" />
+
+<com:Application.controls.UserAutoComplete.UserAutoComplete/>
 <div class="container backend-div-wrapper">
 	<div id="item-details-div"></div>
 </div>

@@ -250,6 +250,13 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					});
 					tmp.tbody.insert({'top': tmp.me._getNewUserRow() });
 					panel.update(tmp.table).addClassName('loaded');
+					panel.getElementsBySelector('.new-user-btn').each(function(item){
+						tmp.userAutoCompleteJs = new UserAutoCompleteJs(tmp.me);
+						tmp.userAutoCompleteJs.loadPopOver(item, function(selectedData) {
+							console.debug(selectedData);
+						});
+						item.store('userAutoCompleteJs', tmp.userAutoCompleteJs);
+					});
 				} catch (e) {
 					tmp.me.showModalBox('<h4 class="text-danger">Error</h4>', e, true);
 				}
@@ -267,12 +274,11 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.me._roles.each(function(role){
 			tmp.hasRole = false;
 			tmp.tr.insert({'bottom': new Element('td', {'role': role.id})
-				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'visible-xs visible-sm visible-lg visible-md'})
-					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) 
-						.observe('click', function(){
-							tmp.me._getNewUserPanel(this);
-						})
-					})
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md', 'style': 'display: inline-block'})
+					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
+					//.observe('click', function(){
+					//	tmp.me._getNewUserPanel(this);
+					//})
 				})
 			});
 		});
@@ -291,7 +297,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 							Event.stop(event);
 							tmp.me.postAjax(tmp.me.getCallbackId('getNewPeople'), {'searchText': $F(this)}, {
 								'onLoading': function() {
-									$$('.new-user-search-box').first().button('loading');
 								}
 								,'onSuccess': function(sender, param) {
 									try{
@@ -317,7 +322,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 									}
 								}
 								,'onComplete': function() {
-									$$('.new-user-search-box').first().button('reset');
 								}
 							});
 						})
