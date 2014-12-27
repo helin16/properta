@@ -61,7 +61,7 @@ class Message extends BaseEntityAbstract
 	 *
 	 * @var string
 	 */
-	private $transId;
+	private $transId = '';
 	/**
 	 * Getter for to
 	 *
