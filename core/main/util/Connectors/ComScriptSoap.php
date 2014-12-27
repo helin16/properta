@@ -1,5 +1,5 @@
 <?php
-class BmvComScriptSoap
+class ComScriptSoap
 {
 	/**
 	 * @SoapClient

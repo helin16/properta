@@ -1,5 +1,5 @@
 <?php
-class BmvComScriptCURL
+class ComScriptCURL
 {
 	const CURL_TIMEOUT = 360000;
 	/**

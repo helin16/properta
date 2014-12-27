@@ -15,6 +15,12 @@ class Controller extends FrontEndPageAbstract
     protected function _getEndJs()
     {
         $js = parent::_getEndJs();
+        $js .="pageJs.init('#main-form');";
         return $js; 
+    }
+    public function getCaptchaKey()
+    {
+    	$googleRecap = Config::get('google', 'reCaptcha');
+    	return $googleRecap['public-key'] ;
     }
 }
