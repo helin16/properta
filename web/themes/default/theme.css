@@ -201,6 +201,10 @@ a:link,a {
 	color: #09C798 !important;
 }
 
+.lime {
+	color: #73b819 !important;
+}
+
 .highlight {
 	color: #FFFFFF;
 	display: block;
@@ -400,4 +404,37 @@ a.rel-type-selector:hover,a.rel-type-selector:active,a.rel-type-selector:focus,.
 	min-width: 200px;
 	max-width: 238px;
 	min-height: 70px;
+}
+
+.homepage-wrapper #home > .banner {
+	background-image: url('images/parallax-blog.jpg');
+	color: #efefef !important;
+}
+
+.desc-cell {
+	padding-bottom: 15px;
+}
+
+.desc-cell .desc-cell-desc {
+	line-height: 110%;
+	color: #c9c9c9 !important;
+	padding: 0 !important;
+	text-align: left;
+	font-size: 14px;
+	font-weight: 500;
+}
+.signup-now-wrapper {
+	padding: 20px 0;
+}
+.signup-now-wrapper .signup-now{
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 4px;
+	padding: 5px;
+	text-transform: uppercase;
+}
+.signup-now-wrapper .signup-now.lime:hover{
+	background: #73b819;
+	color: #fff !important;
+	border-color: #73b819;
 }
