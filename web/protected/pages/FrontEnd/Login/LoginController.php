@@ -52,14 +52,14 @@ class LoginController extends FrontEndPageAbstract
             UserAccount::createUser($email, sha1($password), ($person = Person::create($email, 'User', $email)));
             
             $appInfo = Core::getAppMetaInfo();
-            Message::create(Core::getUser()->getPerson(), $person, Message::TYPE_SYS, 
+            Message::create(Core::getUser()->getPerson(), $person, 
             	($subject = 'Welcome to ' . $appInfo['name'] . ', you are just one step away from it.') , 
             	'<h3>' . $subject . '</h3>'
             			.'<div>'
             				.'<div>here is your initial login details, please change it after you logged in</div>'
             				.'<div><b>Username: </b>' . $email . ' </div>'
             				.'<div><b>Initial Password: </b>' . $password . ' </div>'
-            			.'</div>'); 
+            			.'</div>',  Message::TYPE_SYS); 
             $results['confirmEmail'] = $email;
         	Dao::commitTransaction();
         }

@@ -1,8 +1,8 @@
 <?php
 class Message extends BaseEntityAbstract
 {
-	const TYPE_SYS = 'SYSTEM';
-	const TYPE_USER = 'USER';
+	const TYPE_EMAIL = 'EMAIL';
+	const TYPE_SMS = 'SMS';
 	
 	const SENT_TYPE_NEW = 'NEW';
 	const SENT_TYPE_SENDING = 'SENDING';
@@ -233,15 +233,6 @@ class Message extends BaseEntityAbstract
 	}
 	/**
 	 * (non-PHPdoc)
-	 * @see BaseEntityAbstract::preSave()
-	 */
-	public function preSave()
-	{
-		if(trim($this->getTransId()) === '')
-			$this->setTransId(self::getTransKey());
-	}
-	/**
-	 * (non-PHPdoc)
 	 * @see BaseEntityAbstract::__toString()
 	 */
 	public function __toString()
@@ -299,7 +290,7 @@ class Message extends BaseEntityAbstract
 	 * 
 	 * @return Message
 	 */
-	public static function create(Person $from, Person $to, $type, $subject, $body)
+	public static function create(Person $from, Person $to, $subject, $body, $type)
 	{
 		$entity = new Message();
 		return $entity->setTo($to)
