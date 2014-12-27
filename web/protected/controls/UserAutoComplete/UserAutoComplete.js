@@ -20,7 +20,7 @@ UserAutoCompleteJs.prototype = {
 			'title'    : function() {
 				return new Element('div', {'class': 'row'})
 					.insert({'bottom': new Element('div', {'class': 'col-xs-10'})
-						.insert({'bottom': new Element('input', {'class': 'form-control input-sm searchtext'}) })
+						.insert({'bottom': new Element('input', {'class': 'form-control input-sm searchtext', 'placeholder': 'Name or Email'}) })
 					})
 					.insert({'bottom': new Element('div', {'class': 'col-xs-2'})
 						.insert({'bottom': new Element('a', {'class': 'btn btn-danger btn-xs'}).update(new Element('i', {'class': 'fa fa-times fa-2x'})) 
@@ -49,7 +49,9 @@ UserAutoCompleteJs.prototype = {
 				appendTo: jQuery('.popover-content', tmp.popoverDiv),
 				deferRequestBy : 300,
 				beforeRender: function(container){
-					container.css('position', '');
+					container.siblings('.new-user-row').remove();
+					jQuery('.searchtext', tmp.popoverDiv).val('');
+					container.css('position', '').css('min-width', '400px');
 				},
 				paramName: 'PRADO_CALLBACK_PARAMETER',
 				params: {
@@ -58,7 +60,6 @@ UserAutoCompleteJs.prototype = {
 				},
 				onSelect: function (suggestion) {
 					tmp.popover.popover('hide');
-					jQuery('.searchtext', tmp.popoverDiv).val('');
 			        if(typeof onSelectFunc === 'function')
 			        	onSelectFunc(suggestion.data);
 			    },
@@ -79,14 +80,23 @@ UserAutoCompleteJs.prototype = {
 						tmp.result.items = tmp.newItems;
 						console.debug(tmp.result.items);
 						
+						
 						if(!tmp.result || !tmp.result.items || tmp.result.items.size() === 0) {
-							jQuery('.popover-content', tmp.popoverDiv).html('')
-								.append(jQuery('<div class="row"/>')
-									.append('<div class="col-sm-4"><input class="form-control" user-auto-new="email" placeholder="Email"/></span>')
-									.append('<div class="col-sm-3"><input class="form-control" user-auto-new="firstName" placeholder="Firstname"/></span>')
-									.append('<div class="col-sm-3"><input class="form-control" user-auto-new="lastName" placeholder="Lastname"/></span>')
+							jQuery('.popover-content', tmp.popoverDiv)
+								.append(jQuery('<div class="row new-user-row"/>')
+									.append('<div class="col-sm-4"><input class="form-control" user-auto-new="email" placeholder="Email" required=true /></div>')
+									.append('<div class="col-sm-3"><input class="form-control" user-auto-new="firstName" placeholder="Firstname"/></div>')
+									.append('<div class="col-sm-3"><input class="form-control" user-auto-new="lastName" placeholder="Lastname"/></div>')
 									.append(jQuery('<div class="col-sm-2" />')
-										.append('<span class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus"></span></span>')
+										.append(jQuery('<span class="btn btn-success btn-sm" />')
+												.append('<span class="glyphicon glyphicon-plus"></span>')
+												.click(function(event) {
+													if(typeof addNewFunc === 'function') {
+														addNewFunc(event);
+													}
+													tmp.popover.popover('hide');
+												})
+										)
 									)
 								);
 						}
@@ -103,8 +113,11 @@ UserAutoCompleteJs.prototype = {
 				formatResult: function (suggestion, currentValue) {
 					return new Element('div', {'class': 'row'})
 						.insert({'bottom': new Element('div', {'class': 'col-sm-4'}).update(suggestion.data.email) })
-						.insert({'bottom': new Element('div', {'class': 'col-sm-4'}).update(suggestion.data.firstName) })
-						.insert({'bottom': new Element('div', {'class': 'col-sm-4'}).update(suggestion.data.lastName) })
+						.insert({'bottom': new Element('div', {'class': suggestion.data.btns ? 'col-sm-3': 'col-sm-4'}).update(suggestion.data.firstName) })
+						.insert({'bottom': new Element('div', {'class': suggestion.data.btns ? 'col-sm-3': 'col-sm-4'}).update(suggestion.data.lastName) })
+						.insert({'bottom': !suggestion.data.btns ? '': new Element('div', {'class': 'col-sm-2'})
+							.insert({'bottom': suggestion.data.btns})
+						})
 						.outerHTML;
 				}
 			})

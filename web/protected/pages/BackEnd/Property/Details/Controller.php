@@ -247,7 +247,7 @@ class Controller extends BackEndPageAbstract
 			if(!isset($param->CallbackParameter->propertyId) || !($property = Property::getPropertyByKey(trim($param->CallbackParameter->propertyId))) instanceof Property)
 				throw new Exception('Invalid Property.');
 			if(!isset($param->CallbackParameter->userId) || !($person = Person::get($param->CallbackParameter->userId)) instanceof Person)
-				throw new Exception('Invalid user.');
+				$person = Person::create($param->CallbackParameter->firstName, $param->CallbackParameter->lastName, $param->CallbackParameter->email);
 			if(!isset($param->CallbackParameter->roleId) )
 				throw new Exception('Invalid roles.');
 			$roles = array();

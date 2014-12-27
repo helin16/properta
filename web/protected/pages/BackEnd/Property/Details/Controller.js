@@ -217,7 +217,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.me = this;
 		tmp.btn = btn;
 		tmp.me._signRandID(tmp.btn);
-		tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'propertyId': tmp.me._item.sKey, 'userId': user.id, 'roleId': roles, 'action': action}, {
+		tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'firstName': user.firstName ? user.firstName : '', 'lastName': user.lastName ? user.lastName : '', 'email': user.email ? user.email : '', 'propertyId': tmp.me._item.sKey, 'userId': user.id, 'roleId': roles, 'action': action}, {
 			'onLoading': function() {
 				tmp.btn.up('.update-rel-panel').down('.msg-panel').update('');
 				jQuery('#' + tmp.btn.id).button('loading');
@@ -291,8 +291,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						.insert({'bottom': tmp.thead = new Element('thead')
 							.insert({'bottom': tmp.theadTR = new Element('tr')
 								.insert({'bottom': new Element('th')
-									.insert({'bottom': new Element('span').update('User') })
-									.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md', 'style': 'display: inline-block !important; padding: 0 3px'})
+									.insert({'bottom': new Element('span', {'class': 'pull-left'}).update('User') })
+									.insert({'bottom': tmp.me._can.changeDetails!== true ? '' : new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md pull-left', 'style': 'padding: 0 3px'})
 										.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
 									})
 								})
@@ -319,16 +319,21 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 							selectedData.name = (selectedData.firstName || selectedData.lastName) ? (selectedData.firstName + ' ' + selectedData.lastName) : selectedData.email;
 							selectedData.roleIds = [];
 							selectedData.newUser = true;
-							tmp.userInlist = false;
-							$$('.prop-rel-row').each(function(item){
-								if(!tmp.userInlist)
-									if(item.readAttribute('user-id') == selectedData.id)
-										tmp.userInlist = true;
-							});
-//							if(!tmp.userInlist)
-								$$('.prop-rel-row[user-id]').first()
-									.insert({'before': tmp.me._getUserRow(selectedData).addClassName('success') });
+							$$('.prop-rel-row[user-id]').first()
+								.insert({'before': tmp.me._getUserRow(selectedData).addClassName('success') });
 //								
+						}
+						,function(event){
+							tmp.newUserData = {};
+							$(event.target).up('.new-user-row').getElementsBySelector('[user-auto-new]').each(function(item){
+								tmp.newUserData[item.readAttribute('user-auto-new')]= $F(item);
+							});
+							tmp.newUserData.id = '';
+							tmp.newUserData.roleIds = [];
+							tmp.newUserData.newUser = true;
+							tmp.newUserData.name = (tmp.newUserData.firstName || tmp.newUserData.lastName) ? (tmp.newUserData.firstName + ' ' + tmp.newUserData.lastName) : tmp.newUserData.email;
+							$$('.prop-rel-row[user-id]').first()
+								.insert({'before': tmp.me._getUserRow(tmp.newUserData).addClassName('success') });
 						});
 						item.store('userAutoCompleteJs', tmp.userAutoCompleteJs);
 					});
