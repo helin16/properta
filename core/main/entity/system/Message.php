@@ -7,6 +7,7 @@ class Message extends BaseEntityAbstract
 	const SENT_TYPE_NEW = 'NEW';
 	const SENT_TYPE_SENDING = 'SENDING';
 	const SENT_TYPE_SENT = 'SENT';
+	const SENT_TYPE_FAILED = 'FAILED';
 	/**
 	 * caching the transid
 	 *

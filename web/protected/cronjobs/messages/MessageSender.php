@@ -1,76 +1,49 @@
 <?php
 require_once dirname(__FILE__) . '/../../../bootstrap.php';
 /**
- * The message sender
+ * The cronjob for the message sending.
  * 
- * @author lhe
+ * @author lin
+ *
  */
 abstract class MessageSender
 {
-	/**
-	 * The executer
-	 */
 	public static function run()
 	{
-		$messages = self::_getMessages();
-		self::_log("Got " . count($messages) . ' messages to send:', __FUNCTION__);
-		foreach($messages as $message) {
+		$start = self::_logMsg("== START: processing Messages ==", __CLASS__, __FUNCTION__);
+		$messages = self::_getAndMarkMessages();
+		self::_logMsg("GOT " . count($messages) . ' Message(s): ', __CLASS__, __FUNCTION__);
+		foreach	($messages as $message){
+			self::_logMsg("    Looping message(ID=" . $message->getId() . ': ', __CLASS__, __FUNCTION__);
 			try {
 				Dao::beginTransaction();
-				self::_log("Processing Message (ID= " . $message->getId() . '):', __FUNCTION__);
-				$message = self::_sendMessage($message);
-				self::_log("Message (ID= " . $message->getId() . ') is NOW sent!', __FUNCTION__);
-				Dao::commitTransaction();
-			} catch (Exception $e) {
-				Dao::rollbackTransaction();
-				self::_log('ERROR When sending Message (ID=' . $message->getId() . '), marked it back to NEW: ' .$e->getMessage() , __FUNCTION__);
-				self::_log('\t::' . $e->getTraceAsString() , __FUNCTION__);
-				$message->setSendType(Message::SENT_TYPE_NEW)
+				EmailSenderAbstract::sendEmail($message->getTo(), $message->getSubject(), $message->getBody());
+				$message->setStatus(Message::SENT_TYPE_SENT)
 					->save();
+				Dao::commitTransaction();
+				
+				self::_logMsg("    SUCCESS sending message(ID=" . $message->getId() . ').', __CLASS__, __FUNCTION__);
+			} catch(Exception $ex) {
+				Dao::rollbackTransaction();
+				$message->setStatus(Message::SENT_TYPE_FAILED)
+					->save();
+				self::_logMsg("    ERROR sending message(ID=" . $message->getId() . ': ' . $ex->getMessage(), __CLASS__, __FUNCTION__);
+				self::_logMsg("    ERROR sending message(ID=" . $message->getId() . ': ' . $ex->getTraceAsString(), __CLASS__, __FUNCTION__);
 			}
 		}
+		$end = new UDate();
+		self::_logMsg("== FINISHED: " . count($messages) . " Message(s) == ", __CLASS__, __FUNCTION__);
 	}
-	/**
-	 * Message sender
-	 * 
-	 * @param Message $message
-	 * 
-	 * @throws Exception
-	 */
-	private static function _sendMessage(Message $message)
-	{
-		EmailSenderAbstract::sendEmail($message->getTo()->getEmail(), $message->getSubject(), $message->getBody());
-		$message->setSendType(Message::SENT_TYPE_SENT)
-			->save();
-		return $message;
-	}
-	/**
-	 * Getting the next batch of message to send
-	 * 
-	 * @return Ambigous <Ambigous, multitype:, multitype:BaseEntityAbstract >
-	 */
-	private static function _getMessages()
-	{
-		$messages = Message::getAllByCriteria('sendType = ?', array(Message::SENT_TYPE_NEW));
-		if(count($messages) > 0)
-		{
-			$ids = array_map(create_function('$a', 'return $a->getId();'), $messages);
-			Message::updateByCriteria('sendType = ?', 'id in (' . implode(', ', array_fill(0, count($ids), '?')) . ')' , array_merge(array(Message::SENT_TYPE_SENDING), $ids));
-		}
-		return $messages;
-	}
-	/**
-	 * logging the message;
-	 * 
-	 * @param string $message
-	 * @param string $funcName
-	 * 
-	 * @return UDate
-	 */
-	private static function _log($message, $funcName)
-	{
-		echo ($now = new UDate()) . "::$funcName::" . $message . "\n"; 
+	private static function _logMsg($msg, $className, $funcName) {
+		$now = new UDate();
+		echo trim($now) . '(UTC)::' . $className . '::' . $funcName . ': ' . $msg . "\n";
 		return $now;
+	}
+	private static function _getAndMarkMessages()
+	{
+		$randId = StringUtilsAbstract::getRandKey();
+		Message::updateByCriteria('transId = ?, status = ?', 'active = 1 and status = ?', array($randId, Message::SENT_TYPE_SENDING, Message::SENT_TYPE_NEW));
+		return Message::getAllByCriteria('transId = ? and status = ?', array($randId, Message::SENT_TYPE_SENDING));
 	}
 }
 
