@@ -327,6 +327,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.panel = panel;
 		tmp.me._uploadedData = {};
 		tmp.fileLists = new Element('div', {'class': 'list-group'});
+		tmp.allFilesSupported = true;
 		for(tmp.i = 0, tmp.file; tmp.file = files[tmp.i]; tmp.i++) {
 			tmp.fileRow = new Element('div', {'class': 'row'}).update( new Element('div', {'class': 'col-lg-6 col-md-6'}).update(tmp.file.name) );
 			if((tmp.extension = tmp.file.name.split('.').pop()) !== '' && tmp.me._acceptableTypes.indexOf(tmp.extension.toLowerCase()) > -1) {
@@ -349,6 +350,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			} else {
 				tmp.fileRow.insert({'bottom': new Element('div', {'class': 'col-lg-6 col-md-6'}).update(new Element('small').update('Not supported file extension: ' + tmp.extension) )})
 				tmp.supported = false;
+				tmp.allFilesSupported = false;
 			}
 			tmp.fileLists.insert({'bottom': new Element('div', {'class': 'list-group-item ' + (tmp.supported === true ? 'list-group-item-success' : 'list-group-item-danger')})
 				.insert({'bottom': tmp.fileRow })
@@ -362,8 +364,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			})
 			.insert({'bottom': tmp.fileLists })
 			.insert({'bottom': new Element('div', {'class': 'panel-footer'})
-				.insert({'bottom': new Element('span', {'class': 'btn btn-success start-upload-btn', 'disabled': !tmp.supported})
-					.update(tmp.supported ? 'Start' : 'Not supported file extension!')
+				.insert({'bottom': new Element('span', {'class': 'btn btn-success start-upload-btn', 'disabled': !tmp.allFilesSupported})
+					.update(tmp.allFilesSupported ? 'Start' : 'Not supported file extension!')
 					.observe('click', function() {
 						console.debug('you clicked the upload file btn');
 						// whatever after upload
