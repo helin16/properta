@@ -33,8 +33,6 @@ class FancyBox extends TClientScript
 			$clientScript->registerHeadScriptFile('jquery.fancybox.thumb', $folder . '/source/helpers/jquery.fancybox-thumbs.js');
 			// Add fancyBox Media helper (this is optional) -->
 			$clientScript->registerHeadScriptFile('jquery.fancybox.media', $folder . '/source/helpers/jquery.fancybox-media.js');
-			
-			$clientScript->registerBeginScript('jquery.noConflict', 'jQuery.noConflict();');
 		}
 	}
 }

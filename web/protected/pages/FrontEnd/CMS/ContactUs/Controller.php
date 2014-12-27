@@ -15,6 +15,6 @@ class Controller extends FrontEndPageAbstract
     protected function _getEndJs()
     {
         $js = parent::_getEndJs();
-        return $js;
+        return $js; 
     }
 }

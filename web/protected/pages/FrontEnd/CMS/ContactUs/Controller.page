@@ -13,16 +13,19 @@
 			</div>
 			<div class="contact-form">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<input type="text" placeholder="Name" class="form-control"
-						id="name" name="name"> <input type="text"
-						placeholder="Email Address" class="form-control" id="email"
-						name="email"> <input type="text" placeholder="Website"
-						class="form-control" id="website" name="website">
+					<input type="text" placeholder="Name" class="form-control" id="name" contact-form="name">
+					<input type="text" placeholder="Email Address" class="form-control" id="email" contact-form="email">
+					<div class="input-group">
+						<div class="input-group-addon">
+							<com:TCaptcha id="captcha" />
+						</div>
+						<input type="text" placeholder="words shows on the right" class="form-control" id="captcha" contact-form="captcha">
+					</div>
 				</div>
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<input type="text" placeholder="Subject" class="form-control" id="subject" name="subject">
-					<textarea placeholder="Message" rows="6" id="comments" style="padding: 20px;height: 133px !important;" name="comments" class="form-control"></textarea>
-					<span class="btn btn-lg btn-primary pull-right" id="submit" value="SEND" >Send Message</span>
+					<input type="text" placeholder="Subject" class="form-control" id="subject" contact-form="subject">
+					<textarea placeholder="Message" rows="6" id="comments" style="padding: 20px;height: 133px !important;" contact-form="comments" class="form-control"></textarea>
+					<span class="btn btn-lg btn-primary pull-right" value="SEND" >Send Message</span>
 				</div>
 			</div>
 			<!-- end contact-form -->
