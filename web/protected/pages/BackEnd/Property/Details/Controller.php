@@ -126,7 +126,7 @@ class Controller extends BackEndPageAbstract
 		try
 		{
 			$stats = $items = array();
-			var_dump($param->CallbackParameter);
+// 			var_dump($param->CallbackParameter);
 			
 			$person = Person::get(trim($param->CallbackParameter->person->id));
 			if(!$person instanceof Person)
@@ -247,13 +247,20 @@ class Controller extends BackEndPageAbstract
 			if(!isset($param->CallbackParameter->propertyId) || !($property = Property::getPropertyByKey(trim($param->CallbackParameter->propertyId))) instanceof Property)
 				throw new Exception('Invalid Property.');
 			if(!isset($param->CallbackParameter->userId) || !($person = Person::get($param->CallbackParameter->userId)) instanceof Person)
-				throw new Exception('Invalid user.');
-			if(!isset($param->CallbackParameter->roleId) || !($role = Role::get($param->CallbackParameter->roleId)) instanceof Role)
-				throw new Exception('Invalid role.');
-			if(!isset($param->CallbackParameter->action) || !in_array(($action = trim($param->CallbackParameter->action)), array('create', 'update', 'delete')))
+				$person = Person::create($param->CallbackParameter->firstName, $param->CallbackParameter->lastName, $param->CallbackParameter->email);
+			if(!isset($param->CallbackParameter->roleId) )
+				throw new Exception('Invalid roles.');
+			$roles = array();
+			foreach ($param->CallbackParameter->roleId as $roleId)
+			{
+				if(!(($role= Role::get($roleId->id)) instanceof Role))
+					throw new Exception('Invalid role.');
+				$roles[]= $role;
+			}
+			if(!isset($param->CallbackParameter->action) || !in_array(($action = trim($param->CallbackParameter->action)), array('create', 'update', 'delete', 'addUser')))
 				throw new Exception('Invalid action.');
 			$curRoleIds = $this->_getCurrentRoleIds($property);
-			$canEdit = false;
+			$canEdit = trim($param->CallbackParameter->action) === 'addUser' ? true :false;
 			foreach($this->_getRoles() as $r)
 			{
 				if($r['changeDetails'] === true && in_array($r['id'], $curRoleIds))
@@ -265,23 +272,31 @@ class Controller extends BackEndPageAbstract
 			if($canEdit === false)
 				throw new Exception('Access denied.');
 			
-			$rels = PropertyRel::getRelationships($property, $person, $role);
-			$item = null;
-			if($action === 'create' )
+			foreach ($roles as $role)
 			{
-				$item = (count($rels) > 0) ?  $rels[0] : PropertyRel::create($property, $person, $role);
+				var_dump($person);
+				$rels = PropertyRel::getRelationships($property, $person, $role);
+				$item = null;
+				if($action === 'create' or $action === 'addUser')
+				{
+					$item = (count($rels) > 0) ?  $rels[0] : PropertyRel::create($property, $person, $role);
+				}
+				else if($action === 'delete' )
+				{
+					if(count($rels) === 0)
+						throw new Exception('System error: there is no such Rel when you are trying to update.');
+					$item = $rels[0]->setActive(false)
+						->save()
+						->addLog(Log::TYPE_SYS, 'The property (SKEY=' . $property->getSKey() . ') is no longer linked user(' . $person->getFullName() . ') with role:' . $role->getName(), __CLASS__ . '::' . __FUNCTION__);
+					$property->addLog(Log::TYPE_SYS, 'User(' . $person->getFullName() . ') is no longer a ' . $role->getName() . ' of this property.', __CLASS__ . '::' . __FUNCTION__);
+				}
+				else
+					throw new Exception('Invalid action.');
+				
+				
+				
 			}
-			else if($action === 'delete' )
-			{
-				if(count($rels) === 0)
-					throw new Exception('System error: there is no such Rel when you are trying to update.');
-				$item = $rels[0]->setActive(false)
-					->save()
-					->addLog(Log::TYPE_SYS, 'The property (SKEY=' . $property->getSKey() . ') is no longer linked user(' . $person->getFullName() . ') with role:' . $role->getName(), __CLASS__ . '::' . __FUNCTION__);
-				$property->addLog(Log::TYPE_SYS, 'User(' . $person->getFullName() . ') is no longer a ' . $role->getName() . ' of this property.', __CLASS__ . '::' . __FUNCTION__);
-			}
-			else
-				throw new Exception('Invalid action.');
+			
 			if(!$item instanceof PropertyRel)
 				throw new Exception('System Error: updating NOT success.');
 			

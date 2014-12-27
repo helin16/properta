@@ -7,6 +7,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,_counts: {} //the counts of the attributes
 	,_roles: [] //the roles
 	,_can: {} //whether this user can do something
+	,_fileReader: null // file uploader
+	,_acceptableTypes: ['csv', 'jpg', 'jpeg', 'png']
 	/**
 	 * Showing the google map
 	 */
@@ -143,28 +145,81 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			.insert({'bottom': new Element('td').update(item.name) });
 		tmp.me._roles.each(function(role){
 			tmp.hasRole = (item.roleIds.indexOf(role.id) > -1);
-			tmp.tr.insert({'bottom': new Element('td')
+			tmp.tr.insert({'bottom': new Element('td', {'role-id': role.id})
 				.insert({'bottom': tmp.me._can.changeDetails !== true ? 
 					new Element('span', {'class': (tmp.hasRole === true ? 'text-success': '')}).update(new Element('span', {'class': (tmp.hasRole === true ? 'glyphicon glyphicon-ok-sign' : '') }))
 					:
-					new Element('input', {'type': 'checkbox', 'checked': tmp.hasRole })
+					new Element('input', {'type': 'checkbox', 'checked': tmp.hasRole, 'role-id': role.id})
 						.observe('click', function() {
-							tmp.me._confirmRel(item, role, $(this), $(this).checked ? 'create' : 'delete');
+							if(!item.newUser)
+								tmp.me._confirmRel(item, [role], $(this), $(this).checked ? 'create' : 'delete');
 						})
 				})
 			});
 		});
+		if(item.newUser){
+			tmp.tr.getElementsBySelector('td').pop()
+			.insert({'bottom': new Element('div', {'class': 'new-user-btn-group pull-right'})
+				.insert({'bottom': new Element('a', {'class': 'user-save-btn', 'href': 'javascript: void(0)'})
+					.insert({'bottom': new Element('i', {'class': 'fa fa-floppy-o', 'style': 'padding: 0 2px'}) 
+						.observe('click', function(){
+							tmp.newUserRoles = [];
+							$(this).up('.prop-rel-row').getElementsBySelector('[role-id]').each(function(item){
+								if(item.checked)
+									tmp.newUserRoles.push( {'id': item.readAttribute('role-id')} );
+							});
+							tmp.me._confirmRel($(this).up('.prop-rel-row').retrieve('data'), tmp.newUserRoles, this, 'addUser');
+						})
+					})
+				})
+				.insert({'bottom': new Element('a', {'class': 'user-save-btn', 'href': 'javascript: void(0)'})
+					.insert({'bottom': new Element('i', {'class': 'fa fa-times', 'style': 'padding: 0 2px'}) 
+						.observe('click', function(){
+							tmp.me._confirmDelUserRel(this,this.up('.prop-rel-row').retrieve('data'));
+						})
+					})
+				})
+			});
+		}
 		return tmp.tr;
+	}
+	/**
+	 * show the panel of displaying the confirmation box for adding a propertyrel
+	 */
+	,_confirmDelUserRel: function (btn, user) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newDiv = new Element('div', {'class': 'update-rel-panel'})
+			.insert({'bottom': new Element('div').update('You are about to remove' + ' user(' + user.name + ') for this property.')})
+			.insert({'bottom': new Element('div').update('Countinue?')})
+			.insert({'bottom': new Element('div', {'class': 'msg-panel'}) })
+			.insert({'bottom': new Element('div', {'class': 'row'})
+				.insert({'bottom': new Element('span', {'class': 'col-sm-4 btn btn-danger', 'data-loading-text': "Saving ..."})
+					.update('YES')
+					.observe('click', function(){
+						btn.up('.prop-rel-row').remove();
+						tmp.me.hideModalBox();
+					})
+				})
+				.insert({'bottom': new Element('span', {'class': 'col-sm-4 col-sm-offset-4 btn btn-default'})
+					.update('NO')
+					.observe('click', function(){
+						tmp.me.hideModalBox();
+					})
+				})
+			});
+		tmp.me.showModalBox('Confirm', tmp.newDiv, false);
+		return tmp.me;
 	}
 	/**
 	 * Ajax: creating PropertyRef
 	 */
-	,_submitRel: function (btn, user, role, action) {
+	,_submitRel: function (btn, user, roles, action) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.btn = btn;
 		tmp.me._signRandID(tmp.btn);
-		tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'propertyId': tmp.me._item.sKey, 'userId': user.id, 'roleId': role.id, 'action': action}, {
+		tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'firstName': user.firstName ? user.firstName : '', 'lastName': user.lastName ? user.lastName : '', 'email': user.email ? user.email : '', 'propertyId': tmp.me._item.sKey, 'userId': user.id, 'roleId': roles, 'action': action}, {
 			'onLoading': function() {
 				tmp.btn.up('.update-rel-panel').down('.msg-panel').update('');
 				jQuery('#' + tmp.btn.id).button('loading');
@@ -192,18 +247,18 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	/**
 	 * show the panel of displaying the confirmation box for adding a propertyrel
 	 */
-	,_confirmRel: function (user, role, btn, action) {
+	,_confirmRel: function (user, roles, btn, action) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.newDiv = new Element('div', {'class': 'update-rel-panel'})
-			.insert({'bottom': new Element('div').update('You are about to ' + (action.strip() === 'create' ? 'add' : 'remove') + ' user(' + user.name + ') to the ' + role.name + ' of this property.')})
+			.insert({'bottom': new Element('div').update('You are about to ' + (((action.strip() === 'create') || (action.strip() === 'addUser') ) ? 'add' : 'remove') + ' user (' + user.name + ')' + ((action.strip() === 'addUser') ? ' to ' : (' to the ' + roles.name + ' of ')) + 'this property.')})
 			.insert({'bottom': new Element('div').update('Countinue?')})
 			.insert({'bottom': new Element('div', {'class': 'msg-panel'}) })
 			.insert({'bottom': new Element('div', {'class': 'row'})
 				.insert({'bottom': new Element('span', {'class': 'col-sm-4 btn btn-' + (action.strip()  === 'create' ? 'primary' : 'danger'), 'data-loading-text': "Saving ..."})
 					.update('YES')
 					.observe('click', function(){
-						tmp.me._submitRel(this, user, role, action);
+						tmp.me._submitRel(this, user, roles, action);
 					})
 				})
 				.insert({'bottom': new Element('span', {'class': 'col-sm-4 col-sm-offset-4 btn btn-default'})
@@ -219,6 +274,115 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		return tmp.me;
 	}
 	/**
+	 * getting file manager
+	 */
+	,_showFileManager: function(panel) {
+		var tmp = {};
+		tmp.me = this;
+		if(panel.hasClassName('loaded'))
+			return tmp.me;
+		tmp.me._fileReader = new FileReader();
+		
+		tmp.FileUploadDiv = new Element('div',  {'class': 'panel panel-default drop_file_div', 'title': 'You can drag multiple files here!'})
+		.insert({'bottom': new Element('div', {'class': 'panel-body'})
+			.insert({'bottom': new Element('div', {'class': 'form-group center-block text-left', 'style': 'width: 50%'})
+				.insert({'bottom': new Element('label').update('Drop you files here or select your file below:') })
+				.insert({'bottom': tmp.inputFile = new Element('input', {'type': 'file', 'style': 'display: none;', 'multiple': true}) 
+					.observe('change', function(event) {
+						tmp.me._readFiles(event.target.files, panel);
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'clearfix'}) })
+				.insert({'bottom': new Element('span', {'class': 'btn btn-success clearfix'})
+					.update('Click to select your file')
+					.observe('click', function(event) {
+						tmp.inputFile.click();
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'clearfix'}) })
+				.insert({'bottom': new Element('small').update('ONLY ACCEPT file formats: ' + tmp.me._acceptableTypes.join(', ')) })
+			})
+		})
+		.observe('dragover', function(evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+			evt.dataTransfer.dropEffect = 'copy';
+		})
+		.observe('drop', function(evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+			tmp.me._readFiles(evt.dataTransfer.files);
+		})
+	;
+		
+		panel.addClassName('loaded').update(new Element('div', {'class': 'file-upload-div'})
+			.insert({'bottom': tmp.FileUploadDiv})
+		);
+		return tmp.me;
+	}
+	
+	,_readFiles: function(files, panel) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.panel = panel;
+		tmp.me._uploadedData = {};
+		tmp.fileLists = new Element('div', {'class': 'list-group'});
+		tmp.allFilesSupported = true;
+		for(tmp.i = 0, tmp.file; tmp.file = files[tmp.i]; tmp.i++) {
+			tmp.fileRow = new Element('div', {'class': 'row'}).update( new Element('div', {'class': 'col-lg-6 col-md-6'}).update(tmp.file.name) );
+			if((tmp.extension = tmp.file.name.split('.').pop()) !== '' && tmp.me._acceptableTypes.indexOf(tmp.extension.toLowerCase()) > -1) {
+				tmp.me._fileReader = new FileReader();
+				tmp.me._fileReader.onload = function(event) {
+					event.target.result.split(/\r\n|\n|\r/).each(function(line) {
+						if(line !== null && !line.blank()) {
+							tmp.cols = [];
+							line.split(',').each(function(col) {
+								if(col !== null && !col.blank()) {
+									tmp.cols.push(col.strip());
+								}
+							})
+							tmp.key = tmp.cols.join(',');
+						}
+					})
+				}
+				tmp.me._fileReader.readAsText(tmp.file);
+				tmp.supported = true;
+			} else {
+				tmp.fileRow.insert({'bottom': new Element('div', {'class': 'col-lg-6 col-md-6'}).update(new Element('small').update('Not supported file extension: ' + tmp.extension) )})
+				tmp.supported = false;
+				tmp.allFilesSupported = false;
+			}
+			tmp.fileLists.insert({'bottom': new Element('div', {'class': 'list-group-item ' + (tmp.supported === true ? 'list-group-item-success' : 'list-group-item-danger')})
+				.insert({'bottom': tmp.fileRow })
+			});
+		}
+		$(tmp.panel).update(
+			new Element('div', {'class': 'panel panel-default'})
+			.insert({'bottom': new Element('div', {'class': 'panel-heading'})
+				.update('Files Selected:')
+				.insert({'bottom': new Element('small', {'class': 'pull-right'}).update('ONLY ACCEPT file formats: ' + tmp.me._acceptableTypes.join(', ')) })
+			})
+			.insert({'bottom': tmp.fileLists })
+			.insert({'bottom': new Element('div', {'class': 'panel-footer'})
+				.insert({'bottom': new Element('span', {'class': 'btn btn-success start-upload-btn', 'disabled': !tmp.allFilesSupported})
+					.update(tmp.allFilesSupported ? 'Start' : 'Not supported file extension!')
+					.observe('click', function() {
+						console.debug('you clicked the upload file btn');
+						// whatever after upload
+					})
+				})
+				.insert({'bottom': new Element('span', {'class': 'btn btn-warning pull-right'})
+					.update('Cancel')
+					.observe('click', function(){
+						tmp.me._showFileManager($(tmp.panel).removeClassName('loaded') );
+					})
+				})
+			})
+		);
+		return tmp.me;
+	}
+	
+	/**
 	 * getting the list of people for this property
 	 */
 	,_showPeople: function(panel) {
@@ -232,13 +396,17 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			,'onSuccess': function(sender, param) {
 				try{
 					tmp.result = tmp.me.getResp(param, false, true);
-					console.debug(tmp.result);
 					if(!tmp.result || !tmp.result.items)
 						return;
 					tmp.table = new Element('table', {'class': 'table'})
-						.insert({'bottom': new Element('thead')
+						.insert({'bottom': tmp.thead = new Element('thead')
 							.insert({'bottom': tmp.theadTR = new Element('tr')
-								.insert({'bottom': new Element('th').update('User') })
+								.insert({'bottom': new Element('th')
+									.insert({'bottom': new Element('span', {'class': 'pull-left'}).update('User') })
+									.insert({'bottom': tmp.me._can.changeDetails!== true ? '' : new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md pull-left', 'style': 'padding: 0 3px'})
+										.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
+									})
+								})
 							})
 						})
 						.insert({'bottom': tmp.tbody = new Element('tbody') });
@@ -248,12 +416,35 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					$H(tmp.result.items).each(function(item){
 						tmp.tbody.insert({'bottom': tmp.me._getUserRow(item.value) });
 					});
-					tmp.tbody.insert({'top': tmp.me._getNewUserRow() });
+					
+					
+					
 					panel.update(tmp.table).addClassName('loaded');
 					panel.getElementsBySelector('.new-user-btn').each(function(item){
-						tmp.userAutoCompleteJs = new UserAutoCompleteJs(tmp.me);
+						tmp.exsitingPersonIds = [];
+						$$('.prop-rel-row').each(function(item){
+							tmp.exsitingPersonIds.push(item.readAttribute('user-id'));
+						});
+						tmp.userAutoCompleteJs = new UserAutoCompleteJs(tmp.me, tmp.exsitingPersonIds);
 						tmp.userAutoCompleteJs.loadPopOver(item, function(selectedData) {
-							console.debug(selectedData);
+							selectedData.name = (selectedData.firstName || selectedData.lastName) ? (selectedData.firstName + ' ' + selectedData.lastName) : selectedData.email;
+							selectedData.roleIds = [];
+							selectedData.newUser = true;
+							$$('.prop-rel-row[user-id]').first()
+								.insert({'before': tmp.me._getUserRow(selectedData).addClassName('success') });
+//								
+						}
+						,function(event){
+							tmp.newUserData = {};
+							$(event.target).up('.new-user-row').getElementsBySelector('[user-auto-new]').each(function(item){
+								tmp.newUserData[item.readAttribute('user-auto-new')]= $F(item);
+							});
+							tmp.newUserData.id = '';
+							tmp.newUserData.roleIds = [];
+							tmp.newUserData.newUser = true;
+							tmp.newUserData.name = (tmp.newUserData.firstName || tmp.newUserData.lastName) ? (tmp.newUserData.firstName + ' ' + tmp.newUserData.lastName) : tmp.newUserData.email;
+							$$('.prop-rel-row[user-id]').first()
+								.insert({'before': tmp.me._getUserRow(tmp.newUserData).addClassName('success') });
 						});
 						item.store('userAutoCompleteJs', tmp.userAutoCompleteJs);
 					});
@@ -270,16 +461,13 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.me = this;
 		tmp.tr = new Element('tr', {'class': 'prop-rel-row', 'user-id': 'new-user'})
 			.insert({'bottom': new Element('td')
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md', 'style': 'display: "inline-block !important"'})
+					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
+				})
 			});
 		tmp.me._roles.each(function(role){
 			tmp.hasRole = false;
-			tmp.tr.insert({'bottom': new Element('td', {'role': role.id})
-				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md', 'style': 'display: inline-block'})
-					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
-					//.observe('click', function(){
-					//	tmp.me._getNewUserPanel(this);
-					//})
-				})
+			tmp.tr.insert({'bottom': new Element('td', {'class': 'new-user-role', 'role': role.id})
 			});
 		});
 		return tmp.tr;
@@ -403,6 +591,9 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"})
 						.update('Files ') 
 						.insert({'bottom': (tmp.me._counts.files ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) 
+						})
+						.observe('click', function() {
+							tmp.me._showFileManager($($(this).readAttribute('aria-controls')).down('.panel-body'));
 						})
 					})
 				})
