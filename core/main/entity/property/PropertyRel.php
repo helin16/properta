@@ -105,7 +105,7 @@ class PropertyRel extends ConfirmEntityAbstract
 		foreach($owners as $owner)
 		{
 			if($owner->getId() !== Core::getUser()->getId())
-				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $owner, 'Users changed for Property: ' . $this->getProperty()->getAddress(), str_replace('{roleName}', 'Owner', $message), Message::TYPE_EMAIL);
+				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT)->getPerson(), $owner, 'Users changed for Property: ' . $this->getProperty()->getAddress(), str_replace('{roleName}', 'Owner', $message), Message::TYPE_EMAIL);
 		}
 			
 		//inform all the agents
@@ -113,7 +113,7 @@ class PropertyRel extends ConfirmEntityAbstract
 		foreach($agents as $agent)
 		{
 			if($agent->getId() !== Core::getUser()->getId())
-				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT), $agent, 'Users changed for Property: ' . $this->getProperty()->getAddress(), str_replace('{roleName}', 'Agent', $message), Message::TYPE_EMAIL);
+				Message::create(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT)->getPerson(), $agent, 'Users changed for Property: ' . $this->getProperty()->getAddress(), str_replace('{roleName}', 'Agent', $message), Message::TYPE_EMAIL);
 		}
 	}
     /**
