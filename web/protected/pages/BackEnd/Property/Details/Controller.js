@@ -143,28 +143,81 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			.insert({'bottom': new Element('td').update(item.name) });
 		tmp.me._roles.each(function(role){
 			tmp.hasRole = (item.roleIds.indexOf(role.id) > -1);
-			tmp.tr.insert({'bottom': new Element('td')
+			tmp.tr.insert({'bottom': new Element('td', {'role-id': role.id})
 				.insert({'bottom': tmp.me._can.changeDetails !== true ? 
 					new Element('span', {'class': (tmp.hasRole === true ? 'text-success': '')}).update(new Element('span', {'class': (tmp.hasRole === true ? 'glyphicon glyphicon-ok-sign' : '') }))
 					:
-					new Element('input', {'type': 'checkbox', 'checked': tmp.hasRole })
+					new Element('input', {'type': 'checkbox', 'checked': tmp.hasRole, 'role-id': role.id})
 						.observe('click', function() {
-							tmp.me._confirmRel(item, role, $(this), $(this).checked ? 'create' : 'delete');
+							if(!item.newUser)
+								tmp.me._confirmRel(item, [role], $(this), $(this).checked ? 'create' : 'delete');
 						})
 				})
 			});
 		});
+		if(item.newUser){
+			tmp.tr.getElementsBySelector('td').pop()
+			.insert({'bottom': new Element('div', {'class': 'new-user-btn-group pull-right'})
+				.insert({'bottom': new Element('a', {'class': 'user-save-btn', 'href': 'javascript: void(0)'})
+					.insert({'bottom': new Element('i', {'class': 'fa fa-floppy-o', 'style': 'padding: 0 2px'}) 
+						.observe('click', function(){
+							tmp.newUserRoles = [];
+							$(this).up('.prop-rel-row').getElementsBySelector('[role-id]').each(function(item){
+								if(item.checked)
+									tmp.newUserRoles.push( {'id': item.readAttribute('role-id')} );
+							});
+							tmp.me._confirmRel($(this).up('.prop-rel-row').retrieve('data'), tmp.newUserRoles, this, 'addUser');
+						})
+					})
+				})
+				.insert({'bottom': new Element('a', {'class': 'user-save-btn', 'href': 'javascript: void(0)'})
+					.insert({'bottom': new Element('i', {'class': 'fa fa-times', 'style': 'padding: 0 2px'}) 
+						.observe('click', function(){
+							tmp.me._confirmDelUserRel(this,this.up('.prop-rel-row').retrieve('data'));
+						})
+					})
+				})
+			});
+		}
 		return tmp.tr;
+	}
+	/**
+	 * show the panel of displaying the confirmation box for adding a propertyrel
+	 */
+	,_confirmDelUserRel: function (btn, user) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newDiv = new Element('div', {'class': 'update-rel-panel'})
+			.insert({'bottom': new Element('div').update('You are about to remove' + ' user(' + user.name + ') for this property.')})
+			.insert({'bottom': new Element('div').update('Countinue?')})
+			.insert({'bottom': new Element('div', {'class': 'msg-panel'}) })
+			.insert({'bottom': new Element('div', {'class': 'row'})
+				.insert({'bottom': new Element('span', {'class': 'col-sm-4 btn btn-danger', 'data-loading-text': "Saving ..."})
+					.update('YES')
+					.observe('click', function(){
+						btn.up('.prop-rel-row').remove();
+						tmp.me.hideModalBox();
+					})
+				})
+				.insert({'bottom': new Element('span', {'class': 'col-sm-4 col-sm-offset-4 btn btn-default'})
+					.update('NO')
+					.observe('click', function(){
+						tmp.me.hideModalBox();
+					})
+				})
+			});
+		tmp.me.showModalBox('Confirm', tmp.newDiv, false);
+		return tmp.me;
 	}
 	/**
 	 * Ajax: creating PropertyRef
 	 */
-	,_submitRel: function (btn, user, role, action) {
+	,_submitRel: function (btn, user, roles, action) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.btn = btn;
 		tmp.me._signRandID(tmp.btn);
-		tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'propertyId': tmp.me._item.sKey, 'userId': user.id, 'roleId': role.id, 'action': action}, {
+		tmp.me.postAjax(tmp.me.getCallbackId('saveRel'), {'propertyId': tmp.me._item.sKey, 'userId': user.id, 'roleId': roles, 'action': action}, {
 			'onLoading': function() {
 				tmp.btn.up('.update-rel-panel').down('.msg-panel').update('');
 				jQuery('#' + tmp.btn.id).button('loading');
@@ -192,18 +245,18 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	/**
 	 * show the panel of displaying the confirmation box for adding a propertyrel
 	 */
-	,_confirmRel: function (user, role, btn, action) {
+	,_confirmRel: function (user, roles, btn, action) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.newDiv = new Element('div', {'class': 'update-rel-panel'})
-			.insert({'bottom': new Element('div').update('You are about to ' + (action.strip() === 'create' ? 'add' : 'remove') + ' user(' + user.name + ') to the ' + role.name + ' of this property.')})
+			.insert({'bottom': new Element('div').update('You are about to ' + (((action.strip() === 'create') || (action.strip() === 'addUser') ) ? 'add' : 'remove') + ' user (' + user.name + ')' + ((action.strip() === 'addUser') ? ' to ' : (' to the ' + roles.name + ' of ')) + 'this property.')})
 			.insert({'bottom': new Element('div').update('Countinue?')})
 			.insert({'bottom': new Element('div', {'class': 'msg-panel'}) })
 			.insert({'bottom': new Element('div', {'class': 'row'})
 				.insert({'bottom': new Element('span', {'class': 'col-sm-4 btn btn-' + (action.strip()  === 'create' ? 'primary' : 'danger'), 'data-loading-text': "Saving ..."})
 					.update('YES')
 					.observe('click', function(){
-						tmp.me._submitRel(this, user, role, action);
+						tmp.me._submitRel(this, user, roles, action);
 					})
 				})
 				.insert({'bottom': new Element('span', {'class': 'col-sm-4 col-sm-offset-4 btn btn-default'})
@@ -232,13 +285,17 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			,'onSuccess': function(sender, param) {
 				try{
 					tmp.result = tmp.me.getResp(param, false, true);
-					console.debug(tmp.result);
 					if(!tmp.result || !tmp.result.items)
 						return;
 					tmp.table = new Element('table', {'class': 'table'})
-						.insert({'bottom': new Element('thead')
+						.insert({'bottom': tmp.thead = new Element('thead')
 							.insert({'bottom': tmp.theadTR = new Element('tr')
-								.insert({'bottom': new Element('th').update('User') })
+								.insert({'bottom': new Element('th')
+									.insert({'bottom': new Element('span').update('User') })
+									.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md', 'style': 'display: inline-block !important; padding: 0 3px'})
+										.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
+									})
+								})
 							})
 						})
 						.insert({'bottom': tmp.tbody = new Element('tbody') });
@@ -248,12 +305,30 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					$H(tmp.result.items).each(function(item){
 						tmp.tbody.insert({'bottom': tmp.me._getUserRow(item.value) });
 					});
-					tmp.tbody.insert({'top': tmp.me._getNewUserRow() });
+					
+					
+					
 					panel.update(tmp.table).addClassName('loaded');
 					panel.getElementsBySelector('.new-user-btn').each(function(item){
-						tmp.userAutoCompleteJs = new UserAutoCompleteJs(tmp.me);
+						tmp.exsitingPersonIds = [];
+						$$('.prop-rel-row').each(function(item){
+							tmp.exsitingPersonIds.push(item.readAttribute('user-id'));
+						});
+						tmp.userAutoCompleteJs = new UserAutoCompleteJs(tmp.me, tmp.exsitingPersonIds);
 						tmp.userAutoCompleteJs.loadPopOver(item, function(selectedData) {
-							console.debug(selectedData);
+							selectedData.name = (selectedData.firstName || selectedData.lastName) ? (selectedData.firstName + ' ' + selectedData.lastName) : selectedData.email;
+							selectedData.roleIds = [];
+							selectedData.newUser = true;
+							tmp.userInlist = false;
+							$$('.prop-rel-row').each(function(item){
+								if(!tmp.userInlist)
+									if(item.readAttribute('user-id') == selectedData.id)
+										tmp.userInlist = true;
+							});
+//							if(!tmp.userInlist)
+								$$('.prop-rel-row[user-id]').first()
+									.insert({'before': tmp.me._getUserRow(selectedData).addClassName('success') });
+//								
 						});
 						item.store('userAutoCompleteJs', tmp.userAutoCompleteJs);
 					});
@@ -270,16 +345,13 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.me = this;
 		tmp.tr = new Element('tr', {'class': 'prop-rel-row', 'user-id': 'new-user'})
 			.insert({'bottom': new Element('td')
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md', 'style': 'display: "inline-block !important"'})
+					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
+				})
 			});
 		tmp.me._roles.each(function(role){
 			tmp.hasRole = false;
-			tmp.tr.insert({'bottom': new Element('td', {'role': role.id})
-				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'new-user-btn visible-xs visible-sm visible-lg visible-md', 'style': 'display: inline-block'})
-					.insert({'bottom': new Element('i', {'class': 'glyphicon glyphicon-plus-sign'}) })
-					//.observe('click', function(){
-					//	tmp.me._getNewUserPanel(this);
-					//})
-				})
+			tmp.tr.insert({'bottom': new Element('td', {'class': 'new-user-role', 'role': role.id})
 			});
 		});
 		return tmp.tr;

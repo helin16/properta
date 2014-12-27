@@ -5,9 +5,11 @@ var UserAutoCompleteJs = new Class.create();
 UserAutoCompleteJs.prototype = {
 	pageJs: null //the pageJs objet for ajaxing
 	,input: null // the html element when the popup inital
+	
 	//constructor
-	,initialize: function (pageJs) {
+	,initialize: function (pageJs, exsitingPersonIds) {
 		this.pageJs = pageJs;
+		this.exsitingPersonIds = exsitingPersonIds;
 		return this;
 	}
 	,_showPopOver: function(onSelectFunc, addNewFunc) {
@@ -67,6 +69,16 @@ UserAutoCompleteJs.prototype = {
 				transformResult: function(response, originalQuery) {
 					try {
 						tmp.result = tmp.me.pageJs.getResp(response, false, true);
+						//filter out the existing.
+						tmp.newItems = [];
+						tmp.result.items.each(function(item){
+							if(!(tmp.me.exsitingPersonIds.indexOf(item.id) > -1)) {
+								tmp.newItems.push(item);
+							}
+						});
+						tmp.result.items = tmp.newItems;
+						console.debug(tmp.result.items);
+						
 						if(!tmp.result || !tmp.result.items || tmp.result.items.size() === 0) {
 							jQuery('.popover-content', tmp.popoverDiv).html('')
 								.append(jQuery('<div class="row"/>')
@@ -89,8 +101,6 @@ UserAutoCompleteJs.prototype = {
 				},
 				serviceUrl: window.location,
 				formatResult: function (suggestion, currentValue) {
-					console.debug(suggestion);
-					console.debug(currentValue);
 					return new Element('div', {'class': 'row'})
 						.insert({'bottom': new Element('div', {'class': 'col-sm-4'}).update(suggestion.data.email) })
 						.insert({'bottom': new Element('div', {'class': 'col-sm-4'}).update(suggestion.data.firstName) })
