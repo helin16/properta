@@ -51,6 +51,7 @@ abstract class MessageSender
 	 */
 	private static function _getMessages()
 	{
+		Message::up
 		$messages = Message::getAllByCriteria('sendType = ?', array(Message::SENT_TYPE_NEW));
 		if(count($messages) > 0)
 		{
