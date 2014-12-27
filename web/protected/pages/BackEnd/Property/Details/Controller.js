@@ -7,6 +7,8 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,_counts: {} //the counts of the attributes
 	,_roles: [] //the roles
 	,_can: {} //whether this user can do something
+	,_fileReader: null // file uploader
+	,_acceptableTypes: ['csv', 'jpg', 'jpeg', 'png']
 	/**
 	 * Showing the google map
 	 */
@@ -272,6 +274,113 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		return tmp.me;
 	}
 	/**
+	 * getting file manager
+	 */
+	,_showFileManager: function(panel) {
+		var tmp = {};
+		tmp.me = this;
+		if(panel.hasClassName('loaded'))
+			return tmp.me;
+		tmp.me._fileReader = new FileReader();
+		
+		tmp.FileUploadDiv = new Element('div',  {'class': 'panel panel-default drop_file_div', 'title': 'You can drag multiple files here!'})
+		.insert({'bottom': new Element('div', {'class': 'panel-body'})
+			.insert({'bottom': new Element('div', {'class': 'form-group center-block text-left', 'style': 'width: 50%'})
+				.insert({'bottom': new Element('label').update('Drop you files here or select your file below:') })
+				.insert({'bottom': tmp.inputFile = new Element('input', {'type': 'file', 'style': 'display: none;', 'multiple': true}) 
+					.observe('change', function(event) {
+						tmp.me._readFiles(event.target.files, panel);
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'clearfix'}) })
+				.insert({'bottom': new Element('span', {'class': 'btn btn-success clearfix'})
+					.update('Click to select your file')
+					.observe('click', function(event) {
+						tmp.inputFile.click();
+					})
+				})
+				.insert({'bottom': new Element('div', {'class': 'clearfix'}) })
+				.insert({'bottom': new Element('small').update('ONLY ACCEPT file formats: ' + tmp.me._acceptableTypes.join(', ')) })
+			})
+		})
+		.observe('dragover', function(evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+			evt.dataTransfer.dropEffect = 'copy';
+		})
+		.observe('drop', function(evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+			tmp.me._readFiles(evt.dataTransfer.files);
+		})
+	;
+		
+		panel.addClassName('loaded').update(new Element('div', {'class': 'file-upload-div'})
+			.insert({'bottom': tmp.FileUploadDiv})
+		);
+		return tmp.me;
+	}
+	
+	,_readFiles: function(files, panel) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.panel = panel;
+		tmp.me._uploadedData = {};
+		tmp.fileLists = new Element('div', {'class': 'list-group'});
+		for(tmp.i = 0, tmp.file; tmp.file = files[tmp.i]; tmp.i++) {
+			tmp.fileRow = new Element('div', {'class': 'row'}).update( new Element('div', {'class': 'col-lg-6 col-md-6'}).update(tmp.file.name) );
+			if((tmp.extension = tmp.file.name.split('.').pop()) !== '' && tmp.me._acceptableTypes.indexOf(tmp.extension.toLowerCase()) > -1) {
+				tmp.me._fileReader = new FileReader();
+				tmp.me._fileReader.onload = function(event) {
+					event.target.result.split(/\r\n|\n|\r/).each(function(line) {
+						if(line !== null && !line.blank()) {
+							tmp.cols = [];
+							line.split(',').each(function(col) {
+								if(col !== null && !col.blank()) {
+									tmp.cols.push(col.strip());
+								}
+							})
+							tmp.key = tmp.cols.join(',');
+						}
+					})
+				}
+				tmp.me._fileReader.readAsText(tmp.file);
+				tmp.supported = true;
+			} else {
+				tmp.fileRow.insert({'bottom': new Element('div', {'class': 'col-lg-6 col-md-6'}).update(new Element('small').update('Not supported file extension: ' + tmp.extension) )})
+				tmp.supported = false;
+			}
+			tmp.fileLists.insert({'bottom': new Element('div', {'class': 'list-group-item ' + (tmp.supported === true ? 'list-group-item-success' : 'list-group-item-danger')})
+				.insert({'bottom': tmp.fileRow })
+			});
+		}
+		$(tmp.panel).update(
+			new Element('div', {'class': 'panel panel-default'})
+			.insert({'bottom': new Element('div', {'class': 'panel-heading'})
+				.update('Files Selected:')
+				.insert({'bottom': new Element('small', {'class': 'pull-right'}).update('ONLY ACCEPT file formats: ' + tmp.me._acceptableTypes.join(', ')) })
+			})
+			.insert({'bottom': tmp.fileLists })
+			.insert({'bottom': new Element('div', {'class': 'panel-footer'})
+				.insert({'bottom': new Element('span', {'class': 'btn btn-success start-upload-btn', 'disabled': !tmp.supported})
+					.update(tmp.supported ? 'Start' : 'Not supported file extension!')
+					.observe('click', function() {
+						console.debug('you clicked the upload file btn');
+						// whatever after upload
+					})
+				})
+				.insert({'bottom': new Element('span', {'class': 'btn btn-warning pull-right'})
+					.update('Cancel')
+					.observe('click', function(){
+						tmp.me._showFileManager($(tmp.panel).removeClassName('loaded') );
+					})
+				})
+			})
+		);
+		return tmp.me;
+	}
+	
+	/**
 	 * getting the list of people for this property
 	 */
 	,_showPeople: function(panel) {
@@ -480,6 +589,9 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					.insert({'bottom': new Element('a', {'href': '#tab-files', 'data-toggle': "tab", 'aria-controls': "tab-files", 'role': "tab"})
 						.update('Files ') 
 						.insert({'bottom': (tmp.me._counts.files ? new Element('span', {'class': 'badge'}).update(tmp.me._counts.files) : null) 
+						})
+						.observe('click', function() {
+							tmp.me._showFileManager($($(this).readAttribute('aria-controls')).down('.panel-body'));
 						})
 					})
 				})
