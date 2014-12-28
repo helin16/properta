@@ -35,8 +35,8 @@ abstract class EmailSenderAbstract
 		$mail->AltBody    = $alterBody;
 		$mail->isHTML($isHTML);                                       // Set email format to HTML
 		
-		$mail->From = trim($from) === '' ? trim($from) : trim(Config::get('MailServer', 'default_from_addr'));
-		$mail->FromName = trim($fromName) === '' ? trim($fromName) : trim(Config::get('MailServer', 'default_from_name'));
+		$mail->From = trim($from) !== '' ? trim($from) : trim(Config::get('MailServer', 'default_from_addr'));
+		$mail->FromName = trim($fromName) !== '' ? trim($fromName) : trim(Config::get('MailServer', 'default_from_name'));
 		foreach($tos as $toAddr => $toName) {
 			if(is_numeric($toAddr))
 				$mail->addAddress($toName);
@@ -62,6 +62,7 @@ abstract class EmailSenderAbstract
 			else
 				$mail->addAttachment($path, $name);                       // Optional name
 		}
+		$mail->SMTPDebug = 4;
 		//send the message
 		if(!$mail->send()) {
 			$msg = 'Message could not be sent.';

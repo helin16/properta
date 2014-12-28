@@ -17,7 +17,7 @@ return array(
 		'SMTPAuth' => true,
 		'Username' => 'noreply@budgetpc.com.au',
 		'Password' => 'budget123pc',
-		'SMTPSecure' => 'ssl',
+		'SMTPSecure' => 'smtp',
 		'default_from_addr' => 'noreply@properta.com.au',
 		'default_from_name' => 'PropertA'            
 	)
