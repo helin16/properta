@@ -399,9 +399,9 @@ abstract class BaseEntityAbstract
      * 
      * @return BaseEntityAbstract
      */
-    public function removeTag($type, $tagName)
+    public function removeTags($type, $tagName)
     {
-    	EntityTag::removeTag($this, $type, $tagName);
+    	EntityTag::rmTags($this, $type, $tagName);
     	return $this;
     }
     /**
@@ -411,7 +411,7 @@ abstract class BaseEntityAbstract
      */
     public function clearTags()
     {
-    	EntityTag::removeTag($this, null, null);
+    	EntityTag::rmTags($this, null, null);
     	return $this;
     }
     /**

@@ -16,6 +16,24 @@ CREATE TABLE `asset` (
 	,INDEX (`updatedById`)
 	,UNIQUE INDEX (`assetId`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `attachment`;
+CREATE TABLE `attachment` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`entityId` int(10) unsigned NOT NULL DEFAULT 0,
+	`EntityName` varchar(100) NOT NULL DEFAULT '',
+	`assetId` int(10) unsigned NOT NULL DEFAULT 0,
+	`active` bool NOT NULL DEFAULT 1,
+	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
+	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+	,INDEX (`assetId`)
+	,INDEX (`createdById`)
+	,INDEX (`updatedById`)
+	,INDEX (`entityId`)
+	,INDEX (`EntityName`)
+) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `content`;
 CREATE TABLE `content` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -173,6 +191,7 @@ CREATE TABLE `person` (
 	`email` varchar(100) NOT NULL DEFAULT '',
 	`firstName` varchar(50) NOT NULL DEFAULT '',
 	`lastName` varchar(50) NOT NULL DEFAULT '',
+	`fullName` varchar(200) NOT NULL DEFAULT '',
 	`active` bool NOT NULL DEFAULT 1,
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
 	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
@@ -184,6 +203,7 @@ CREATE TABLE `person` (
 	,INDEX (`email`)
 	,INDEX (`firstName`)
 	,INDEX (`lastName`)
+	,INDEX (`fullName`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
@@ -249,6 +269,40 @@ CREATE TABLE `useraccount` (
 	,INDEX (`updatedById`)
 	,INDEX (`username`)
 	,INDEX (`password`)
+) ENGINE=innodb DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `entitytag`;
+CREATE TABLE `entitytag` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`type` varchar(20) NOT NULL DEFAULT '',
+	`entityId` int(10) unsigned NOT NULL DEFAULT 0,
+	`EntityName` varchar(100) NOT NULL DEFAULT '',
+	`tagId` int(10) unsigned NOT NULL DEFAULT 0,
+	`active` bool NOT NULL DEFAULT 1,
+	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
+	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+	,INDEX (`tagId`)
+	,INDEX (`createdById`)
+	,INDEX (`updatedById`)
+	,INDEX (`entityId`)
+	,INDEX (`EntityName`)
+	,INDEX (`type`)
+) ENGINE=innodb DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE `tag` (
+	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`name` varchar(100) NOT NULL DEFAULT '',
+	`active` bool NOT NULL DEFAULT 1,
+	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00',
+	`createdById` int(10) unsigned NOT NULL DEFAULT 0,
+	`updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`updatedById` int(10) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+	,INDEX (`createdById`)
+	,INDEX (`updatedById`)
+	,UNIQUE INDEX (`name`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
 
 -- Completed CRUD Setup.

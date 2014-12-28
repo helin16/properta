@@ -179,7 +179,7 @@ class EntityTag extends BaseEntityAbstract
 	 * 
 	 * @return BaseEntityAbstract
 	 */
-	public static function removeTag(BaseEntityAbstract $entity, $type, $tagName)
+	public static function rmTags(BaseEntityAbstract $entity, $type, $tagName)
 	{
 		$where = 'entityId = ? and entityName = ?';
 		$params = array($entity->getId(), get_class($entity));
