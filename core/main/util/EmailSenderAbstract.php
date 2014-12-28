@@ -62,7 +62,6 @@ abstract class EmailSenderAbstract
 			else
 				$mail->addAttachment($path, $name);                       // Optional name
 		}
-		$mail->SMTPDebug = 4;
 		//send the message
 		if(!$mail->send()) {
 			$msg = 'Message could not be sent.';
