@@ -43,7 +43,7 @@ class HomeController extends FrontEndPageAbstract
 			$resp = ReCaptcha::verifyResponse($conf['verify-url'], $_SERVER['REMOTE_ADDR'], $data['g-captcha'], $conf['secret-key']);
 			if ($resp === null || !$resp->success)
 				throw new Exception('Invalid Captcha Provided!');
-			EmailSenderAbstract::sendEmail(Config::get('contact-us', 'tos'), $data['subject'], $data['comments'], $data['comments'], $data['email'], $data['name']);
+			EmailSenderAbstract::sendEmail(Config::get('contact-us', 'tos'), $this->getAppName() . ' Contact Us: ' . $data['subject'], $data['comments'], $data['comments'], $data['email'], $data['name']);
 		}
 		catch(Exception $ex)
 		{
