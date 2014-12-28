@@ -160,10 +160,10 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						tmp.me._saveProperty(this);
 					})
 				})
-				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'form-group col-sm-4 text-center rel-type-selector orange', 'prop-rel-type': tmp.me._propRelTypeIds.tanent})
+				.insert({'bottom': new Element('a', {'href': 'javascript: void(0);', 'class': 'form-group col-sm-4 text-center rel-type-selector orange', 'prop-rel-type': tmp.me._propRelTypeIds.tenant})
 					.insert({'bottom': new Element('div', {'class': 'milstone-counter'})
 						.insert({'bottom': new Element('span', {'class': 'fa fa-key fa-5x icon-header'}) })
-						.insert({'bottom': new Element('span', {'class': 'stat-count highlight'}).update('Tanent') })
+						.insert({'bottom': new Element('span', {'class': 'stat-count highlight'}).update('Tenant') })
 						.insert({'bottom': new Element('span', {'class': 'milestone-details'}).update('Who rents this property') })
 					})
 					.observe('click', function() {

@@ -67,6 +67,10 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 		return tmp.me;
 	}
 	
-	
+	,load: function () {
+		jQuery('.user-flipper').textrotator({
+	        speed: 3000
+		})
+	}
 	
 });

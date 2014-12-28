@@ -19,9 +19,6 @@
 			<!-- FrontEnd:: login page -->
 			<url ServiceParameter="FrontEnd.Login.LoginController" pattern="login.html" />
 			
-			<!-- FrontEnd:: CMS:: ContactUs page -->
-			<url ServiceParameter="FrontEnd.CMS.ContactUs.Controller" pattern="contactus.html" />
-			
 			<!-- FrontEnd:: logout page -->
 			<url ServiceParameter="FrontEnd.Logout.LogoutController" pattern="logout.html" />
 			
@@ -36,6 +33,9 @@
 			
 			<!-- asset service -->
 			<url ServiceId="asset" ServiceParameter="" pattern="asset/{method}" parameters.method="get" />
+			
+			<!-- asset service -->
+			<url ServiceId="ajax" ServiceParameter="" pattern="ajax/{method}" parameters.method="\w+"  />
 			
 		</module>
 
@@ -55,7 +55,7 @@
 		</service>
 
 		<service id="asset" class="Application.pages.FrontEnd.Asset.AssetController"></service>
-		<service id="ajax" class="Application.pages.BackEnd.Ajax.Controller"></service>
+		<service id="ajax" class="Application.pages.FrontEnd.Ajax.Controller"></service>
 		<service id="soap" class="System.Web.Services.TSoapService">
 			<soap id="webauth" provider="Application.classes.Soap.WebAuth" />
 		</service>

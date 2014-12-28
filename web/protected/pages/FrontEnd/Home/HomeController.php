@@ -15,7 +15,8 @@ class HomeController extends FrontEndPageAbstract
 	protected function _getEndJs()
 	{
 		$js = parent::_getEndJs();
-		$js .="pageJs.init('#main-form');";
+		$js .="pageJs.init('#main-form')";
+		$js .=".load();";
 		return $js;
 	}
 	public function getCaptchaKey()

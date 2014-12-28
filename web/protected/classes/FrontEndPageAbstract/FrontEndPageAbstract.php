@@ -91,6 +91,9 @@ abstract class FrontEndPageAbstract extends TPage
 		//font awesome
 		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'FontAwesome' . DIRECTORY_SEPARATOR);
 		$clientScript->registerStyleSheetFile('Awesome.font.css', $folder .  '/css/font-awesome.min.css');
+		//font awesome
+		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'picons' . DIRECTORY_SEPARATOR);
+		$clientScript->registerStyleSheetFile('picons.css', $folder .  '/picons.css');
 		//jquery
 		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'jQuery' . DIRECTORY_SEPARATOR);
 		$clientScript->registerHeadScriptFile('jQuery', $folder . '/jquery-2.1.1.min.js');

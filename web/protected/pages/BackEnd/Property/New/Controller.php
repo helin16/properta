@@ -48,7 +48,7 @@ class Controller extends BackEndPageAbstract
 				foreach(Property::getAllByCriteria('addressId = ?', array($address->getId())) as $property)
 				{
 					$propArray = $property->getJson();
-					$propArray['curRoleIds'] = array_map(create_function('$a', 'return intval($a->getId());'), Role::getPropertyRoles($property, Core::getUser()));
+					$propArray['curRoleIds'] = array_map(create_function('$a', 'return intval($a->getId());'), Role::getPropertyRoles($property, Core::getUser()->getPerson()));
 					$results['properties'][] = $propArray;
 				}
 			}
