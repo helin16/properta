@@ -17,7 +17,7 @@ abstract class EmailSenderAbstract
 	 * 
 	 * @throws Exception
 	 */
-	public static function sendEmail(array $tos, $subject, $body, $alertBody = '', $from = '', $fromName = '', $isHTML = true, array $attachments = array(), array $ccs = array(), array $bccs = array(), $wordWrap = 100)
+	public static function sendEmail(array $tos, $subject, $body, $alterBody = '', $from = '', $fromName = '', $isHTML = true, array $attachments = array(), array $ccs = array(), array $bccs = array(), $wordWrap = 100)
 	{
 		if(is_string($tos))
 			$tos = array($tos);
@@ -32,7 +32,7 @@ abstract class EmailSenderAbstract
 		$mail->WordWrap   = $wordWrap;                                // Set word wrap to 50 characters
 		$mail->Subject    = $subject;
 		$mail->Body       = $body;
-		$mail->AltBody    = $alertBody;
+		$mail->AltBody    = $alterBody;
 		$mail->isHTML($isHTML);                                       // Set email format to HTML
 		
 		$mail->From = trim($from) === '' ? trim($from) : trim(Config::get('MailServer', 'default_from_addr'));
