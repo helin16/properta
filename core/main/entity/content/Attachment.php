@@ -171,4 +171,19 @@ class Attachment extends BaseEntityAbstract
 			self::updateByCriteria('active = 0', 'entityId = ? and entityName = ? and assetId = ?', array($entity->getId(), get_class($entity), $asset->getId()));
 		return $entity;
 	}
+	/**
+	 * Getting all for an entity
+	 * 
+	 * @param BaseEntityAbstract $entity
+	 * @param int                $pageNo
+	 * @param int                $pageSize
+	 * @param array              $orderBy
+	 * @param array              $stats
+	 * 
+	 * @return multiple:Attachment
+	 */
+	public static function getAllForEntity(BaseEntityAbstract $entity, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+	{
+		return self::getAllByCriteria('entityId = ? and entityName = ?', array($entity->getId(), get_class($entity)), true, $pageNo, $pageSize, $orderBy, $stats);
+	}
 }

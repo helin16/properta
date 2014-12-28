@@ -362,6 +362,21 @@ abstract class BaseEntityAbstract
     	return (is_array($this->_jsonArray) && count($this->_jsonArray) > 0 );
     }
     /**
+     * Getting all EntityTag
+     *
+     * @param string $type
+     * @param int    $pageNo
+     * @param int    $pageSize
+     * @param array  $orderBy
+     * @param array  $stats
+     *
+     * @return multiple:EntityTag
+     */
+    public function getAllEntityTags($type = null, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+    {
+    	return EntityTag::getAllForEntity($this, $type, $pageNo, $pageSize, $orderBy, $stats);
+    }
+    /**
      * Tagging an entity
      * 
      * @param string $tagName The tag's name
@@ -397,6 +412,20 @@ abstract class BaseEntityAbstract
     {
     	EntityTag::clearTags($this);
     	return $this;
+    }
+    /**
+     * Getting all attachments
+     * 
+     * @param int   $pageNo
+	 * @param int   $pageSize
+	 * @param array $orderBy
+	 * @param array $stats
+	 * 
+	 * @return multiple:Attachment
+     */
+    public function getAttachments($pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+    {
+    	return Attachment::getAllForEntity($this, $pageNo, $pageSize, $orderBy, $stats);
     }
     /**
      * Attach an asset to an entity

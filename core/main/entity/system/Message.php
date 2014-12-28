@@ -9,12 +9,6 @@ class Message extends BaseEntityAbstract
 	const SENT_TYPE_SENT = 'SENT';
 	const SENT_TYPE_FAILED = 'FAILED';
 	/**
-	 * caching the transid
-	 *
-	 * @var string
-	 */
-	private static $_transId = '';
-	/**
 	 * The message is send to
 	 * 
 	 * @var Person
@@ -266,19 +260,6 @@ class Message extends BaseEntityAbstract
 		DaoMap::createIndex('subject');
 	
 		DaoMap::commit();
-	}
-	/**
-	 * Getting the transid
-	 *
-	 * @param string $salt The salt of making the trans id
-	 *
-	 * @return string
-	 */
-	public static function getTransKey($salt = '')
-	{
-		if(trim(self::$_transId) === '')
-			self::$_transId = StringUtilsAbstract::getRandKey($salt);
-		return self::$_transId;
 	}
 	/**
 	 * creating a message

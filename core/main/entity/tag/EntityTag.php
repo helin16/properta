@@ -196,4 +196,26 @@ class EntityTag extends BaseEntityAbstract
 		self::updateByCriteria('active = 0', 'entityId = ? and entityName = ?', array($entity->getId(), get_class($entity)));
 		return $entity;
 	}
+	/**
+	 * Getting all for an entity
+	 * 
+	 * @param BaseEntityAbstract $entity
+	 * @param string             $type
+	 * @param int                $pageNo
+	 * @param int                $pageSize
+	 * @param array              $orderBy
+	 * @param array              $stats
+	 * 
+	 * @return multiple:EntityTag
+	 */
+	public static function getAllForEntity(BaseEntityAbstract $entity, $type = null, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+	{
+		$where = 'entityId = ? and entityName = ?';
+		$params = array($entity->getId(), get_class($entity));
+		if(($type = trim($type)) !== '') {
+			$where .= ' AND type = ?';
+			$params[] = $type;
+		}
+		return self::getAllByCriteria($where, $params, true, $pageNo, $pageSize, $orderBy, $stats);
+	}
 }
