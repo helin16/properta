@@ -15,7 +15,7 @@ class AjaxController extends TService
      */
     public function run()
     {
-    	BackEndPageAbstract::checkUser();
+    	$results = $errors = array();
         try 
         {
             $method = '_' . ((isset($this->Request['method']) && trim($this->Request['method']) !== '') ? trim($this->Request['method']) : '');
@@ -28,7 +28,7 @@ class AjaxController extends TService
         {
         	$errors = $ex->getMessage();
         }
-        return StringUtilsAbstract::getJson($results, $errors);
+        echo StringUtilsAbstract::getJson($results, $errors);
     }
     /**
      * Search the fullname of the

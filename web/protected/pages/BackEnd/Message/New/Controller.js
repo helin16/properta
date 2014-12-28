@@ -3,23 +3,14 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new FrontPageJs(), {
-	valCap: function(data, input) {
-		var tmp = {};
-		tmp.me = this;
-		$(input).value = data;
-		tmp.me._signRandID(input);
-		jQuery(tmp.me.jQueryFormSelector).bootstrapValidator('revalidateField', input.id);
-		return tmp.me;
-	}
-	
-	,_submitForm: function(jQueryForm) {
+	_submitForm: function(jQueryForm) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.data = {};
-		jQuery.each(jQueryForm.find('[contact-form]'), function(index, item) {
-			tmp.data[jQuery(item).attr('contact-form')] = jQuery(item).val();
+		jQuery.each(jQueryForm.find('[new-message-form]'), function(index, item) {
+			tmp.data[jQuery(item).attr('new-message-form')] = jQuery(item).val();
 		});
-		
+		console.debug(tmp.data);return;
 		tmp.submitBtn = jQuery(tmp.me.jQueryFormSelector).data('bootstrapValidator').$submitButton;
 		jQuery(tmp.me.jQueryFormSelector).find('.contact-form-msg').remove();
 		tmp.msg = jQuery('<div class="alert contact-form-msg" style="display: inline-block;"/>');
@@ -42,13 +33,49 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 		})
 		return tmp.me;
 	}
+
+	,initSelect2(jQuerySelector) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.newEmail = null;
+		jQuery(jQuerySelector).select2({
+			placeholder: "Recipients",
+			minimumInputLength: 1,
+			multiple: true,
+			ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+				url: "/backend/ajax/searchPerson",
+				dataType: 'json',
+				quietMillis: 250,
+				data: function (term, page) {
+					if(/^.+@.+$/.match(term) === true)
+						tmp.newEmail = term;
+					return {
+						searchText: term, // search term
+						pageNo: page
+					};
+				},
+				results: function (data, page) { // parse the results into the format expected by Select2.
+					// since we are using custom formatting functions we do not need to alter the remote JSON data
+					tmp.results = [];
+					if(tmp.newEmail !== null) {
+						tmp.results.push({'text' : tmp.newEmail, 'id': tmp.newEmail});
+					}
+					data.resultData.items.each(function(item){
+						tmp.results.push({'text': item.fullName + '<' + item.email + '>', 'id': item.id});
+					})
+					return { results: tmp.results };
+				},
+				cache: true
+			},
+		});
+		return tmp.me;
+	}
 	
 	,init: function(jQueryFormSelector) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.me.jQueryFormSelector = jQueryFormSelector;
 		jQuery(tmp.me.jQueryFormSelector).bootstrapValidator({
-			excluded: [':disabled'],
 	        message: 'This value is not valid',
 	        feedbackIcons: {
 	            valid: 'glyphicon glyphicon-ok',
@@ -57,7 +84,6 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 	        },
 	        fields: {
 	        	'to': {
-	        		message: 'The name is invalid',
 	                validators: {
 	                    notEmpty: {
 	                        message: 'Please tell us whom you want to sent to.'
@@ -65,7 +91,6 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 	                }
 	        	}
 	        	,'subject': {
-	        		message: 'Something about your message',
 	        		validators: {
 	        			notEmpty: {
 	        				message: 'A summary of your message'
@@ -73,7 +98,6 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 	        		}
 	        	}
 	        	,'comments': {
-	        		message: 'what do you want to say?',
 	        		validators: {
 	        			notEmpty: {
 	        				message: 'what do you want to say?'
@@ -89,11 +113,4 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
         });
 		return tmp.me;
 	}
-	
-	,load: function () {
-		jQuery('.user-flipper').textrotator({
-	        speed: 3000
-		})
-	}
-	
 });

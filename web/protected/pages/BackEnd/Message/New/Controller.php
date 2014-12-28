@@ -15,11 +15,12 @@ class Controller extends FrontEndPageAbstract
     protected function _getEndJs()
     {
         $js = parent::_getEndJs();
-        $js .="pageJs.setCallbackId('contactus', '" . $this->contactUsBtn->getUniqueId() . "')";
+        $js .="pageJs.setCallbackId('newMessage', '" . $this->newMessageBtn->getUniqueId() . "')";
+        $js .=".initSelect2('.select2')";
         $js .=".init('#main-form');";
         return $js; 
     }
-	public function contactUs($sender, $param)
+	public function newMessage($sender, $param)
 	{
 		$results = $errors = array();
 		try
