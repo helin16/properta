@@ -27,6 +27,12 @@ class Person extends BaseEntityAbstract
      */
     private $lastName;
     /**
+     * The fullname of the person
+     * 
+     * @var string
+     */
+    private $fullName;
+    /**
      * Getter for firstName
      *
      * @return string
@@ -50,7 +56,7 @@ class Person extends BaseEntityAbstract
     /**
      * Getter for lastName
      *
-     * @return 
+     * @return string
      */
     public function getLastName() 
     {
@@ -71,7 +77,7 @@ class Person extends BaseEntityAbstract
     /**
      * Getter for email
      *
-     * @return 
+     * @return string
      */
     public function getEmail() 
     {
@@ -87,6 +93,29 @@ class Person extends BaseEntityAbstract
     public function setEmail($value)
     {
         $this->email = $value;
+        return $this;
+    }
+    /**
+     * Getter for fullname
+     *
+     * @return string
+     */
+    public function getFullName() 
+    {
+    	if(trim($this->fullName) === '')
+    		return trim(trim($this->getFirstName()) . ' ' . trim($this->getLastName()));
+        return $this->fullName;
+    }
+    /**
+     * Setter for fullName
+     *
+     * @param string $value The fullName
+     *
+     * @return Person
+     */
+    public function setFullName($value)
+    {
+        $this->fullName = $value;
         return $this;
     }
     /**
@@ -108,14 +137,6 @@ class Person extends BaseEntityAbstract
         return $this->getEmail();
     }
     /**
-     * Getting the full name of the user
-     * @return string
-     */
-    public function getFullName()
-    {
-    	return trim(trim($this->getFirstName()) . ' ' . trim($this->getLastName()));
-    }
-    /**
      * (non-PHPdoc)
      * @see BaseEntityAbstract::preSave()
      */
@@ -123,6 +144,7 @@ class Person extends BaseEntityAbstract
     {
     	if(trim($this->getEmail()) === '')
     		throw new EntityException('Email can NOT be empty', 'exception_entity_person_email_empty');
+    	$this->setFullName(trim(trim($this->getFirstName()) . ' ' . trim($this->getLastName())));
     }
     /**
      * (non-PHPdoc)
@@ -134,11 +156,13 @@ class Person extends BaseEntityAbstract
         DaoMap::setStringType('email', 'varchar', 100);
         DaoMap::setStringType('firstName', 'varchar', 50);
         DaoMap::setStringType('lastName', 'varchar', 50);
+        DaoMap::setStringType('fullName', 'varchar', 200);
         parent::__loadDaoMap();
         
         DaoMap::createIndex('email');
         DaoMap::createIndex('firstName');
         DaoMap::createIndex('lastName');
+        DaoMap::createIndex('fullName');
         DaoMap::commit();
     }
     /**

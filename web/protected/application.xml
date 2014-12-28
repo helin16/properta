@@ -23,21 +23,24 @@
 			<url ServiceParameter="FrontEnd.Logout.LogoutController" pattern="logout.html" />
 			
 			<!-- BackEnd:: home page -->
-			<url ServiceParameter="BackEnd.Home.Controller" pattern="/backend.html" />
+			<url ServiceParameter="BackEnd.Home.Controller" pattern="backend.html" />
 			
 			<!-- BackEnd:: Message:: List page -->
-			<url ServiceParameter="BackEnd.Message.List.Controller" pattern="/backend/messages.html" />
+			<url ServiceParameter="BackEnd.Message.List.Controller" pattern="backend/messages.html" />
 			<!-- BackEnd:: Message:: New page -->
-			<url ServiceParameter="BackEnd.Message.New.Controller" pattern="/backend/message/new.html" />
+			<url ServiceParameter="BackEnd.Message.New.Controller" pattern="backend/message/new.html" />
 			
 			<!-- BackEnd:: Property:: List page -->
-			<url ServiceParameter="BackEnd.Property.List.Controller" pattern="/backend/properties.html" />
+			<url ServiceParameter="BackEnd.Property.List.Controller" pattern="backend/properties.html" />
 			<!-- BackEnd:: Property:: Details page -->
-			<url ServiceParameter="BackEnd.Property.New.Controller" pattern="/backend/property/new.html"/>
-			<url ServiceParameter="BackEnd.Property.Details.Controller" pattern="/backend/property/{id}.html" parameters.id="\w+"/>
+			<url ServiceParameter="BackEnd.Property.New.Controller" pattern="backend/property/new.html"/>
+			<url ServiceParameter="BackEnd.Property.Details.Controller" pattern="backend/property/{id}.html" parameters.id="\w+"/>
 			
 			<!-- asset service -->
 			<url ServiceId="asset" ServiceParameter="" pattern="asset/{method}" parameters.method="get" />
+			
+			<!-- asset service -->
+			<url ServiceId="backendAjax" ServiceParameter="" pattern="backend/ajax/{method}" parameters.method="\w+"  />
 			
 			<!-- asset service -->
 			<url ServiceId="ajax" ServiceParameter="" pattern="ajax/{method}" parameters.method="\w+"  />
@@ -61,6 +64,7 @@
 
 		<service id="asset" class="Application.pages.FrontEnd.Asset.AssetController"></service>
 		<service id="ajax" class="Application.pages.FrontEnd.Ajax.Controller"></service>
+		<service id="backendAjax" class="Application.pages.BackEnd.Ajax.AjaxController"></service>
 		<service id="soap" class="System.Web.Services.TSoapService">
 			<soap id="webauth" provider="Application.classes.Soap.WebAuth" />
 		</service>
