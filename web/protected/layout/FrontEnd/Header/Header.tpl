@@ -36,7 +36,7 @@
       	   		<ul class="nav nav-pills" role="tablist">
       	   			<li><a href="/backend.html" title="Home"><i class="glyphicon glyphicon-home"></i><span class="hidden-xs hidden-sm"> Home</span></a></li>
       	   			<li><a href="/backend/properties.html" title="Properties"><i class="glyphicon glyphicon-th-list"></i><span class="hidden-xs hidden-sm"> Properties</span></a></li>
-      	   			<li><a href="/" title="Messages"><i class="glyphicon glyphicon-envelope"></i><span class="hidden-xs hidden-sm"> Messages</span></a></li>
+      	   			<li><a href="/backend/messages.html" title="Messages"><i class="glyphicon glyphicon-envelope"></i><span class="hidden-xs hidden-sm"> Messages</span></a></li>
       	   			<li class="dropdown visible-xs visible-md visible-sm visible-lg">
       	   				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-cog"></i><span class="hidden-xs hidden-sm"> <%= Core::getUser()->getPerson()->getFirstName() %></span><span class="caret"></span></a>
       	   				<ul class="dropdown-menu" role="menu">
