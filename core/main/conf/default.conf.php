@@ -12,11 +12,11 @@ return array(
 		,'version' => '1.0.0'
 	)
 	,'MailServer' =>  array (
-		'host' => 'mail.websiteforyou.com.au',
-		'port' => 465,
+		'host' => 'mail.budgetpc.com.au',
+		'port' => 587,
 		'SMTPAuth' => true,
-		'Username' => 'test@websiteforyou.com.au',
-		'Password' => 'test@websiteforyou.com.au',
+		'Username' => 'noreply@budgetpc.com.au',
+		'Password' => 'budget123pc',
 		'SMTPSecure' => 'ssl',
 		'default_from_addr' => 'noreply@properta.com.au',
 		'default_from_name' => 'PropertA'            
