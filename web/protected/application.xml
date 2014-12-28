@@ -27,6 +27,8 @@
 			
 			<!-- BackEnd:: Message:: List page -->
 			<url ServiceParameter="BackEnd.Message.List.Controller" pattern="/backend/messages.html" />
+			<!-- BackEnd:: Message:: New page -->
+			<url ServiceParameter="BackEnd.Message.New.Controller" pattern="/backend/message/new.html" />
 			
 			<!-- BackEnd:: Property:: List page -->
 			<url ServiceParameter="BackEnd.Property.List.Controller" pattern="/backend/properties.html" />
