@@ -15,6 +15,7 @@ class AjaxController extends TService
      */
     public function run()
     {
+    	BackEndPageAbstract::checkUser();
         try 
         {
             $method = '_' . ((isset($this->Request['method']) && trim($this->Request['method']) !== '') ? trim($this->Request['method']) : '');

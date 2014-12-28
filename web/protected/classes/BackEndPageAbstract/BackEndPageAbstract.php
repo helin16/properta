@@ -14,8 +14,16 @@ abstract class BackEndPageAbstract extends FrontEndPageAbstract
 	public function __construct()
 	{
 	    parent::__construct();
-	    if(!Core::getUser() instanceof UserAccount || (Core::getUser()->getId() === UserAccount::ID_GUEST_ACCOUNT))
-	    	die(FrontEndPageAbstract::show404Page('Page Not Found', 'Oops, the page you are looking for is not there'));
+	    self::checkUser();
+	}
+	/**
+	 * checking the current user
+	 */
+	public static function checkUser()
+	{
+		if(!Core::getUser() instanceof UserAccount || (Core::getUser()->getId() === UserAccount::ID_GUEST_ACCOUNT))
+			die(FrontEndPageAbstract::show404Page('Page Not Found', 'Oops, the page you are looking for is not there'));
+		return true;
 	}
 	/**
 	 * Getting The end javascript
