@@ -380,15 +380,16 @@ abstract class BaseEntityAbstract
      * Tagging an entity
      * 
      * @param string $tagName The tag's name
+     * @param string $type    The type of the tag
      * @param mixed  $newTag  The new generated EntityTag
      * 
      * @return BaseEntityAbstract 
      */
-    public function addTag($tagName, &$newEntityTag = null)
+    public function addTag($tagName, $type = EntityTag::TYPE_SYS, &$newEntityTag = null)
     {
     	if($tagName instanceof Tag)
     		$tagName = $tagName->getName();
-    	$newEntityTag = EntityTag::tagEntity($this, $tagName);
+    	$newEntityTag = EntityTag::tagEntity($this, $tagName, $type);
     	return $this;
     }
     /**
@@ -398,9 +399,9 @@ abstract class BaseEntityAbstract
      * 
      * @return BaseEntityAbstract
      */
-    public function removeTag($tagName)
+    public function removeTag($type, $tagName)
     {
-    	EntityTag::removeTag($this, $tagName);
+    	EntityTag::removeTag($this, $type, $tagName);
     	return $this;
     }
     /**
@@ -410,7 +411,7 @@ abstract class BaseEntityAbstract
      */
     public function clearTags()
     {
-    	EntityTag::clearTags($this);
+    	EntityTag::removeTag($this, null, null);
     	return $this;
     }
     /**

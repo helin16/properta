@@ -38,28 +38,8 @@ class AssetController extends TService
     {
     	if(!isset($params['id']) || ($assetId = trim($params['id'])) === '')
     		throw new Exception('Nothing to get!');
-    	$asset = null;
-    	//try to use apc
-    	if(extension_loaded('apc') && ini_get('apc.enabled'))
-    	{
-    		if(!apc_exists($assetId))
-    		{
-    			$asset = Asset::getAsset($assetId);
-    			apc_add($assetId, $asset);
-    		}
-    		else
-    		{
-    			$asset = apc_fetch($assetId);
-    		}
-    		
-    	}
-    	else
-    	{
-    		$asset = Asset::getAsset($assetId);
-    	}
-    	
-    	if(!$asset instanceof Asset)
-	        throw new Exception('invalid id(' . $assetId . ') to get!');
+    	if(!($asset = Asset::getAsset($assetId)) instanceof Asset)
+	        throw new Exception('Nothing found for: ' . $assetId);
     	$this->getResponse()->writeFile($asset->getFileName(), file_get_contents($asset->getPath()), $asset->getMimeType(), null, false);
     }
 }

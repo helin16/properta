@@ -174,26 +174,24 @@ class EntityTag extends BaseEntityAbstract
 	 * remove tag of the entity
 	 * 
 	 * @param BaseEntityAbstract $entity
+	 * @param string|null        $type
 	 * @param string             $tagName
 	 * 
 	 * @return BaseEntityAbstract
 	 */
-	public static function removeTag(BaseEntityAbstract $entity, $tagName)
+	public static function removeTag(BaseEntityAbstract $entity, $type, $tagName)
 	{
-		if(($tag = Tag::getByName($tagName)) instanceof Tag)
-			self::updateByCriteria('active = 0', 'entityId = ? and entityName = ? and tagId = ?', array($entity->getId(), get_class($entity), $tag->getId()));
-		return $entity;
-	}
-	/**
-	 * Clearing all the tags for an entity
-	 * 
-	 * @param BaseEntityAbstract $entity
-	 * 
-	 * @return BaseEntityAbstract
-	 */
-	public static function clearTags(BaseEntityAbstract $entity)
-	{
-		self::updateByCriteria('active = 0', 'entityId = ? and entityName = ?', array($entity->getId(), get_class($entity)));
+		$where = 'entityId = ? and entityName = ?';
+		$params = array($entity->getId(), get_class($entity));
+		if($type !== null) {
+			$where .= ' AND type = ?';
+			$params[] = trim($type);
+		}
+		if($tagName !== null && ($tag = Tag::getByName($tagName)) instanceof Tag) {
+			$where .= ' AND tagId = ?';
+			$params[] = $tag->getId();
+		}
+		self::updateByCriteria('active = 0', $where, $params);
 		return $entity;
 	}
 	/**
