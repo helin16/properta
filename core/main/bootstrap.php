@@ -24,6 +24,7 @@ abstract class SystemCoreAbstract
 			$base . '/entity/content/',
 			$base . '/entity/property/',
 			$base . '/entity/system/',
+			$base . '/entity/tag/',
 			$base . '/exception/',
 			$base . '/util/',
 			$base . '/util/Connectors',

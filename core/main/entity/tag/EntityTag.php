@@ -170,4 +170,52 @@ class EntityTag extends BaseEntityAbstract
 	{
 		return self::create($entity->getId(), get_class($entity), Tag::create($tagName), $type);
 	}
+	/**
+	 * remove tag of the entity
+	 * 
+	 * @param BaseEntityAbstract $entity
+	 * @param string             $tagName
+	 * 
+	 * @return BaseEntityAbstract
+	 */
+	public static function removeTag(BaseEntityAbstract $entity, $tagName)
+	{
+		if(($tag = Tag::getByName($tagName)) instanceof Tag)
+			self::updateByCriteria('active = 0', 'entityId = ? and entityName = ? and tagId = ?', array($entity->getId(), get_class($entity), $tag->getId()));
+		return $entity;
+	}
+	/**
+	 * Clearing all the tags for an entity
+	 * 
+	 * @param BaseEntityAbstract $entity
+	 * 
+	 * @return BaseEntityAbstract
+	 */
+	public static function clearTags(BaseEntityAbstract $entity)
+	{
+		self::updateByCriteria('active = 0', 'entityId = ? and entityName = ?', array($entity->getId(), get_class($entity)));
+		return $entity;
+	}
+	/**
+	 * Getting all for an entity
+	 * 
+	 * @param BaseEntityAbstract $entity
+	 * @param string             $type
+	 * @param int                $pageNo
+	 * @param int                $pageSize
+	 * @param array              $orderBy
+	 * @param array              $stats
+	 * 
+	 * @return multiple:EntityTag
+	 */
+	public static function getAllForEntity(BaseEntityAbstract $entity, $type = null, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
+	{
+		$where = 'entityId = ? and entityName = ?';
+		$params = array($entity->getId(), get_class($entity));
+		if(($type = trim($type)) !== '') {
+			$where .= ' AND type = ?';
+			$params[] = $type;
+		}
+		return self::getAllByCriteria($where, $params, true, $pageNo, $pageSize, $orderBy, $stats);
+	}
 }
