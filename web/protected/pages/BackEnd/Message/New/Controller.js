@@ -15,7 +15,7 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 	,_submitForm: function(jQueryForm) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.data = {'g-captcha': grecaptcha.getResponse()};
+		tmp.data = {};
 		jQuery.each(jQueryForm.find('[contact-form]'), function(index, item) {
 			tmp.data[jQuery(item).attr('contact-form')] = jQuery(item).val();
 		});
@@ -35,7 +35,6 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 				} catch(e) {
 					tmp.msg.addClass('alert-danger').html('<strong>ERROR:</strong> ' + e).insertBefore(jQuery(tmp.submitBtn));
 				}
-				grecaptcha.reset();
 			}
 			,'onComplete': function() {
 				jQuery(tmp.submitBtn).button('reset');
@@ -87,13 +86,6 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
             // Prevent form submission
             e.preventDefault();
             tmp.me._submitForm(jQuery(tmp.me.jQueryFormSelector));
-        })
-        .bootstrapValidator('addField', 'gcap', {
-        	validators: {
-        		notEmpty: {
-        			message: 'Need to confirm you are not a robot'
-        		}
-        	}
         });
 		return tmp.me;
 	}

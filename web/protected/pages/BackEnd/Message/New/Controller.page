@@ -16,10 +16,6 @@
 						<div class="form-group">
 							<input type="text" placeholder="subject" class="form-control" contact-form="subject"  name="subject">
 						</div>
-						<div class="form-group">
-							<input type="hidden" name="gcap" id="gcap"/>
-							<div id="g-recaptcha" class="g-recaptcha"></div>
-						</div>
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						<div class="form-group">
@@ -30,10 +26,6 @@
 						</div>
 					</div>
 				</div>
-				<script>
-				var rendCap = function() { grecaptcha.render('g-recaptcha', {'sitekey' : "<%= $this->getCaptchaKey() %>", 'callback' : function(data) {pageJs.valCap(data, $('gcap'));} }); }
-				</script>
-				<script src="https://www.google.com/recaptcha/api.js?onload=rendCap&render=explicit" async defer></script>
 			</div>
 			<!-- end container -->
 		</section>

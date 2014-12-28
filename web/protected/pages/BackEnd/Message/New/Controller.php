@@ -19,22 +19,18 @@ class Controller extends FrontEndPageAbstract
         $js .=".init('#main-form');";
         return $js; 
     }
-	public function getCaptchaKey()
-	{
-		$googleRecap = Config::get('google', 'reCaptcha');
-		return $googleRecap['public-key'] ;
-	}
 	public function contactUs($sender, $param)
 	{
 		$results = $errors = array();
 		try
 		{
 			$data = json_decode(json_encode($param->CallbackParameter), true);
-			$conf = Config::get('google', 'reCaptcha');
-			$resp = ReCaptcha::verifyResponse($conf['verify-url'], $_SERVER['REMOTE_ADDR'], $data['g-captcha'], $conf['secret-key']);
-			if ($resp === null || !$resp->success)
-				throw new Exception('Invalid Captcha Provided!');
-			EmailSenderAbstract::sendEmail(Config::get('contact-us', 'tos'), $this->getAppName() . ' Contact Us: ' . $data['subject'], $data['comments'], $data['comments'], $data['email'], $data['name']);
+			var_dump($data);
+			$from = Core::getUser()->getPerson();
+			$to = $param->CallbackParameter->to;
+			$subject = $param->CallbackParameter->subject;
+			$body = $param->CallbackParameter->comments;
+			Message::create($from, $to, $subject, $body, Message::TYPE_EMAIL);
 		}
 		catch(Exception $ex)
 		{
