@@ -73,14 +73,23 @@ class Controller extends BackEndPageAbstract
 			var_dump($param->CallbackParameter);
 			
 			$action = trim($param->CallbackParameter->action);
-			if(!($message = Message::get(trim($param->CallbackParameter->message->id))) instanceof Message && $action === 'NEW')
-				$message = new Message();
-			else new Exception('Invalid Message passed in!');
+			if(!($message = Message::get(trim($param->CallbackParameter->message->id))) instanceof Message && $action !== 'NEW')
+				throw new Exception('Invalid Message passed in!');
 			
 			if($action === 'MARKREAD')
 			{
 				$message->setIsRead(true)->save();
+			} 
+			else if($action === 'NEW')
+			{
+				$from = $param->CallbackParameter->message->from;
+				$to = $param->CallbackParameter->message->to;
+				$subject = $param->CallbackParameter->message->subject;
+				$body = $param->CallbackParameter->message->body;
+				$type = $param->CallbackParameter->message->type;
+				$message = Message::create($from, $to, $subject, $body, $type);
 			}
+			
 			
 			$results['items'] = $message->getJson();
 		}

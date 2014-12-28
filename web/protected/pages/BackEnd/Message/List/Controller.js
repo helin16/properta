@@ -34,7 +34,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					tmp.result = tmp.me.getResp(param, false, true);
 					if(!tmp.result)
 						return;
-					console.debug(tmp.result);
 					
 					//reset div
 					if(tmp.reset === true) {
@@ -50,7 +49,6 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 						item.remove();
 					});
 					//main body structure
-					console.debug($(tmp.resultDiv));
 					$(tmp.resultDiv).insert({'bottom': new Element('div', {'class': 'row'}) 
 						.insert({'bottom': tmp.leftPanel = new Element('div', {'class': 'col-md-4 left-panel-container'})
 						})
@@ -79,24 +77,22 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 	,_getLeftPanelRow: function(item) {
 		var tmp = {};
 		tmp.me = this;
-		return new Element('div', {'class': 'row'}).store('data',item)
+		return new Element('div', {'class': (!item.isRead ? 'unread row' : 'row'), 'style': (!item.isRead ? 'color: red' : '')}).store('data',item)
 			.insert({'bottom': new Element('span').update(item.from ? item.from : 'sender name or email ...') })
 			.insert({'bottom': new Element('div', {'style': 'overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'}).update(item.subject) })
 			.observe('click', function(){
-				console.debug($(this).retrieve('data'));
-//				if($(this).retrieve('data').isRead === false) {
-				
-					tmp.me._updateMessage(item, 'MARKREAD');
-				
-				
-//				}
+				if($(this).retrieve('data').isRead === false) {
+					tmp.me._updateMessage(this, item, 'MARKREAD');
+				}
 				$$('.right-panel-container').first().update(tmp.me._getMessageDetailDiv(item)).addClassName('message-detail-container').writeAttribute('item_id', item.id);
 			})
 	}
 	
-	,_updateMessage: function(item, action) {
+	,_updateMessage: function(btn, item, action) {
 		var tmp = {};
 		tmp.me = this;
+		tmp.btn = btn;
+		console.debug(btn);
 		tmp.me.postAjax(tmp.me.getCallbackId('updateMessage'), {'message': item, 'action': action}, {
 			'onLoading': function () {
 			}
@@ -105,7 +101,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					tmp.result = tmp.me.getResp(param, false, true);
 					if(!tmp.result)
 						return;
-					console.debug(tmp.result);
+					tmp.btn.removeClassName('unread').writeAttribute('style','color: ""');
 				} catch (e) {
 					tmp.resultDiv.insert({'bottom': tmp.me.getAlertBox('Error', e).addClassName('alert-danger') });
 				}
