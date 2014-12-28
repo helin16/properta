@@ -294,11 +294,11 @@ class Message extends BaseEntityAbstract
 	public static function create(Person $from, Person $to, $subject, $body, $type)
 	{
 		$entity = new Message();
-		return $entity->setTo($to)
-			->setFrom($from)
-			->setType($type)
-			->setSubject($subject)
-			->setBody($body)
+		return $entity->setTo(trim($to))
+			->setFrom(trim($from))
+			->setType(trim($type))
+			->setSubject(trim($subject))
+			->setBody(trim($body))
 			->save();
 	}
 }
