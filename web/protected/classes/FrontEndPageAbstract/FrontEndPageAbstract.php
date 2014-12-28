@@ -41,15 +41,15 @@ abstract class FrontEndPageAbstract extends TPage
 	 */
 	protected function _getEndJs() 
 	{
-		$js ='jQuery("#header > .top-head").affix({
-				offset: {
-				    top: 10,
-				    bottom: function () {
-				      return (this.bottom = jQuery(".footer").outerHeight(true))
-				    }
-				}
-			}).on("affix.bs.affix", function(){ jQuery( this ).data("originalPadding", jQuery( this ).css("padding")).css("padding", 0); })
-			.on("affixed-top.bs.affix", function() {jQuery( this ).css("padding", jQuery( this ).data("originalPadding"));});';
+		$js ='jQuery("#header > .top-head").affix({';
+		$js .= 'offset: {';
+			$js .= 'top: 10,';
+			$js .= 'bottom: function () {';
+		    	$js .= 'return (this.bottom = jQuery(".footer").outerHeight(true))';
+				    $js .= '}';
+				$js .= '}';
+			$js .= '}).on("affix.bs.affix", function(){ jQuery( this ).data("originalPadding", jQuery( this ).css("padding")).css("padding", 0); })';
+			$js .= '.on("affixed-top.bs.affix", function() {jQuery( this ).css("padding", jQuery( this ).data("originalPadding"));});';
 	    $js .= 'if(typeof(PageJs) !== "undefined"){var pageJs = new PageJs(); }';
 	    return $js;
 	}
@@ -91,7 +91,7 @@ abstract class FrontEndPageAbstract extends TPage
 		//font awesome
 		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'FontAwesome' . DIRECTORY_SEPARATOR);
 		$clientScript->registerStyleSheetFile('Awesome.font.css', $folder .  '/css/font-awesome.min.css');
-		//font awesome
+		//picons
 		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'picons' . DIRECTORY_SEPARATOR);
 		$clientScript->registerStyleSheetFile('picons.css', $folder .  '/picons.css');
 		//jquery
@@ -106,6 +106,11 @@ abstract class FrontEndPageAbstract extends TPage
 		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'bootstrapValidator' . DIRECTORY_SEPARATOR);
 		$clientScript->registerHeadScriptFile('Bootstrap.validator.js', $folder . '/js/bootstrapValidator.min.js');
 		$clientScript->registerStyleSheetFile('Bootstrap.validator.css', $folder . '/css/bootstrapValidator.min.css');
+		//tweenmax
+		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'TweenMax' . DIRECTORY_SEPARATOR);
+		$clientScript->registerHeadScriptFile('TweenMax.js', $folder .  '/TweenMax.js');
+		$clientScript->registerHeadScriptFile('TweenMax.smoothScroll.js', $folder .  '/smoothScroll.js');
+		$clientScript->registerHeadScriptFile('TweenMax.scrollTo.js', $folder .  '/scrollTo.js');
 		//jquery noconflict
 		$clientScript->registerHeadScript('jquery.noConflict', 'jQuery.noConflict();');
 		
