@@ -228,6 +228,20 @@ class Message extends BaseEntityAbstract
 	}
 	/**
 	 * (non-PHPdoc)
+	 * @see BaseEntityAbstract::getJson()
+	 */
+	public function getJson($extra = '', $reset = false)
+	{
+		$array = array();
+		if(!$this->isJsonLoaded($reset))
+		{
+			$array['to'] = $this->getTo()->getJson();
+			$array['from'] = $this->getFrom()->getJson();
+		}
+		return parent::getJson($array, $reset);
+	}
+	/**
+	 * (non-PHPdoc)
 	 * @see BaseEntityAbstract::__toString()
 	 */
 	public function __toString()
