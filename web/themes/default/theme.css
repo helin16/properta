@@ -1,4 +1,4 @@
-html,body,#main-form {
+html,body,.main-form {
 	width: 100%;
 	padding: 0px;
 	margin: 0px;
@@ -18,19 +18,19 @@ html,body,#main-form {
 	top: 10px;
 }
 
-#main-form>#mainbody,#main-form>#footer {
+.main-form>#mainbody,.main-form>#footer {
 	display: block;
 }
 
-#main-form>#mainbody {
+.main-form>#mainbody {
 	min-height: 70%;
 }
 
-#main-form>#mainbody .page-header {
+.main-form>#mainbody .page-header {
 	margin-top: 0px;
 }
 
-#main-form>#footer {
+.main-form>#footer {
 	min-height: 30%;
 }
 

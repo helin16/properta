@@ -177,6 +177,28 @@ class Confirmation extends BaseEntityAbstract
 	    return $this;
 	}
 	/**
+	 * Getting the entity
+	 * 
+	 * @return BaseEntityAbstract
+	 * @throws Exception
+	 * @throws EntityException
+	 */
+	public function getEntity()
+	{
+		$class = trim($this->getEntityName());
+		try {
+			if(!class_exists($class))
+				throw new Exception();
+		} catch (Exception $ex) {
+			return null;
+		}
+		if(!($entity = $class::get(trim($this->getEntityId()))) instanceof ConfirmEntityAbstract || !($confirm = $entity->getConfirmation()) instanceof Confirmation)
+			return null;
+		if(trim($confirm->getId()) !== trim($this->getId()))
+			return null;
+		return $entity;
+	}
+	/**
 	 * (non-PHPdoc)
 	 * @see BaseEntityAbstract::preSave()
 	 */
@@ -224,15 +246,12 @@ class Confirmation extends BaseEntityAbstract
 	 */
 	public function confirm()
 	{
-		$class = trim($this->getEntityName());
-		if(!($entity = $class::get(trim($this->getEntityId()))) instanceof ConfirmEntityAbstract || !($confirm = $entity->getConfirmation()) instanceof Confirmation)
+		if(!($entity = $this->getEntity()) instanceof BaseEntityAbstract)
 			throw new EntityException('The entity you are trying to confirm is not found.');
-		if(trim($confirm->getId()) === trim($this->getId()))
-			throw new EntityException('The entity you are trying to confirm is invalid.');
 		$entity->setConfirmation(null)
 			->setActive(true)
 			->save()
-			->addLog(Log::TYPE_SYS, 'Confirmed(=' . $this->getSKey() . ') ' . $class . '(ID=' . trim($this->getEntityId()) . ').');
+			->addLog(Log::TYPE_SYS, 'Confirmed(=' . $this->getSKey() . ') ' . get_class($entity) . '(ID=' . trim($entity->getId()) . ').');
 		$this->setActive(false)->save();
 		return $entity;
 	}
@@ -262,5 +281,17 @@ class Confirmation extends BaseEntityAbstract
 			->save()
 			->addLog(Log::TYPE_SYS, $msg);
 		return $entity;
+	}
+	/**
+	 * Getting Confirmation by the skey
+	 * 
+	 * @param string $key
+	 * 
+	 * @return NULL|Confirmation
+	 */
+	public static function getBySkeyNotExpired($key)
+	{
+		$items = self::getAllByCriteria('skey = ? and expiryTime >= NOW()', array(trim($key)), true, 1, 1);
+		return count($items) > 0 ? $items[0] : null;
 	}
 }

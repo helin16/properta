@@ -17,7 +17,7 @@ class Controller extends FrontEndPageAbstract
         $js = parent::_getEndJs();
         $js .="pageJs.setCallbackId('newMessage', '" . $this->newMessageBtn->getUniqueId() . "')";
         $js .=".initSelect2('.select2')";
-        $js .=".init('#main-form');";
+        $js .=".init('#" .  $this->getPage()->getForm()->getClientId() . "');";
         return $js; 
     }
 	public function newMessage($sender, $param)

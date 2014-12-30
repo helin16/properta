@@ -16,7 +16,7 @@ class HomeController extends FrontEndPageAbstract
 	{
 		$js = parent::_getEndJs();
 		$js .="pageJs.setCallbackId('contactus', '" . $this->contactUsBtn->getUniqueId() . "')";
-		$js .=".init('#main-form')";
+		$js .=".init('#" . $this->getPage()->getForm()->getClientId() . "')";
 		$js .=".load();";
 		return $js;
 	}

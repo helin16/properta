@@ -75,9 +75,9 @@ class UserAccount extends ConfirmEntityAbstract
      *
      * @return UserAccount
      */
-    public function setPassword($Password)
+    public function setPassword($password, $encryptPass = false)
     {
-        $this->password = $Password;
+        $this->password = ($encryptPass === true ? self::encryptPass($password) : $password);
         return $this;
     }
     /**
@@ -141,6 +141,7 @@ class UserAccount extends ConfirmEntityAbstract
     		throw new EntityException('Username can NOT be empty', 'exception_entity_useraccount_username_empty');
     	if(trim($this->getPassword()) === '')
     		throw new EntityException('Password can NOT be empty', 'exception_entity_useraccount_password_empty');
+    	parent::preSave();
     }
     /**
      * (non-PHPdoc)
@@ -171,27 +172,39 @@ class UserAccount extends ConfirmEntityAbstract
     public static function getUserByUsernameAndPassword($username, $password, $noHashPass = false)
     {
     	$query = self::getQuery();
-    	$userAccounts = self::getAllByCriteria("`username` = :username AND `Password` = :password", array('username' => $username, 'password' => ($noHashPass === true ? $password : sha1($password))), true, 1, 1);
+    	$userAccounts = self::getAllByCriteria("`username` = :username AND `Password` = :password", array('username' => $username, 'password' => ($noHashPass === true ? $password : self::encryptPass($password))), true, 1, 1);
     	if(count($userAccounts) > 0)
     		return $userAccounts[0];
     	return null;
     }
     /**
-     * Creating a new useraccount
-     *
-     * @param string $email
+     * encrypt password
+     * 
      * @param string $password
-     * @param Person   $person
-     *
+     * 
+     * @return string
+     */
+    public static function encryptPass($password)
+    {
+    	return sha1($password);
+    }
+    /**
+     * Creating a new useraccount
+     * 
+     * @param unknown $username
+     * @param unknown $password
+     * @param Person  person
+     * 
      * @return UserAccount
      */
-    public static function createUser($username, $password, Person $person)
+    public static function create($username, $password, Person $person, $encryptPass = true)
     {
     	$userAccount = new UserAccount();
     	return $userAccount->setUserName($username)
-    		->setPassword($password)
+    		->setPassword($password, !$encryptPass)
     		->setPerson($person)
     		->save()
+    		->needToConfirm('UserAccount Created')
     		->addLog(Log::TYPE_SYS, 'UserAccount created with (username=' . $username . ') with person(id=' . $person->getId() . ')');
     }
     /**
@@ -203,10 +216,10 @@ class UserAccount extends ConfirmEntityAbstract
      *
      * @return Ambigous <BaseEntity, BaseEntityAbstract>
      */
-    public static function updateUser(UserAccount &$userAccount, $username, $password)
+    public static function updateUser(UserAccount &$userAccount, $username, $password, $encryptPass = true)
     {
     	return $userAccount->setUserName($username)
-    		->setPassword($password)
+    		->setPassword($password, !$encryptPass)
     		->save()
     		->addLog(Log::TYPE_SYS, 'UserAccount updated with (username=' . $username . ') with person(id=' . $userAccount->getPerson()->getId() . ')' );
     }

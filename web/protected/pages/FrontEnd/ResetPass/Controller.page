@@ -1,0 +1,6 @@
+<com:TContent ID="MainContent">
+    <com:TCallback ID="resetPassBtn" OnCallback="resetPass" />
+    <br />
+    <br />
+	<com:TPanel id='resetForm' CssClass="container"></com:TPanel>
+</com:TContent>

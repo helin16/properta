@@ -159,7 +159,6 @@ FrontPageJs.prototype = {
 		if($(tmp.me.modalId)) {
 			$(tmp.me.modalId).remove();
 		}
-		
 		$$('body')[0].insert({'bottom': tmp.newBox.writeAttribute('id',  tmp.me.modalId)});
 		jQuery('#' + tmp.me.modalId).modal({'show': true, 'target': '#' + tmp.me.modalId});
 		return tmp.me;

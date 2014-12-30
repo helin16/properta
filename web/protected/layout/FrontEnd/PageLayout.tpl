@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </com:THead>
 <body role="document">
-	<com:TForm Attributes.id="main-form" Attributes.onSubmit="return false;">
+	<com:TForm id="mainForm" Attributes.class="main-form" Attributes.onSubmit="return false;">
 		<header id="header">
 			<com:Application.layout.FrontEnd.Header.Header />
 		</header>

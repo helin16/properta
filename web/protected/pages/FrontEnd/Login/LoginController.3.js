@@ -50,34 +50,40 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 		
 		tmp.usernamebox = loginPanel.down('[login-panel="email"]');
 		tmp.passwordbox = loginPanel.down('[login-panel="password"]');
+		tmp.errMsgDiv = new Element('div');
 		if($F(tmp.usernamebox).blank()) {
-			tmp.me._markFormGroupError($(tmp.usernamebox), tmp.me._getErrMsg('Please provide an email!'));
+			tmp.errMsgDiv.insert({'bottom': tmp.me._getErrMsg('Please provide an email!') });
 			tmp.hasError = true;
 		}
-		if(!tmp.me.validateEmail($F(tmp.usernamebox).strip())) {
-			tmp.me._markFormGroupError($(tmp.usernamebox), tmp.me._getErrMsg('Please provide an valid email!'));
+		else if($F(tmp.usernamebox).strip().match(/^.+@.+$/) === null) {
+			tmp.errMsgDiv.insert({'bottom': tmp.me._getErrMsg('Please provide an valid email!') });
 			tmp.hasError = true;
 		}
 		if($F(tmp.passwordbox).blank()) {
-			tmp.me._markFormGroupError($(tmp.passwordbox), tmp.me._getErrMsg('Please provide an password!'));
+			tmp.errMsgDiv.insert({'bottom': tmp.me._getErrMsg('Please provide an password!') });
 			tmp.hasError = true;
 		}
-		return tmp.hasError === true ? false : {'email': $F(tmp.usernamebox).strip(), 'password': $F(tmp.passwordbox).strip()};
+		if(tmp.hasError === true) {
+			loginPanel.down('.msg-div').update(tmp.errMsgDiv);
+			return false;
+		}
+		return {'email': $F(tmp.usernamebox).strip(), 'password': $F(tmp.passwordbox).strip()};
 	}
 
 	,_getErrMsg: function (msg) {
-		return new Element('span', {'class': 'errmsg smalltxt'}).update(msg);
+		return new Element('div', {'class': 'errmsg smalltxt text-danger'}).update(msg);
 	}
 	
-	,signUp: function (btn) {
+	,_signUp: function (btn) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.panel = $(btn).up('.signup-form');
 		tmp.panel.down('.msg-div').update('');
+		tmp.emailBox = tmp.panel.down('[sigup-panel="email"]');
 		tmp.hasErr = false;
-		tmp.email = (tmp.panel.down('input.email') ? $F(tmp.panel.down('input.email')).strip() : '');
-		if (tmp.email.match(/^.+@[0-9a-zA-Z_-]+(\.[0-9a-zA-Z_-]+)+$/) === null) {
-			tmp.me._markFormGroupError(tmp.panel.down('input.email'), 'Please provide an valid email address.');
+		tmp.email = (tmp.emailBox ? $F(tmp.emailBox).strip() : '');
+		if (tmp.email.match(/^.+@.+$/) === null) {
+			tmp.panel.down('.msg-div').update(tmp.me._getErrMsg('Please provide an valid email!'));
 			tmp.hasErr = true;
 		}
 		if(tmp.hasErr === true)
@@ -97,7 +103,7 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 						return;
 					tmp.msg = '<p>An email will be sent to <em><u>' + tmp.result.confirmEmail + '</u></em> with the initial password soon. Please use that to login and change the initial password after you logged in.</p>';
 					tmp.panel.down('.msg-div').update(tmp.me.getAlertBox(tmp.msg).addClassName('alert-success'));
-					tmp.panel.down('input.email').clear();
+					tmp.emailBox.clear();
 				} catch(e) {
 					tmp.panel.down('.msg-div').update(tmp.me.getAlertBox(e).addClassName('alert-danger'));
 				}
@@ -117,22 +123,23 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.panel = $(btn).up('.pass-retrieve-panel');
-		tmp.emailBox = tmp.panel.down('input.email');
+		tmp.panel.down('.msg-div').update('');
+		tmp.emailBox = tmp.panel.down('[pass-retrieve-panel="email"]');
 		tmp.hasErr = false;
 		tmp.email = (tmp.emailBox ? $F(tmp.emailBox).strip() : '');
-		if (tmp.email.match(/^.+@[0-9a-zA-Z_-]+(\.[0-9a-zA-Z_-]+)+$/) === null) {
-			tmp.me._markFormGroupError(tmp.emailBox, 'Please provide an valid email address.');
+		if (tmp.email.match(/^.+@.+$/) === null) {
+			tmp.panel.down('.msg-div').update(tmp.me._getErrMsg('Please provide an valid email!'));
 			tmp.hasErr = true;
 		}
 		if(tmp.hasErr === true)
 			return tmp.me;
 		
-		
 		tmp.me._signRandID(btn);
+		tmp.loadingDiv = tmp.me._getLoadingPanel();
 		tmp.me.postAjax(tmp.me.getCallbackId('retrieve-pass'), {'email': tmp.email}, {
-			'OnLoading': function () {
-				tmp.emailBox.disabled = true;
+			'onLoading': function () {
 				jQuery('#' + btn.id).button('loading');
+				$(tmp.me._ressultPanelId).insert({'after': tmp.loadingDiv}).hide();
 			}
 			,'onSuccess': function(sender, param) {
 				try {
@@ -148,7 +155,8 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 			}
 			,'onComplete': function(sender, param) {
 				jQuery('#' + btn.id).button('reset');
-				tmp.emailBox.disabled = false;
+				tmp.loadingDiv.remove();
+				$(tmp.me._ressultPanelId).show();
 			}
 		}, 60000)
 		return tmp.me;
@@ -156,47 +164,111 @@ PageJs.prototype = Object.extend(new FrontPageJs(), {
 	/**
 	 * Showing the retrieve password panel
 	 */
-	,showRetrievePassPanel: function(btn) {
+	,showRetrievePassPanel: function(show) {
+		if(show === true) { //the retrieve-panel
+			jQuery('.pass-retrieve-panel').show();
+			jQuery('.login-panel').hide();
+		} else {
+			jQuery('.login-panel').show();
+			jQuery('.pass-retrieve-panel').hide();
+		}
+	}
+	/**
+	 * initialising
+	 */
+	,init: function(jQueryFormSelector) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.newPanel = new Element('div', {'class': 'col-sm-6 col-sm-push-3 pass-retrieve-panel'})
-			.insert({'bottom': new Element('div', {'class': 'panel panel-default'})
-				.insert({'bottom': new Element('div', {'class': 'panel-body'})
-					.insert({'bottom': new Element('h4').update('Please provide your email you signed up with:') })
-					.insert({'bottom': new Element('div', {'class': 'msg-div'}) })
-					.insert({'bottom': new Element('div', {'class': 'form-group'}) 
-						.insert({'bottom': new Element('label').update('Your email:') }) 
-						.insert({'bottom': new Element('div', {'class': 'input-group'})
-							.insert({'bottom': new Element('div', {'class': 'input-group-addon'}).update(new Element('div', {'class': 'glyphicon glyphicon-envelope'})) })
-							.insert({'bottom': tmp.emailTxtBox = new Element('input', {'class': 'form-control email', 'placeholder': "Your email that you signed up with."})
-								.observe('keydown', function(event){
-									tmp.submitBtn = $(this).up('.pass-retrieve-panel').down('.submit-btn');
-									tmp.me.keydown(event, function(){ 
-										if(tmp.submitBtn) {
-											tmp.submitBtn.click();
-										} 
-									});
-								})
-							})
-						}) 
-					})
-					.insert({'bottom': new Element('div', {'class': 'form-group'})
-						.insert({'bottom': new Element('a', {'href': 'javascript: void(0);'}).update('Cancel')
-							.observe('click', function() {
-								$(this).up('.pass-retrieve-panel').remove();
-								$(tmp.me._ressultPanelId).show();
-							})
-						})
-						.insert({'bottom': new Element('span', {'class': 'btn btn-primary pull-right submit-btn', 'data-loading-text': "<i class='fa fa-refresh fa-spin'></i>"}).update('Retrieve My Password')
-							.observe('click', function() {
-								tmp.me._submtRetrievePass(this);
-							})
-						})
-					})
-				})
-			})
-		$(tmp.me._ressultPanelId).insert({'after': tmp.newPanel}).hide();
-		tmp.emailTxtBox.focus();
+		tmp.me.jQueryFormSelector = jQueryFormSelector;
+		jQuery(tmp.me.jQueryFormSelector).bootstrapValidator({
+	        message: 'This value is not valid',
+	        feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	        	'login_email': {
+	                validators: {
+	                    notEmpty: {
+	                        message: 'Your email is needed here'
+	                    },
+	                    emailAddress: {
+	                        message: 'The input is not a valid email address'
+	                    }
+	                }
+	        	}
+	        	,'login_pass': {
+	        		validators: {
+	        			notEmpty: {
+	        				message: 'You password please.'
+	        			}
+	        		}
+	        	}
+	        	,'signup_email': {
+	        		validators: {
+	                    notEmpty: {
+	                        message: 'We need to know your email address to sign you up.'
+	                    },
+	                    emailAddress: {
+	                        message: 'The input is not a valid email address'
+	                    }
+	                }
+	        	}
+	        	,'retrieve_pass_email': {
+	        		validators: {
+	        			notEmpty: {
+	        				message: 'Your email is needed here'
+	        			},
+	        			emailAddress: {
+	        				message: 'The input is not a valid email address'
+	        			}
+	        		}
+	        	}
+	        }
+		})
+		.on('success.form.bv', function(e) {
+            // Prevent form submission
+            e.preventDefault();
+        })
+        .on('error.field.bv', function(e, data) {
+        	data.bv.disableSubmitButtons(false);
+        })
+        .on('success.field.bv', function(e, data) {
+        	data.bv.disableSubmitButtons(false);
+        })
+        .on('keydown', '.login-page-form[submit-btn]', function(e){
+        	tmp.element = jQuery(e.target);
+        	tmp.me.keydown(e, function(){
+        		jQuery(tmp.element.attr('submit-btn')).click();
+        	});
+        })
+        .on('click', '#loginbtn', function(e){
+        	jQuery('.panel .msg-div').html('');
+            jQuery.each(jQuery('.form-control'), function(index, element){
+            	jQuery(tmp.me.jQueryFormSelector).bootstrapValidator('enableFieldValidators', jQuery(element).attr('name'), jQuery(element).hasClass('login-form'));
+            });
+            if(jQuery(tmp.me.jQueryFormSelector).bootstrapValidator('validate').data('bootstrapValidator').isValid())
+            	tmp.me.login($('loginbtn'));
+        })
+        .on('click', '#signupbtn', function(e){
+        	jQuery('.panel .msg-div').html('');
+        	jQuery.each(jQuery('.form-control'), function(index, element){
+        		jQuery(tmp.me.jQueryFormSelector).bootstrapValidator('enableFieldValidators', jQuery(element).attr('name'), jQuery(element).hasClass('signup-form'));
+        	});
+        	if(jQuery(tmp.me.jQueryFormSelector).bootstrapValidator('validate').data('bootstrapValidator').isValid())
+        		tmp.me._signUp($('signupbtn'));
+        })
+        .on('click', '#retrievebtn', function(e){
+        	jQuery('.panel .msg-div').html('');
+        	jQuery.each(jQuery('.form-control'), function(index, element){
+        		jQuery(tmp.me.jQueryFormSelector).bootstrapValidator('enableFieldValidators', jQuery(element).attr('name'), jQuery(element).hasClass('retrieve-pass-form'));
+        	});
+        	if(jQuery(tmp.me.jQueryFormSelector).bootstrapValidator('validate').data('bootstrapValidator').isValid())
+        		tmp.me._submtRetrievePass($('retrievebtn'));
+        })
+        ;
+		return tmp.me;
 	}
 	
 });

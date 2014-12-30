@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </com:THead>
 <body>
-    <com:TForm Attributes.id="main-form" Attributes.onSubmit="return false;">
+    <com:TForm id="mainForm" Attributes.class="main-form" Attributes.onSubmit="return false;">
         <com:TContentPlaceHolder ID="MainContent" />
     </com:TForm>
 </body>
