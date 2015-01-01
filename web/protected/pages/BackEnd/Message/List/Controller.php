@@ -15,7 +15,7 @@ class Controller extends BackEndPageAbstract
 	protected function _getEndJs()
 	{
 		$js = parent::_getEndJs();
-		$js .= "pageJs.setHTMLIDs(" . json_encode(array('resultDivId' => 'result-div', 'totalNoOfItemsId' => 'totalNoOfItemsId')) . ")";
+		$js .= "pageJs.setHTMLIDs(" . json_encode(array('resultDivId' => 'result-div', 'totalNoOfItemsId' => 'totalNoOfItemsId', 'unreadMessageContentBodyId'=>'unread-message-content-body', 'messageContentBody'=> 'message-content-body')) . ")";
 		$js .= ".setCallbackId('getItems', '" . $this->getItemsBtn->getUniqueID() . "')";
 		$js .= ".setCallbackId('updateMessage', '" . $this->updateMessageBtn->getUniqueID() . "')";
 		$js .= ".setPropRelTypes(" . Role::ID_TENANT . ", " . Role::ID_AGENT .", " . Role::ID_OWNER . ")";

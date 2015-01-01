@@ -12,3 +12,5 @@ INSERT INTO `role` (`id`, `name`, `active`, `created`, `createdById`, `updated`,
 	(40,'tenant', 1, '2014-03-06 19:47:35', 42, '2014-03-25 06:45:56', 42),
 	(41,'agent', 1, '2014-03-06 19:47:35', 42, '2014-03-25 06:45:56', 42),
 	(42,'owner', 1, '2014-03-06 19:47:35', 42, '2014-03-25 06:45:56', 42);
+	
+UPDATE `properta`.`useraccount` SET `active` = '1' WHERE `useraccount`.`id` = 10;
