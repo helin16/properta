@@ -102,6 +102,8 @@ abstract class FrontEndPageAbstract extends TPage
 		$clientScript->registerStyleSheetFile('Bootstrap.css', $folder . '/css/bootstrap.min.css');
 		$clientScript->registerStyleSheetFile('Bootstrap.theme.css', $folder . '/bootstrap-theme.min.css');
 		$clientScript->registerHeadScriptFile('Bootstrap.js', $folder . '/js/bootstrap.min.js');
+		$clientScript->registerHeadScriptFile('Bootstrap.transition.js', $folder . '/js/transition.js');
+		$clientScript->registerHeadScriptFile('Bootstrap.collapse.js', $folder . '/js/collapse.js');
 		//bootstrap form validator
 		$folder = $this->publishFilePath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'bootstrapValidator' . DIRECTORY_SEPARATOR);
 		$clientScript->registerHeadScriptFile('Bootstrap.validator.js', $folder . '/js/bootstrapValidator.min.js');
