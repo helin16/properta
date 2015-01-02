@@ -59,7 +59,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					tmp.result.items.each(function(item){
 						tmp.me._fillMessageRow(item);
 					});
-					
+					jQuery('[data-toggle="collapse"]').collapse('hide');
 				} catch (e) {
 					tmp.resultDiv.insert({'bottom': tmp.me.getAlertBox('Error', e).addClassName('alert-danger') });
 				}
@@ -76,34 +76,42 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 		tmp.message = message;
 		console.debug(message);
 		
-		tmp.container = tmp.message.isRead ? $(tmp.me._htmlIDs.messageContentBody) : $(tmp.me._htmlIDs.unreadMessageContentBodyId);
+		// ids
+		tmp.containerId = tmp.message.isRead ? tmp.me._htmlIDs.messageContentBody : tmp.me._htmlIDs.unreadMessageContentBodyId;
+		tmp.headingId = tmp.containerId + 'Heading' + message.id;
+		tmp.accordionId = tmp.containerId;
+		tmp.collapseId = tmp.containerId + 'Collapse' + message.id;
+		
 		//remove empty message
-		if(tmp.container.down('.empty-message-row'))
-			tmp.container.down('.empty-message-row').remove();
+		if($(tmp.containerId).down('.empty-message-row'))
+			$(tmp.containerId).down('.empty-message-row').remove();
 		//fill in message
-		tmp.container.insert({'bottom': new Element('div', {'class': 'row row-primary', 'style': 'cursor: pointer;'}).store('data', tmp.message)
-			.insert({'bottom': new Element('div', {'class': 'col-md-3', 'style': 'white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'})
-				.insert({'bottom': new Element('p', {'title': tmp.message.from.email}).update(tmp.message.from.fullName) })
+		$(tmp.containerId).insert({'bottom': new Element('div', {'class': 'panel panel-default message-panel', 'style': 'cursor: pointer;', 'item-id': message.id }).store('data', tmp.message)
+			.insert({'bottom': new Element('div', {'class': 'panel-heading', 'role': 'tab', 'id': tmp.headingId })
+				.insert({'bottom': new Element('h4', {'class': 'panel-title'})
+					.insert({'bottom': new Element('a', {'data-toggle': 'collapse', 'data-parent': ('#' + tmp.accordionId), 'href': ('#' + tmp.collapseId), 'aria-expanded': 'false', 'aria-controls': tmp.collapseId })
+						.insert({'bottom': new Element('div', {'class': 'row'})
+							.insert({'bottom': new Element('span', {'class': 'col-md-3', 'style': 'white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'}).update(message.from.fullName) })
+							.insert({'bottom': new Element('span', {'class': 'col-md-9', 'style': 'white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'}).update(message.subject) })
+						})
+					})
+					.observe('click', function(){
+						tmp.message = $(this).up('.message-panel').retrieve('data');
+						tmp.me._markMessageToRead(tmp.message);
+					})
+				})
 			})
-			.insert({'bottom': new Element('div', {'class': 'col-md-9', 'style': 'white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'})
-				.insert({'bottom': new Element('p').update(tmp.message.subject) })
-			})
-			.observe('click', function(){
-				console.debug(this);
-				tmp.messageRow = $(this);
-				jQuery('.messageDetailDiv').remove();
-				if(!tmp.message.isRead)
-					tmp.messageRow = tmp.me._moveMessageToRead($(this));
-				tmp.messageRow.insert({'after': tmp.me._getMessageDetaiPanel(tmp.messageRow.retrieve('data')) });
-				// move unread message to read
+			.insert({'bottom': new Element('div', {'class': 'panel-collapse collapse in', 'id': tmp.collapseId, 'role': 'tabpanel', 'aria-labelledby': tmp.headingId }) 
+				.insert({'bottom': new Element('div', {'class': 'panel-body'})
+					.update(message.body)
+				})
 			})
 		})
 	}
-	,_moveMessageToRead: function(oldMessageRow) {
+	,_markMessageToRead: function(message) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.oldMessageRow = oldMessageRow;
-		tmp.message = oldMessageRow.retrieve('data');
+		tmp.message = message;
 		tmp.me.postAjax(tmp.me.getCallbackId('updateMessage'), {'message': tmp.message, 'action': 'MARKREAD'}, {
 			'onLoading': function () {
 			}
@@ -112,9 +120,7 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 					tmp.result = tmp.me.getResp(param, false, true);
 					if(!tmp.result)
 						return;
-					tmp.oldMessageRow.remove();
-					tmp.newMessageRow = tmp.me._fillMessageRow(tmp.result.items);
-					return tmp.newMessageRow;
+					return tmp.result.items;
 				} catch (e) {
 					tmp.resultDiv.insert({'bottom': tmp.me.getAlertBox('Error', e).addClassName('alert-danger') });
 				}
@@ -125,27 +131,18 @@ PageJs.prototype = Object.extend(new BackEndPageJs(), {
 			}
 		});
 	}
-	,_getMessageDetaiPanel: function(message) {
-		var tmp = {};
-		tmp.me = this;
-		tmp.message = message;
-		return new Element('div', {'class': 'messageDetailDiv'})
-			.insert({'bottom': new Element('div', {'class': 'row'})
-				.insert({'bottom': new Element('div', {'class': 'col-md-12'}).update(message.body) })
-			})
-	}
 	,_getRightPanel: function() {
 		var tmp = {};
 		tmp.me = this;
 		return new Element('div', {'id': 'content'})
 			.insert({'bottom': new Element('h2').update('Unread') })
-			.insert({'bottom': new Element('div', {'id': tmp.me._htmlIDs.unreadMessageContentBodyId})
-				.insert({'bottom': new Element('div', {'class': 'row empty-message-row'})
+			.insert({'bottom': new Element('div', {'class': 'panel-group', 'id': tmp.me._htmlIDs.unreadMessageContentBodyId, 'role': 'tablist', 'aria-multiselectable': 'true' })
+				.insert({'bottom': new Element('div', {'class': 'row empty-message-row' })
 					.insert({'bottom': new Element('div', {'class': 'col-md-12'}).update('Woohoo! You' + "'" + 've read all the messages in your inbox.') })
 				})
 			})
 			.insert({'bottom': new Element('h2').update('Everything Else') }) 
-			.insert({'bottom': new Element('div', {'id': tmp.me._htmlIDs.messageContentBody})
+			.insert({'bottom': new Element('div', {'class': 'panel-group', 'id': tmp.me._htmlIDs.messageContentBody, 'role': 'tablist', 'aria-multiselectable': 'true' })
 				.insert({'bottom': new Element('div', {'class': 'row empty-message-row'})
 					.insert({'bottom': new Element('div', {'class': 'col-md-12'})
 						.insert({'bottom': new Element('span').update('Psst! It seems like you haven' + "'" + 't read any message yet. ') })
