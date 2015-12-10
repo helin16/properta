@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\BaseModel;
 
 class CreateIssuesTable extends Migration
 {
@@ -20,7 +19,16 @@ class CreateIssuesTable extends Migration
             $table->integer('rental_id')->unsigned();
             $table->string('status', 32);
             $table->timestamps();
-            BaseModel::blueprint($table);
+
+            $table->foreign('from_user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+
+            $table->foreign('to_user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 
