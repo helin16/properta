@@ -144,6 +144,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Additional Providers ...
+         */
+        Illuminate\Html\HtmlServiceProvider::class
     ],
 
     /*
@@ -192,6 +196,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
+        /*
+         * Additional aliases ...
+         */
+        'Form'=> 'Illuminate\Html\FormFacade',
+        'HTML'=> 'Illuminate\Html\HtmlFacade',
     ],
 
 ];

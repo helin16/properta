@@ -33,6 +33,12 @@
             .title {
                 font-size: 96px;
             }
+
+            a {
+                font-weight: bold;
+                font-family: "Arial Black";
+                color: deepskyblue;
+            }
         </style>
     </head>
     <body>
@@ -40,6 +46,10 @@
             <div class="content">
                 <div class="title">Laravel 5</div>
             </div>
+            <ul>
+                <li><a href="auth/login">Login</a></li>
+                <li><a href="auth/logout">Logout</a></li>
+            </ul>
         </div>
     </body>
 </html>
