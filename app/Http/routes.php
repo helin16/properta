@@ -30,5 +30,5 @@ Route::group(['prefix' => 'dashboard', 'as' => 'HomePage::', 'middleware' => 'au
 });
 
 Route::group(['prefix' => 'api', 'as' => 'API::', 'middleware' => 'simpleauth'], function() {
-    Route::resource('issues','API\IssuesController');
+    Route::resource('issues','API\IssuesController', ['only' => ['index', 'store', 'update', 'destroy', 'show']]);
 });

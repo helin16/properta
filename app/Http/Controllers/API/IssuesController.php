@@ -20,16 +20,6 @@ class IssuesController extends Controller
         return Issue::all();
     }
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -48,18 +38,7 @@ class IssuesController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return Issue::find($id);
     }
 
     /**
@@ -71,7 +50,9 @@ class IssuesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $obj = Issue::findOrFail($id);
+        $obj->update($request->all());
+        return $obj;
     }
 
     /**
@@ -82,6 +63,6 @@ class IssuesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Issue::destroy($id);
     }
 }
