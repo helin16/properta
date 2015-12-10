@@ -3,8 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\System;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Schema\Blueprint;
 
 abstract class BaseModel extends Model
 {
@@ -12,5 +12,9 @@ abstract class BaseModel extends Model
     {
         $this->attributes['active'] = 1;
         return parent::performInsert($query, $options);
+    }
+    public static function blueprint(Blueprint &$table)
+    {
+        $table->boolean('active');
     }
 }

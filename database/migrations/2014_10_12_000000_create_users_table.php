@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\BaseModel;
 
 class CreateUsersTable extends Migration
 {
@@ -14,11 +15,11 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('active');
             $table->string('email')->unique();
             $table->string('password', 60);
             $table->rememberToken();
             $table->timestamps();
+            BaseModel::blueprint($table);
         });
     }
 
