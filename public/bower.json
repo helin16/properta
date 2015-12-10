@@ -1,0 +1,11 @@
+{
+  "name": "properta",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "tether": "master",
+    "bootstrap": "~4.0.0",
+    "font-awesome": "master"
+  },
+  "private": true
+}
