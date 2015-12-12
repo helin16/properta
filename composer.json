@@ -10,8 +10,9 @@
   "require": {
     "php": ">=5.5.9",
     "laravel/framework": "5.1.*",
-    "doctrine/dbal": "dev-master",
-    "illuminate/html": "5.*"
+    "illuminate/html": "5.*",
+    "barryvdh/laravel-ide-helper": "^2.1",
+    "doctrine/dbal": "^2.5"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
@@ -41,6 +42,8 @@
       "php artisan clear-compiled"
     ],
     "post-update-cmd": [
+      "php artisan ide-helper:generate",
+      "php artisan ide-helper:meta",
       "php artisan optimize"
     ],
     "post-root-package-install": [

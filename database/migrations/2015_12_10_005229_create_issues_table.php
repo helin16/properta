@@ -22,12 +22,12 @@ class CreateIssuesTable extends Migration
 
             $table->foreign('from_user_id')
                 ->references('id')
-                ->on('users')
+                ->on('user')
                 ->onDelete('cascade');
 
             $table->foreign('to_user_id')
                 ->references('id')
-                ->on('users')
+                ->on('user')
                 ->onDelete('cascade');
         });
     }

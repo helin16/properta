@@ -147,7 +147,8 @@ return [
         /*
          * Additional Providers ...
          */
-        Illuminate\Html\HtmlServiceProvider::class
+        Illuminate\Html\HtmlServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*

@@ -3,6 +3,7 @@ use App\User;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use App\Password;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->seed('UserTableSeeder');
+        $this->seed('SystemUserSeeder');
 
         Model::reguard();
     }
@@ -28,7 +29,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 }
-class UserTableSeeder extends Seeder
+class SystemUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -37,7 +38,15 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->delete();
-        User::create(['email' => 'test@test.com', 'password' => Hash::make('test')]);
+        DB::table('password')->delete();
+        $password = new Password();
+        $password->password = Hash::make('test');
+        $password->save();
+
+        DB::table('user')->delete();
+        $user = new User();
+        $user->email = 'test@test.com';
+        $user->password_id = $password->id;
+        $user->save();
     }
 }
