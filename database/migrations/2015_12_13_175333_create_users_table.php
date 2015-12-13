@@ -1,6 +1,5 @@
 <?php
-use Database\Migrations\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+namespace Database\Migrations;
 
 class CreateUsersTable extends Migration
 {
@@ -11,7 +10,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        $this->schema->create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('email', $this->email_string_length)->unique();
             $table->string('username', 25);
@@ -27,6 +26,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('users');
+        $this->schema->dropIfExists('users');
     }
 }

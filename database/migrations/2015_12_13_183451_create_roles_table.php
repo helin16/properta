@@ -1,6 +1,5 @@
 <?php
-use Database\Migrations\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+namespace Database\Migrations;
 
 class CreateRolesTable extends Migration
 {
@@ -11,7 +10,7 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        $this->schema->create('roles', function (Blueprint $table) {
             $table->increments('id');
             $table->nameAndDescription();
         });
@@ -24,6 +23,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('roles');
+        $this->schema->dropIfExists('roles');
     }
 }

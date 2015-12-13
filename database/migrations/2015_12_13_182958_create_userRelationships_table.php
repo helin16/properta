@@ -1,6 +1,5 @@
 <?php
-use Database\Migrations\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+namespace Database\Migrations;
 
 class CreateUserRelationshipsTable extends Migration
 {
@@ -11,7 +10,7 @@ class CreateUserRelationshipsTable extends Migration
      */
     public function up()
     {
-        Schema::create('userRelationships', function (Blueprint $table) {
+        $this->schema->create('userRelationships', function (Blueprint $table) {
             $table->string('parent_user_id', $this->foreign_key_string_length);
             $table->string('user_id', $this->foreign_key_string_length);
         });
@@ -24,6 +23,6 @@ class CreateUserRelationshipsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('userRelationships');
+        $this->schema->dropIfExists('userRelationships');
     }
 }

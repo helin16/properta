@@ -23,6 +23,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('db.connection.mysql', 'Database\Migrations\MySqlConnection');
     }
 }

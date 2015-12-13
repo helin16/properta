@@ -1,6 +1,5 @@
 <?php
-use Database\Migrations\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+namespace Database\Migrations;
 
 class CreatePasswordsTable extends Migration
 {
@@ -11,7 +10,7 @@ class CreatePasswordsTable extends Migration
      */
     public function up()
     {
-        Schema::create('passwords', function (Blueprint $table) {
+        $this->schema->create('passwords', function (Blueprint $table) {
             $table->string('user_id', $this->foreign_key_string_length)->unique();
             $table->primary('user_id');
             $table->string('password', 60);
@@ -25,6 +24,6 @@ class CreatePasswordsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('passwords');
+        $this->schema->dropIfExists('passwords');
     }
 }
