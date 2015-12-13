@@ -1,5 +1,6 @@
 <?php
-namespace Database\Migrations;
+use App\Database\Migrations\Migration;
+use App\Database\Migrations\Blueprint;
 
 class CreateUserRelationshipsTable extends Migration
 {
@@ -11,8 +12,8 @@ class CreateUserRelationshipsTable extends Migration
     public function up()
     {
         $this->schema->create('userRelationships', function (Blueprint $table) {
-            $table->string('parent_user_id', $this->foreign_key_string_length);
-            $table->string('user_id', $this->foreign_key_string_length);
+            $table->string('parent_user_id', $table->foreign_key_string_length);
+            $table->string('user_id', $table->foreign_key_string_length);
         });
     }
 

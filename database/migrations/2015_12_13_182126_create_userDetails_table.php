@@ -1,5 +1,6 @@
 <?php
-namespace Database\Migrations;
+use App\Database\Migrations\Migration;
+use App\Database\Migrations\Blueprint;
 
 class CreateUserDetailsTable extends Migration
 {
@@ -12,7 +13,7 @@ class CreateUserDetailsTable extends Migration
     {
         $this->schema->create('userDetails', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_id', $this->foreign_key_string_length);
+            $table->string('user_id', $table->foreign_key_string_length);
             $table->string('name', 50);
             $table->string('contactNumber', 50);
             $table->string('emergencyContact');

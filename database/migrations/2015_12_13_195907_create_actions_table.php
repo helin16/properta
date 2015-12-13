@@ -2,7 +2,7 @@
 use App\Database\Migrations\Migration;
 use App\Database\Migrations\Blueprint;
 
-class CreateRolesTable extends Migration
+class CreateActionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -11,7 +11,7 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('roles', function (Blueprint $table) {
+        $this->schema->create('actions', function (Blueprint $table) {
             $table->increments('id');
             $table->nameAndDescription();
         });
@@ -24,6 +24,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('roles');
+        $this->schema->dropIfExists('actions');
     }
 }

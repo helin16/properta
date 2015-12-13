@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Migrations;
+namespace App\Database\Migrations;
 use Illuminate\Database\Schema\Blueprint as BaseBlueprint;
 
 class Blueprint extends BaseBlueprint

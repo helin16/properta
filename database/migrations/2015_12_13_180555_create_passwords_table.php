@@ -1,5 +1,6 @@
 <?php
-namespace Database\Migrations;
+use App\Database\Migrations\Migration;
+use App\Database\Migrations\Blueprint;
 
 class CreatePasswordsTable extends Migration
 {
@@ -11,7 +12,7 @@ class CreatePasswordsTable extends Migration
     public function up()
     {
         $this->schema->create('passwords', function (Blueprint $table) {
-            $table->string('user_id', $this->foreign_key_string_length)->unique();
+            $table->string('user_id', $table->foreign_key_string_length)->unique();
             $table->primary('user_id');
             $table->string('password', 60);
         });

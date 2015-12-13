@@ -1,5 +1,5 @@
 <?php
-namespace Database\Migrations;
+namespace App\Database\Migrations;
 use Illuminate\Database\MysqlConnection as BaseMySqlConnection;
 
 class MySqlConnection extends BaseMySqlConnection
