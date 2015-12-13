@@ -1,9 +1,8 @@
 <?php
-use App\User;
-
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use App\Password;
+use App\password;
+use App\user;
 
 class DatabaseSeeder extends Seeder
 {
@@ -38,15 +37,16 @@ class SystemUserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('password')->delete();
-        $password = new Password();
+        DB::table('users')->delete();
+        $user = new user();
+        $user->email = 'test@test.com';
+        $user->save();
+
+        DB::table('passwords')->delete();
+        $password = new password();
         $password->password = Hash::make('test');
+        $password->user_id = $user->id;
         $password->save();
 
-        DB::table('user')->delete();
-        $user = new User();
-        $user->email = 'test@test.com';
-        $user->password_id = $password->id;
-        $user->save();
     }
 }
