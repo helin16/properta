@@ -149,6 +149,7 @@ return [
          */
         Illuminate\Html\HtmlServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        ArtemSchander\L5Modular\ModuleServiceProvider::class
     ],
 
     /*
