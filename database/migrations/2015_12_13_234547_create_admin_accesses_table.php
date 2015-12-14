@@ -11,7 +11,7 @@ class CreateAdminAccessesTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('adminAccesses', function (Blueprint $table) {
+        $this->schema->create('admin_accesses', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('rental_id');
             $table->unsignedInteger('role_id');
@@ -29,6 +29,6 @@ class CreateAdminAccessesTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('adminAccesses');
+        $this->schema->dropIfExists('admin_accesses');
     }
 }

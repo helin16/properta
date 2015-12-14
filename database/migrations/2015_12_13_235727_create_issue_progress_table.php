@@ -2,7 +2,7 @@
 use App\Database\Migrations\Migration;
 use App\Database\Migrations\Blueprint;
 
-class CreateIssueDetailsTable extends Migration
+class CreateIssueProgressTable extends Migration
 {
     /**
      * Run the migrations.
@@ -11,13 +11,10 @@ class CreateIssueDetailsTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('issueDetails', function (Blueprint $table) {
+        $this->schema->create('issue_progress', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('issue_id');
             $table->text('content');
-            $table->string('3rdParty');
-            $table->unsignedTinyInteger('priority');
-            $table->json('media_ids');
         });
     }
 
@@ -28,6 +25,6 @@ class CreateIssueDetailsTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('issueDetails');
+        $this->schema->dropIfExists('issue_progress');
     }
 }

@@ -2,7 +2,7 @@
 use App\Database\Migrations\Migration;
 use App\Database\Migrations\Blueprint;
 
-class CreatePropertyLogsTable extends Migration
+class CreatePropertyDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -11,12 +11,14 @@ class CreatePropertyLogsTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('propertyLogs', function (Blueprint $table) {
+        $this->schema->create('property_details', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('property_id');
             $table->string('type', $table->type_string_length);
-            $table->text('content');
-            $table->json('comments');
+            $table->unsignedTinyInteger('carParks');
+            $table->unsignedTinyInteger('bedrooms');
+            $table->unsignedTinyInteger('bathrooms');
+            $table->json('options');
         });
     }
 
@@ -27,6 +29,6 @@ class CreatePropertyLogsTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('propertyLogs');
+        $this->schema->dropIfExists('property_details');
     }
 }

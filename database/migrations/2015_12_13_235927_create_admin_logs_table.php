@@ -11,7 +11,7 @@ class CreateAdminLogsTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('adminLogs', function (Blueprint $table) {
+        $this->schema->create('admin_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('tableName', $table->table_name_string_length);
             $table->unsignedInteger('tableId');
@@ -25,6 +25,6 @@ class CreateAdminLogsTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('adminLogs');
+        $this->schema->dropIfExists('admin_logs');
     }
 }
