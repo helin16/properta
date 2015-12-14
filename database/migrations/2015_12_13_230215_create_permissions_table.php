@@ -12,8 +12,8 @@ class CreatePermissionsTable extends Migration
     public function up()
     {
         $this->schema->create('permissions', function (Blueprint $table) {
-            $table->unsignedInteger('action_id', $table->foreign_key_string_length);
-            $table->unsignedInteger('role_id', $table->foreign_key_string_length);
+            $table->unsignedInteger('action_id');
+            $table->unsignedInteger('role_id');
             $table->boolean('permitted');
         });
     }

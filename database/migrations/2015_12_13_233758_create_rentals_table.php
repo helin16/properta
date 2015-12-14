@@ -15,8 +15,8 @@ class CreateRentalsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('property_id');
             $table->double('dailyAmount', null, 4);
-            $table->nullableTimestamps('from');
-            $table->nullableTimestamps('to');
+            $table->timestamp('from')->nullable();
+            $table->timestamp('to')->nullable();
             $table->json('media_ids');
         });
     }
