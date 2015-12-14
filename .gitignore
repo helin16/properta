@@ -7,3 +7,5 @@ config/app.php
 vendor
 .idea
 /.phpstorm.meta.php
+/composer.lock
+/_ide_helper.php

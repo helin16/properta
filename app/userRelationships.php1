@@ -1,8 +1,0 @@
-<?php
-
-namespace App;
-
-class userRelationships extends BaseModel
-{
-    //
-}
