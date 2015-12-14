@@ -14,7 +14,7 @@ class CreatePropertiesTable extends Migration
         $this->schema->create('properties', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('address_id');
-            $table->string('description');
+            $table->text('description');
         });
     }
 
