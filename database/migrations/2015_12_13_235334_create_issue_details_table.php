@@ -15,6 +15,7 @@ class CreateIssueDetailsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('issue_id');
             $table->text('content');
+            $table->string('type', $table->type_string_length);
             $table->string('3rdParty');
             $table->unsignedTinyInteger('priority');
             $table->json('media_ids');

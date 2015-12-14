@@ -17,6 +17,8 @@ use App\Modules\PropertyLog\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\AdminAccess\Models\AdminAccess;
 use App\Modules\Issue\Models\Issue;
+use App\Modules\IssueDetail\Models\IssueDetail;
+use App\Modules\IssueProgress\Models\IssueProgress;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -67,7 +69,7 @@ $factory->define(Message::class, function (Faker\Generator $faker) {
     ];
     if(Address::all()->count() > 0)
 	    for($i = 0; $i < random_int(1, 10); $i++)
-	    	$array['media_ids'][] = $faker->randomElement(Address::all()->all())->id;
+	    	$array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
 	$array['media_ids'] = json_encode($array['media_ids']);
     return $array;
 });
@@ -168,7 +170,7 @@ $factory->define(Rental::class, function (Faker\Generator $faker) {
     ];
     
     for($i = 0; $i < random_int(1, 10); $i++)
-    	$array['media_ids'][] = $faker->randomElement(Address::all()->all())->id;
+    	$array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
     $array['media_ids'] = json_encode($array['media_ids']);
 	    
     return $array;
@@ -196,5 +198,29 @@ $factory->define(Issue::class, function (Faker\Generator $faker) {
         'requester_user_id' => $faker->randomElement(User::all()->all())->id,
         'rental_id' => $faker->randomElement(Rental::all()->all())->id,
     	'status' => $faker->words(random_int(1, 2), true),
+    ];
+});
+
+$factory->define(IssueDetail::class, function (Faker\Generator $faker) {
+    $array = [
+        'issue_id' => $faker->randomElement(Issue::all()->all())->id,
+        'content' => $faker->sentences(random_int(1, 200), true),
+    	'type' => $faker->words(random_int(1, 2), true),
+    	'3rdParty' => $faker->url,
+    	'priority' => $faker->numberBetween(0,5),
+    	'media_ids' => []
+    ];
+    
+    for($i = 0; $i < random_int(1, 10); $i++)
+    	$array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
+    $array['media_ids'] = json_encode($array['media_ids']);
+    
+    return $array;
+});
+
+$factory->define(IssueProgress::class, function (Faker\Generator $faker) {
+    return [
+        'issue_id' => $faker->randomElement(Issue::all()->all())->id,
+        'content' => $faker->sentences(random_int(1, 200), true),
     ];
 });

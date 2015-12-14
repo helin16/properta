@@ -18,6 +18,8 @@ use App\Modules\PropertyLog\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\AdminAccess\Models\AdminAccess;
 use App\Modules\Issue\Models\Issue;
+use App\Modules\IssueDetail\Models\IssueDetail;
+use App\Modules\IssueProgress\Models\IssueProgress;
 
 const SEED_LIMIT = 10;
 const MESSAGE_SEED_MULTI = 10;
@@ -51,6 +53,8 @@ class DatabaseSeeder extends Seeder
         $this->seed('RentalLogSeeder');
         $this->seed('AdminAccessSeeder');
         $this->seed('IssueSeeder');
+        $this->seed('IssueDetailSeeder');
+        $this->seed('IssueProgressSeeder');
 
         Model::reguard();
     }
@@ -267,6 +271,30 @@ class IssueSeeder extends Seeder
     public function run()
     {
         factory(Issue::class, Property::all()->count())->create();
+    }
+}
+class IssueDetailSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(IssueDetail::class, Issue::all()->count())->create();
+    }
+}
+class IssueProgressSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(IssueProgress::class, Issue::all()->count())->create();
     }
 }
 function echoDebug($entity, $info)
