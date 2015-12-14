@@ -141,6 +141,6 @@ $factory->define(PropertyDetail::class, function (Faker\Generator $faker) {
         'carParks' => $faker->numberBetween(0,2),
         'bedrooms' => $faker->numberBetween(0,5),
         'bathrooms' => $faker->numberBetween(1,3),
-//         'options ' => json_encode([]) // TODO: somehow with this line, migrate fails
+        'options' => json_encode([])
     ];
 });
