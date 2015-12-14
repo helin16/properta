@@ -13,6 +13,10 @@ use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
 use App\Modules\Property\Models\Property;
 use App\Modules\PropertyDetail\Models\PropertyDetail;
+use App\Modules\PropertyLog\Models\PropertyLog;
+use App\Modules\Rental\Models\Rental;
+use App\Modules\AdminAccess\Models\AdminAccess;
+use App\Modules\Issue\Models\Issue;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -142,5 +146,55 @@ $factory->define(PropertyDetail::class, function (Faker\Generator $faker) {
         'bedrooms' => $faker->numberBetween(0,5),
         'bathrooms' => $faker->numberBetween(1,3),
         'options' => json_encode([])
+    ];
+});
+
+$factory->define(PropertyLog::class, function (Faker\Generator $faker) {
+    return [
+        'property_id' => $faker->randomElement(Property::all()->all())->id,
+        'type' => $faker->word,
+        'content' => $faker->sentences(random_int(1, 20), true),
+        'comments' => json_encode([])
+    ];
+});
+
+$factory->define(Rental::class, function (Faker\Generator $faker) {
+    $array = [
+        'property_id' => $faker->randomElement(Property::all()->all())->id,
+    	'dailyAmount' => $faker->randomFloat(4, 500/30, 2000/30),
+        'from' => random_int(0, 1) === 0 ? null : $faker->dateTimeBetween('-10 years'),
+        'to' => random_int(0, 1) === 0 ? null : $faker->dateTimeBetween('now', '+10 years'),
+    	'media_ids' => []
+    ];
+    
+    for($i = 0; $i < random_int(1, 10); $i++)
+    	$array['media_ids'][] = $faker->randomElement(Address::all()->all())->id;
+    $array['media_ids'] = json_encode($array['media_ids']);
+	    
+    return $array;
+});
+
+$factory->define(AdminAccess::class, function (Faker\Generator $faker) {
+	do
+	{
+	    $array = [
+	        'rental_id' => $faker->randomElement(Rental::all()->all())->id,
+	        'role_id' => $faker->randomElement(Role::all()->all())->id,
+	    	'canManage' => $faker->boolean(),
+	    	'canManage' => $faker->boolean(),
+	    	'canIssue' => $faker->boolean(),
+	    	'canDocument' => $faker->boolean(),
+	    	'canStatement' => $faker->boolean(),
+	    	'canMessage' => $faker->boolean(),
+	    ];
+    } while(AdminAccess::where(['rental_id' => $array['rental_id'], 'role_id' => $array['role_id']])->get()->count() > 0);
+    return $array;
+});
+
+$factory->define(Issue::class, function (Faker\Generator $faker) {
+    return [
+        'requester_user_id' => $faker->randomElement(User::all()->all())->id,
+        'rental_id' => $faker->randomElement(Rental::all()->all())->id,
+    	'status' => $faker->words(random_int(1, 2), true),
     ];
 });

@@ -1,9 +1,8 @@
 <?php namespace App\Modules\Rental\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Modules\Abstracts\Models\BaseModel;
 
-class Rental extends Model {
-
+class Rental extends BaseModel
+{
 	//
-
 }

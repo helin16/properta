@@ -1,9 +1,8 @@
 <?php namespace App\Modules\Issue\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Modules\Abstracts\Models\BaseModel;
 
-class Issue extends Model {
-
+class Issue extends BaseModel
+{
 	//
-
 }

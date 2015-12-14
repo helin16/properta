@@ -36,6 +36,7 @@
   },
   "scripts": {
     "post-install-cmd": [
+      "php artisan key:generate",
       "php artisan clear-compiled",
       "php artisan optimize"
     ],

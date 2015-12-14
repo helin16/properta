@@ -14,10 +14,15 @@ use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
 use App\Modules\Property\Models\Property;
 use App\Modules\PropertyDetail\Models\PropertyDetail;
+use App\Modules\PropertyLog\Models\PropertyLog;
+use App\Modules\Rental\Models\Rental;
+use App\Modules\AdminAccess\Models\AdminAccess;
+use App\Modules\Issue\Models\Issue;
 
 const SEED_LIMIT = 10;
 const MESSAGE_SEED_MULTI = 10;
 const ADDRESS_SEED_MULTI = 2;
+const PROPERTY_LOG_SEED_MULTI = 3;
 
 class DatabaseSeeder extends Seeder
 {
@@ -42,6 +47,10 @@ class DatabaseSeeder extends Seeder
         $this->seed('PermissionSeeder');
         $this->seed('PropertySeeder');
         $this->seed('PropertyDetailSeeder');
+        $this->seed('PropertyLogSeeder');
+        $this->seed('RentalLogSeeder');
+        $this->seed('AdminAccessSeeder');
+        $this->seed('IssueSeeder');
 
         Model::reguard();
     }
@@ -210,6 +219,54 @@ class PropertyDetailSeeder extends Seeder
     public function run()
     {
         factory(PropertyDetail::class, SEED_LIMIT)->create();
+    }
+}
+class PropertyLogSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(PropertyLog::class, Property::all()->count() * PROPERTY_LOG_SEED_MULTI)->create();
+    }
+}
+class RentalLogSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Rental::class, Property::all()->count())->create();
+    }
+}
+class AdminAccessSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(AdminAccess::class, Property::all()->count())->create();
+    }
+}
+class IssueSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Issue::class, Property::all()->count())->create();
     }
 }
 function echoDebug($entity, $info)

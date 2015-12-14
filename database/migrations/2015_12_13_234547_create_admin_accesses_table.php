@@ -17,6 +17,7 @@ class CreateAdminAccessesTable extends Migration
             $table->unsignedInteger('role_id');
             $table->boolean('canManage');
             $table->boolean('canIssue');
+            $table->boolean('canDocument');
             $table->boolean('canStatement');
             $table->boolean('canMessage');
         });
