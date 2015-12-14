@@ -2,7 +2,7 @@
 use App\Database\Migrations\Migration;
 use App\Database\Migrations\Blueprint;
 
-class CreateMediasTable extends Migration
+class CreateMediaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -11,7 +11,7 @@ class CreateMediasTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('medias', function (Blueprint $table) {
+        $this->schema->create('media', function (Blueprint $table) {
             $table->increments('id');
             $table->string('mimeType');
             $table->string('name');
@@ -26,6 +26,6 @@ class CreateMediasTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('medias');
+        $this->schema->dropIfExists('media');
     }
 }

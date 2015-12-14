@@ -7,6 +7,8 @@ use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
 use App\Modules\Address\Models\Address;
+use App\Modules\Media\Models\Media;
+use Carbon\Carbon;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -71,6 +73,20 @@ $factory->define(Address::class, function (Faker\Generator $faker) {
         'state' => $faker->city,
         'country' => $faker->country,
         'postcode' => $faker->postcode
+    ];
+});
+
+$factory->define(Media::class, function (Faker\Generator $faker) {
+	if(!file_exists('/tmp'))
+		mkdir('/tmp');
+	$file = $faker->image(DIRECTORY_SEPARATOR . 'tmp');
+	$name = basename($file);
+	$mimeType = mime_content_type($file);
+	rename($file, $newPath = (DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . sha1(file_get_contents($file)) . '.' . pathinfo($name, PATHINFO_EXTENSION)));
+    return [
+        'mimeType' => $mimeType,
+        'name' => $name,
+        'path' => $newPath
     ];
 });
 

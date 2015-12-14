@@ -8,6 +8,7 @@ use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
 use App\Modules\Address\Models\Address;
+use App\Modules\Media\Models\Media;
 
 const SEED_LIMIT = 10;
 const MESSAGE_SEED_MULTI = 10;
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->seed('MessagesSeeder');
         $this->seed('AddressesSeeder');
         $this->seed('BrandsSeeder');
+        $this->seed('MediaSeeder');
 
         Model::reguard();
     }
@@ -127,6 +129,18 @@ class BrandsSeeder extends Seeder
     public function run()
     {
         factory(Brand::class, SEED_LIMIT)->create();
+    }
+}
+class MediaSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Media::class, SEED_LIMIT)->create();
     }
 }
 function echoDebug($entity, $info)
