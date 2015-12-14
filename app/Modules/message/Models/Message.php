@@ -1,9 +1,8 @@
 <?php namespace App\Modules\Message\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Modules\Abstracts\Models\BaseModel;
 
-class Message extends Model {
-
+class Message extends BaseModel
+{
 	//
-
 }

@@ -1,4 +1,4 @@
 <?php
  /**
- *	Rental Helper  
+ *	User Helper  
  */
