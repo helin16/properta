@@ -12,7 +12,8 @@
     "laravel/framework": "5.1.*",
     "illuminate/html": "5.*",
     "barryvdh/laravel-ide-helper": "^2.1",
-    "doctrine/dbal": "^2.5"
+    "doctrine/dbal": "^2.5",
+    "artem-schander/l5-modular": "dev-master"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

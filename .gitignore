@@ -3,3 +3,4 @@
 /.settings
 /web/assets
 /web/protected/runtime
+config/app.php
