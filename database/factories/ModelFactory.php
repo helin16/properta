@@ -5,6 +5,8 @@ use App\Modules\Password\Models\Password;
 use App\Modules\UserDetails\Models\UserDetails;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
+use App\Modules\Brand\Models\Brand;
+use App\Modules\Address\Models\Address;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -52,6 +54,23 @@ $factory->define(Message::class, function (Faker\Generator $faker) {
         'subject' => $faker->sentence,
         'content' => $faker->sentences(random_int(3,100), true),
         'media_ids' => json_encode([])
+    ];
+});
+
+$factory->define(Brand::class, function (Faker\Generator $faker) {
+    return [
+        'address_id' => $faker->randomElement(Address::all()->all())->id,
+        'settings' => json_encode([])
+    ];
+});
+
+$factory->define(Address::class, function (Faker\Generator $faker) {
+    return [
+        'street' => $faker->streetAddress,
+        'suburb' => $faker->city,
+        'state' => $faker->city,
+        'country' => $faker->country,
+        'postcode' => $faker->postcode
     ];
 });
 

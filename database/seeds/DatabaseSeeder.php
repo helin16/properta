@@ -6,9 +6,12 @@ use App\Modules\Password\Models\Password;
 use App\Modules\UserDetails\Models\UserDetails;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
+use App\Modules\Brand\Models\Brand;
+use App\Modules\Address\Models\Address;
 
 const SEED_LIMIT = 10;
 const MESSAGE_SEED_MULTI = 10;
+const ADDRESS_SEED_MULTI = 2;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,6 +27,8 @@ class DatabaseSeeder extends Seeder
         $this->seed('SystemUserSeeder');
         $this->seed('UsersSeeder');
         $this->seed('MessagesSeeder');
+        $this->seed('AddressesSeeder');
+        $this->seed('BrandsSeeder');
 
         Model::reguard();
     }
@@ -98,6 +103,30 @@ class MessagesSeeder extends Seeder
     public function run()
     {
         factory(Message::class, User::all()->count() * MESSAGE_SEED_MULTI)->create();
+    }
+}
+class AddressesSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Address::class, User::all()->count() * ADDRESS_SEED_MULTI)->create();
+    }
+}
+class BrandsSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Brand::class, SEED_LIMIT)->create();
     }
 }
 function echoDebug($entity, $info)
