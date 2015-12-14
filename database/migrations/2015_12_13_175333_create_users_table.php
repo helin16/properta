@@ -14,8 +14,8 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('email', $table->email_string_length)->unique();
             $table->string('username', 25);
-            $table->string('brand_id', $table->foreign_key_string_length);
-            $table->string('address_id', $table->foreign_key_string_length);
+            $table->unsignedInteger('brand_id');
+            $table->unsignedInteger('address_id');
         });
     }
 

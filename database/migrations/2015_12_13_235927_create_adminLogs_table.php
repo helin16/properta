@@ -2,7 +2,7 @@
 use App\Database\Migrations\Migration;
 use App\Database\Migrations\Blueprint;
 
-class CreateUserDetailsTable extends Migration
+class CreateAdminLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -11,12 +11,10 @@ class CreateUserDetailsTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('userDetails', function (Blueprint $table) {
+        $this->schema->create('adminLogs', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->string('name', 50);
-            $table->string('contactNumber', 50);
-            $table->string('emergencyContact');
+            $table->string('tableName', $table->table_name_string_length);
+            $table->unsignedInteger('tableId');
         });
     }
 
@@ -27,6 +25,6 @@ class CreateUserDetailsTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('userDetails');
+        $this->schema->dropIfExists('adminLogs');
     }
 }

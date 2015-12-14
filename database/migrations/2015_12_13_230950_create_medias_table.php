@@ -2,7 +2,7 @@
 use App\Database\Migrations\Migration;
 use App\Database\Migrations\Blueprint;
 
-class CreateUserDetailsTable extends Migration
+class CreateMediasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -11,12 +11,11 @@ class CreateUserDetailsTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('userDetails', function (Blueprint $table) {
+        $this->schema->create('medias', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->string('name', 50);
-            $table->string('contactNumber', 50);
-            $table->string('emergencyContact');
+            $table->string('mimeType');
+            $table->string('name');
+            $table->string('path');
         });
     }
 
@@ -27,6 +26,6 @@ class CreateUserDetailsTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('userDetails');
+        $this->schema->dropIfExists('medias');
     }
 }

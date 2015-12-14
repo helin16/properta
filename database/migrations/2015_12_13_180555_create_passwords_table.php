@@ -12,7 +12,7 @@ class CreatePasswordsTable extends Migration
     public function up()
     {
         $this->schema->create('passwords', function (Blueprint $table) {
-            $table->string('user_id', $table->foreign_key_string_length)->unique();
+            $table->unsignedInteger('user_id')->unique();
             $table->primary('user_id');
             $table->string('password', 60);
         });

@@ -12,8 +12,8 @@ class CreateUserRelationshipsTable extends Migration
     public function up()
     {
         $this->schema->create('userRelationships', function (Blueprint $table) {
-            $table->string('parent_user_id', $table->foreign_key_string_length);
-            $table->string('user_id', $table->foreign_key_string_length);
+            $table->unsignedInteger('parent_user_id');
+            $table->unsignedInteger('user_id');
         });
     }
 
