@@ -9,6 +9,11 @@ use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
 use App\Modules\Address\Models\Address;
 use App\Modules\Media\Models\Media;
+use App\Modules\Role\Models\Role;
+use App\Modules\Action\Models\Action;
+use App\Modules\Permission\Models\Permission;
+use App\Modules\Property\Models\Property;
+use App\Modules\PropertyDetail\Models\PropertyDetail;
 
 const SEED_LIMIT = 10;
 const MESSAGE_SEED_MULTI = 10;
@@ -30,16 +35,20 @@ class DatabaseSeeder extends Seeder
         $this->seed('MessagesSeeder');
         $this->seed('AddressesSeeder');
         $this->seed('BrandsSeeder');
+        $this->command->info('Start seeding media, this may take a while');
         $this->seed('MediaSeeder');
+        $this->seed('RoleSeeder');
+        $this->seed('ActionSeeder');
+        $this->seed('PermissionSeeder');
+        $this->seed('PropertySeeder');
+        $this->seed('PropertyDetailSeeder');
 
         Model::reguard();
     }
     private function seed($className)
     {
         if(class_exists($className))
-        {
             $this->call($className);
-        }
     }
 }
 class SystemUserSeeder extends Seeder
@@ -141,6 +150,66 @@ class MediaSeeder extends Seeder
     public function run()
     {
         factory(Media::class, SEED_LIMIT)->create();
+    }
+}
+class RoleSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Role::class, SEED_LIMIT)->create();
+    }
+}
+class ActionSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Action::class, SEED_LIMIT)->create();
+    }
+}
+class PermissionSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Permission::class, SEED_LIMIT)->create();
+    }
+}
+class PropertySeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Property::class, SEED_LIMIT)->create();
+    }
+}
+class PropertyDetailSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(PropertyDetail::class, SEED_LIMIT)->create();
     }
 }
 function echoDebug($entity, $info)

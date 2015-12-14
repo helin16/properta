@@ -8,7 +8,11 @@ use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
 use App\Modules\Address\Models\Address;
 use App\Modules\Media\Models\Media;
-use Carbon\Carbon;
+use App\Modules\Role\Models\Role;
+use App\Modules\Action\Models\Action;
+use App\Modules\Permission\Models\Permission;
+use App\Modules\Property\Models\Property;
+use App\Modules\PropertyDetail\Models\PropertyDetail;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -50,13 +54,18 @@ $factory->define(UserRelationship::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(Message::class, function (Faker\Generator $faker) {
-    return [
+    $array = [
         'from_user_id' => ($from_user_id = $faker->randomElement(User::all()->all())->id),
         'to_user_id' => $faker->randomElement(User::where('id', '!=', $from_user_id)->get()->all())->id,
         'subject' => $faker->sentence,
         'content' => $faker->sentences(random_int(3,100), true),
-        'media_ids' => json_encode([])
+        'media_ids' => []
     ];
+    if(Address::all()->count() > 0)
+	    for($i = 0; $i < random_int(1, 10); $i++)
+	    	$array['media_ids'][] = $faker->randomElement(Address::all()->all())->id;
+	$array['media_ids'] = json_encode($array['media_ids']);
+    return $array;
 });
 
 $factory->define(Brand::class, function (Faker\Generator $faker) {
@@ -82,7 +91,9 @@ $factory->define(Media::class, function (Faker\Generator $faker) {
 	$file = $faker->image(DIRECTORY_SEPARATOR . 'tmp');
 	$name = basename($file);
 	$mimeType = mime_content_type($file);
-	rename($file, $newPath = (DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . sha1(file_get_contents($file)) . '.' . pathinfo($name, PATHINFO_EXTENSION)));
+	$newPath = (DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . sha1(file_get_contents($file)) . (pathinfo($name, PATHINFO_EXTENSION) === '' ? : ('.' . pathinfo($name, PATHINFO_EXTENSION))));
+	if($file !== $newPath)
+		rename($file, $newPath);
     return [
         'mimeType' => $mimeType,
         'name' => $name,
@@ -90,3 +101,46 @@ $factory->define(Media::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(Role::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->words(random_int(1, 3), true),
+        'description' => $faker->sentences(random_int(1, 5), true)
+    ];
+});
+
+$factory->define(Action::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->words(random_int(1, 3), true),
+        'description' => $faker->sentences(random_int(1, 5), true)
+    ];
+});
+
+$factory->define(Permission::class, function (Faker\Generator $faker) {
+	do
+	{
+	    $array = [
+	        'action_id' => $faker->randomElement(Action::all()->all())->id,
+	        'role_id' => $faker->randomElement(Role::all()->all())->id,
+	    	'permitted' => $faker->boolean(80)
+	    ];
+	} while(Permission::where(['action_id' => $array['action_id'], 'role_id' => $array['role_id']])->get()->count() > 0);
+    return $array;
+});
+
+$factory->define(Property::class, function (Faker\Generator $faker) {
+    return [
+        'address_id' => $faker->randomElement(Address::all()->all())->id,
+        'description' => $faker->sentences(random_int(1, 20), true)
+    ];
+});
+
+$factory->define(PropertyDetail::class, function (Faker\Generator $faker) {
+    return [
+        'property_id' => $faker->randomElement(Property::all()->all())->id,
+        'type' => $faker->word,
+        'carParks' => $faker->numberBetween(0,2),
+        'bedrooms' => $faker->numberBetween(0,5),
+        'bathrooms' => $faker->numberBetween(1,3),
+//         'options ' => json_encode([]) // TODO: somehow with this line, migrate fails
+    ];
+});
