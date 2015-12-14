@@ -11,10 +11,11 @@ class CreateUserDetailsTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('userDetails', function (Blueprint $table) {
+        $this->schema->create('user_details', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->string('name', 50);
+            $table->string('firstName', 50);
+            $table->string('lastName', 50);
             $table->string('contactNumber', 50);
             $table->string('emergencyContact');
         });
@@ -27,6 +28,6 @@ class CreateUserDetailsTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('userDetails');
+        $this->schema->dropIfExists('user_details');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\User\Models\user;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -11,11 +12,42 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Modules\User\Models\user::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
         'email' => $faker->email,
-        'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
     ];
 });
+
+// $factory->define(App\password::class, function (Faker\Generator $faker) {
+//     return [
+//         'password' => Hash::make(str_random(15))
+//     ];
+// });
+
+// $factory->define(App\userDetails::class, function (Faker\Generator $faker) {
+//     $array =  [
+//         'firstName' => $faker->firstName,
+//         'lastName' => $faker->lastName,
+//         'contactNumber' => $faker->phoneNumber
+//     ];
+//     if(random_int(0,1) === 0)
+//         $array['emergencyContact'] = $faker->phoneNumber;
+//     return $array;
+// });
+
+// $factory->define(App\userRelationships::class, function (Faker\Generator $faker) {
+//     return [
+//         'parent_user_id' => $faker->randomElement(App\user::all()->all())->id
+//     ];
+// });
+
+// $factory->define(App\messages::class, function (Faker\Generator $faker) {
+//     return [
+//         'from_user_id' => ($from_user_id = $faker->randomElement(App\user::all()->all())->id),
+//         'to_user_id' => $faker->randomElement(App\user::where('id', '!=', $from_user_id)->get()->all())->id,
+//         'subject' => $faker->sentence,
+//         'content' => $faker->sentences(random_int(3,100), true),
+//         'media_ids' => json_encode([])
+//     ];
+// });
+

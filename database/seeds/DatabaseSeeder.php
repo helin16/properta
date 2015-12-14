@@ -1,8 +1,9 @@
 <?php
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use App\password;
-use App\user;
+use App\Modules\User\Models\user;
+
+const SEED_LIMIT = 10;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +17,8 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->seed('SystemUserSeeder');
+//         $this->seed('UsersSeeder');
+//         $this->seed('MessagesSeeder');
 
         Model::reguard();
     }
@@ -24,7 +27,6 @@ class DatabaseSeeder extends Seeder
         if(class_exists($className))
         {
             $this->call($className);
-            $this->command->info($className . ' table seeded!');
         }
     }
 }
@@ -37,16 +39,63 @@ class SystemUserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->delete();
-        $user = new user();
-        $user->email = 'test@test.com';
-        $user->save();
+        user::where('email', '=', 'test@test.com')->delete();
+        $user = factory(user::class)->create([
+           'email' =>  'test@test.com'
+        ]);
 
-        DB::table('passwords')->delete();
-        $password = new password();
-        $password->password = Hash::make('test');
-        $password->user_id = $user->id;
-        $password->save();
-
+//         App\password::where('user_id', '=', $user->id)->delete();
+//         $password = factory(App\password::class)->create([
+//             'user_id' => $user->id,
+//             'password' => Hash::make(str_random(15))
+//         ]);
     }
+}
+class UsersSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(App\user::class, SEED_LIMIT)->create()->each(function($user){
+            // password
+            $password = factory(App\password::class)->create([
+                'user_id' => $user->id,
+                'password' => Hash::make(str_random(15))
+            ]);
+            echoDebug($user, $password);
+            // user details
+            $userDetails = factory(App\userDetails::class)->create([
+                'user_id' => $user->id
+            ]);
+            echoDebug($user, $userDetails);
+            // user relationship
+            if(random_int(0,1) === 0)
+            {
+                $userRelationship = factory(App\userRelationships::class)->create([
+                    'user_id' => $user->id
+                ]);
+                echoDebug($user, $userRelationship);
+            }
+        });
+    }
+}
+class MessagesSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(App\messages::class, SEED_LIMIT)->create();
+    }
+}
+function echoDebug($entity, $info)
+{
+    echo ( get_class($info) . ($info->id ? ('[' . $info->id . ']') : '') . ' created for ' . get_class($entity) . '[' . $entity->id . ']' . PHP_EOL );
 }

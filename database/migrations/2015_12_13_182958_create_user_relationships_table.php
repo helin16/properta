@@ -11,9 +11,9 @@ class CreateUserRelationshipsTable extends Migration
      */
     public function up()
     {
-        $this->schema->create('userRelationships', function (Blueprint $table) {
+        $this->schema->create('user_relationships', function (Blueprint $table) {
             $table->unsignedInteger('parent_user_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->unique();
         });
     }
 
@@ -24,6 +24,6 @@ class CreateUserRelationshipsTable extends Migration
      */
     public function down()
     {
-        $this->schema->dropIfExists('userRelationships');
+        $this->schema->dropIfExists('user_relationships');
     }
 }
