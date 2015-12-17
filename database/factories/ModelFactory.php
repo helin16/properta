@@ -1,24 +1,25 @@
 <?php
 
 use App\Modules\User\Models\User;
-use App\Modules\Password\Models\Password;
+use App\Modules\User\Models\Password;
 use App\Modules\UserDetails\Models\UserDetails;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
-use App\Modules\Address\Models\Address;
-use App\Modules\Media\Models\Media;
-use App\Modules\Role\Models\Role;
+use App\Modules\Rental\Models\Address;
+use App\Modules\Message\Models\Media;
+use App\Modules\User\Models\Role;
 use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
-use App\Modules\Property\Models\Property;
+use App\Modules\Rental\Models\Property;
 use App\Modules\PropertyDetail\Models\PropertyDetail;
 use App\Modules\PropertyLog\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
+use App\Modules\Rental\Models\RentalUser;
 use App\Modules\AdminAccess\Models\AdminAccess;
 use App\Modules\Issue\Models\Issue;
-use App\Modules\IssueDetail\Models\IssueDetail;
-use App\Modules\IssueProgress\Models\IssueProgress;
+use App\Modules\Issue\Models\IssueDetail;
+use App\Modules\Issue\Models\IssueProgress;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -222,5 +223,13 @@ $factory->define(IssueProgress::class, function (Faker\Generator $faker) {
     return [
         'issue_id' => $faker->randomElement(Issue::all()->all())->id,
         'content' => $faker->sentences(random_int(1, 200), true),
+    ];
+});
+
+$factory->define(RentalUser::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => $faker->randomElement(User::all()->all())->id,
+        'role_id' => $faker->randomElement(Role::all()->all())->id,
+        'rental_id' => $faker->randomElement(Rental::all()->all())->id,
     ];
 });

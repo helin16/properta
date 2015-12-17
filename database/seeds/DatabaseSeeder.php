@@ -1,30 +1,34 @@
 <?php
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+
 use App\Modules\User\Models\User;
-use App\Modules\Password\Models\Password;
+use App\Modules\User\Models\Password;
 use App\Modules\UserDetails\Models\UserDetails;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
-use App\Modules\Address\Models\Address;
-use App\Modules\Media\Models\Media;
-use App\Modules\Role\Models\Role;
+use App\Modules\Rental\Models\Address;
+use App\Modules\Message\Models\Media;
+use App\Modules\User\Models\Role;
 use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
-use App\Modules\Property\Models\Property;
+use App\Modules\Rental\Models\Property;
 use App\Modules\PropertyDetail\Models\PropertyDetail;
 use App\Modules\PropertyLog\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
+use App\Modules\Rental\Models\RentalUser;
 use App\Modules\AdminAccess\Models\AdminAccess;
 use App\Modules\Issue\Models\Issue;
-use App\Modules\IssueDetail\Models\IssueDetail;
-use App\Modules\IssueProgress\Models\IssueProgress;
+use App\Modules\Issue\Models\IssueDetail;
+use App\Modules\Issue\Models\IssueProgress;
 
 const SEED_LIMIT = 10;
 const MESSAGE_SEED_MULTI = 10;
 const ADDRESS_SEED_MULTI = 2;
 const PROPERTY_LOG_SEED_MULTI = 3;
+const RENTAL_SEED_MULTI  = 3;
+const RENTAL_USER_SEED_MULTI = 3;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,21 +41,22 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->seed('SystemUserSeeder');
+//         $this->seed('SystemUserSeeder');
         $this->seed('UsersSeeder');
-        $this->seed('MessagesSeeder');
+//         $this->seed('MessagesSeeder');
         $this->seed('AddressesSeeder');
-        $this->seed('BrandsSeeder');
+//         $this->seed('BrandsSeeder');
         $this->command->info('Start seeding media, this may take a while');
         $this->seed('MediaSeeder');
         $this->seed('RoleSeeder');
-        $this->seed('ActionSeeder');
-        $this->seed('PermissionSeeder');
+//         $this->seed('ActionSeeder');
+//         $this->seed('PermissionSeeder');
         $this->seed('PropertySeeder');
-        $this->seed('PropertyDetailSeeder');
-        $this->seed('PropertyLogSeeder');
-        $this->seed('RentalLogSeeder');
-        $this->seed('AdminAccessSeeder');
+//         $this->seed('PropertyDetailSeeder');
+//         $this->seed('PropertyLogSeeder');
+//         $this->seed('AdminAccessSeeder');
+        $this->seed('RentalSeeder');
+        $this->seed('RentalUserSeeder');
         $this->seed('IssueSeeder');
         $this->seed('IssueDetailSeeder');
         $this->seed('IssueProgressSeeder');
@@ -102,18 +107,18 @@ class UsersSeeder extends Seeder
             ]);
             echoDebug($user, $password);
             // user details
-            $userDetails = factory(UserDetails::class)->create([
-                'user_id' => $user->id
-            ]);
-            echoDebug($user, $userDetails);
+//             $userDetails = factory(UserDetails::class)->create([
+//                 'user_id' => $user->id
+//             ]);
+//             echoDebug($user, $userDetails);
             // user relationship
-            if(random_int(0,1) === 0)
-            {
-                $userRelationship = factory(UserRelationship::class)->create([
-                    'user_id' => $user->id
-                ]);
-                echoDebug($user, $userRelationship);
-            }
+//             if(random_int(0,1) === 0)
+//             {
+//                 $userRelationship = factory(UserRelationship::class)->create([
+//                     'user_id' => $user->id
+//                 ]);
+//                 echoDebug($user, $userRelationship);
+//             }
         });
     }
 }
@@ -237,18 +242,6 @@ class PropertyLogSeeder extends Seeder
         factory(PropertyLog::class, Property::all()->count() * PROPERTY_LOG_SEED_MULTI)->create();
     }
 }
-class RentalLogSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        factory(Rental::class, Property::all()->count())->create();
-    }
-}
 class AdminAccessSeeder extends Seeder
 {
     /**
@@ -295,6 +288,30 @@ class IssueProgressSeeder extends Seeder
     public function run()
     {
         factory(IssueProgress::class, Issue::all()->count())->create();
+    }
+}
+class RentalSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(Rental::class, Property::all()->count() * RENTAL_SEED_MULTI)->create();
+    }
+}
+class RentalUserSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        factory(RentalUser::class, Rental::all()->count() * RENTAL_USER_SEED_MULTI)->create();
     }
 }
 function echoDebug($entity, $info)
