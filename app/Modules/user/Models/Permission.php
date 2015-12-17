@@ -6,7 +6,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract
+class Permission extends BaseModel implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
 	/**
@@ -25,7 +25,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     protected function checkLogin(){
         // do logic
-        ;
+        echo 111;
 
         return true;
 

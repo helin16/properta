@@ -5,4 +5,9 @@ use App\Modules\Abstracts\Controllers\BaseController;
 class RentalController extends BaseController 
 {
 	//
+    public function __construct(){
+
+    }
+
+
 }
