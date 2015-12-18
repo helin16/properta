@@ -3,6 +3,7 @@
 use App\Modules\Abstracts\Controllers\BaseController;
 use App\Modules\Rental\Models\Rental;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RentalController extends BaseController 
 {
@@ -18,7 +19,10 @@ class RentalController extends BaseController
      */
     public function index()
     {
-    	$items = Rental::all()->toArray();
+//    	$items = Rental::all()->toArray();
+//        $items = DB::table('rentals')->paginate(15)->toArray();
+        $items = Rental::paginate(15)->toArray();
+
 //        return $items;
     	return view('rental::rentals', compact('items'));
     }
