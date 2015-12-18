@@ -18,6 +18,8 @@ class CreateRentalsTable extends Migration
             $table->timestamp('from')->nullable();
             $table->timestamp('to')->nullable();
             $table->json('media_ids');
+
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

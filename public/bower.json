@@ -6,7 +6,10 @@
     "bootstrap": "~3.3.6",
     "font-awesome": "~4.5.0",
     "react": "~0.14.3",
-    "mustache.js": "mustache#~2.2.1"
+    "mustache.js": "mustache#~2.2.1",
+    "moment": "~2.10.6",
+    "accounting": "~0.3.2",
+    "eonasdan-bootstrap-datetimepicker": "~4.17.37"
   },
   "private": true
 }
