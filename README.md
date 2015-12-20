@@ -36,7 +36,7 @@ AllowOverride All
 DocumentRoot "S:\PhpstormProjects\properta\public" 
 </VirtualHost>
 ```
-### Desing
+### Design
 * [Entity Relationship Diagram](https://drive.google.com/file/d/0Bxgq42UyfKTIV2FSb09KU3Vycms/view?usp=sharing)
 * [Laravel](laravel.com)
 * [Bootstrap](laravel.com)
