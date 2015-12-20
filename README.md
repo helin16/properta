@@ -23,7 +23,7 @@ bower install
 mysql -e 'create database properta'
 php artisan migrate:refresh --seed
 ```
-#### web hosting
+#### Hosting
 ```Apache
 <Directory "S:\PhpstormProjects\properta\public">
 Order Allow,Deny
