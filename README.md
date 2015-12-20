@@ -8,7 +8,7 @@
 ```Bash
 git clone https://github.com/helin16/properta.git
 ```
-#### PHP packages
+#### PHP Packages
 ```Bash
 cd properta
 compossor install
@@ -36,4 +36,3 @@ AllowOverride All
 DocumentRoot "S:\PhpstormProjects\properta\public" 
 </VirtualHost>
 ```
-
