@@ -21,10 +21,10 @@ class RentalController extends BaseController
     {
 //    	$items = Rental::all()->toArray();
 //        $items = DB::table('rentals')->paginate(15)->toArray();
-        $items = Rental::paginate(15)->toArray();
+        $items = Rental::paginate(5)->toArray();
 
 //        return $items;
-    	return view('rental::rentals', compact('items'));
+    	return view('rental::list.rentals', compact('items'));
     }
     
     /**
@@ -34,7 +34,7 @@ class RentalController extends BaseController
      */
     public function create()
     {
-    	//
+        return view('rental::detail.rental', ['item' => null]);
     }
     
     /**
@@ -56,7 +56,8 @@ class RentalController extends BaseController
      */
     public function show($id)
     {
-    	//
+    	$item = Rental::findOrFail($id)->toArray();
+        return view('rental::detail.rental', compact('item'));
     }
     
     /**
