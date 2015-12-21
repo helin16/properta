@@ -1,4 +1,4 @@
-### Requrement
+### Development Requrement
 * [composser](https://getcomposer.org)
 * [npm](https://www.npmjs.com)
 * [bower](bower.io/)
