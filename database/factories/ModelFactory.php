@@ -93,12 +93,13 @@ $factory->define(Address::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(Media::class, function (Faker\Generator $faker) {
-	if(!file_exists('/tmp'))
-		mkdir('/tmp');
-	$file = $faker->image(DIRECTORY_SEPARATOR . 'tmp');
+    $directory = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' .DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'media';
+	if(!file_exists($directory))
+		mkdir($directory);
+	$file = $faker->image($directory);
 	$name = basename($file);
 	$mimeType = mime_content_type($file);
-	$newPath = (DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . sha1(file_get_contents($file)) . (pathinfo($name, PATHINFO_EXTENSION) === '' ? : ('.' . pathinfo($name, PATHINFO_EXTENSION))));
+	$newPath = (dirname($file) . DIRECTORY_SEPARATOR . sha1(file_get_contents($file)) . (pathinfo($name, PATHINFO_EXTENSION) === '' ? : ('.' . pathinfo($name, PATHINFO_EXTENSION))));
 	if($file !== $newPath)
 		rename($file, $newPath);
     return [

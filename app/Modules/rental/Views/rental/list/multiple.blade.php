@@ -1,69 +1,88 @@
-@extends('rental::base.base')
-@foreach($items['data'] as $item)
-{{ var_dump($item) }}
-<hr/>
-@endforeach
+@extends('rental::base.list.footable')
+{{--@foreach($items['data'] as $item)--}}
+{{--{{ var_dump($items) }}--}}
+{{--<hr/>--}}
+{{--@endforeach--}}
 
 @section('page_body')
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="wrapper wrapper-content animated fadeInUp">
-
-                <div class="ibox">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>All projects assigned to this account</h5>
+                        <h5>FooTable with row toggler, sorting and pagination</h5>
+
                         <div class="ibox-tools">
-                            <a href="" class="btn btn-primary btn-xs">Create new project</a>
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row m-b-sm m-t-sm">
-                            <div class="col-md-1">
-                                <button type="button" id="loading-example-btn" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> Refresh</button>
-                            </div>
-                            <div class="col-md-11">
-                                <div class="input-group"><input type="text" placeholder="Search" class="input-sm form-control"> <span class="input-group-btn">
-                                        <button type="button" class="btn btn-sm btn-primary"> Go!</button> </span></div>
-                            </div>
-                        </div>
 
-                        <div class="project-list">
-
-                            <table class="table table-hover">
-                                <tbody>
+                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="8">
+                            <thead>
+                            <tr>
+                                <th data-toggle="true">Address</th>
+                                <th class="hidden-xs" data-toggle="true">Suburb</th>
+                                <th class="hidden-xs" data-toggle="true">Postcode</th>
+                                <th>Daily Amount</th>
+                                <th >From</th>
+                                <th class="hidden-xs">To</th>
+                                <th data-hide="all">Address</th>
+                                <th data-hide="all">Description</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($items as $item)
                                 <tr>
-                                    <td class="project-status">
-                                        <span class="label label-primary">Active</span>
-                                    </td>
-                                    <td class="project-title">
-                                        <a href="project_detail.html">Contract with Zender Company</a>
-                                        <br>
-                                        <small>Created 14.08.2014</small>
-                                    </td>
-                                    <td class="project-completion">
-                                        <small>Completion with: 48%</small>
-                                        <div class="progress progress-mini">
-                                            <div style="width: 48%;" class="progress-bar"></div>
-                                        </div>
-                                    </td>
-                                    <td class="project-people">
-                                        <a href=""><img alt="image" class="img-circle" src="img/a3.jpg"></a>
-                                        <a href=""><img alt="image" class="img-circle" src="img/a1.jpg"></a>
-                                        <a href=""><img alt="image" class="img-circle" src="img/a2.jpg"></a>
-                                        <a href=""><img alt="image" class="img-circle" src="img/a4.jpg"></a>
-                                        <a href=""><img alt="image" class="img-circle" src="img/a5.jpg"></a>
-                                    </td>
-                                    <td class="project-actions">
-                                        <a href="#" class="btn btn-white btn-sm"><i class="fa fa-folder"></i> View </a>
-                                        <a href="#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> Edit </a>
-                                    </td>
+                                    <td>{{ $item['property']['address']['street'] }}</td>
+                                    <td class="hidden-xs">{{ $item['property']['address']['suburb'] }}</td>
+                                    <td class="hidden-xs">{{ $item['property']['address']['postcode'] }}</td>
+                                    <td>{{ $item['dailyAmount'] }}</td>
+                                    <td render_utc_datetime="{{ $item['from'] }}"></td>
+                                    <td class="hidden-xs" render_utc_datetime="{{ $item['to'] }}"></td>
+                                    <td>@include('rental::address.list.inline', ['item' => $item['property']['address']])</td>
+                                    <td>{{ $item['property']['description'] }}</td>
+                                    <td><a href="{{ '/rental/' . $item['id'] }}"><i class="fa fa-pencil-square-o"></i></a></td>
                                 </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                            @endforeach
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="7">
+                                    <ul class="pagination pull-right"></ul>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    @parent
+    <script>
+        $('[render_utc_datetime]').each(function(){
+            if($(this).attr('render_utc_datetime') !== '')
+                $(this).html(moment.utc($(this).attr('render_utc_datetime')).local().format('D MMM YYYY'));
+        });
+    </script>
 @endsection

@@ -9,3 +9,5 @@ vendor
 /.phpstorm.meta.php
 /composer.lock
 /_ide_helper.php
+/media
+!/media/.gitkeep

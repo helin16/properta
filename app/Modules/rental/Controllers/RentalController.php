@@ -19,9 +19,9 @@ class RentalController extends BaseController
      */
     public function index()
     {
-//    	$items = Rental::all()->toArray();
-//        $items = DB::table('rentals')->paginate(15)->toArray();
-        $items = Rental::paginate(5)->toArray();
+    	$items = Rental::all()->toArray();
+////        $items = DB::table('rentals')->paginate(15)->toArray();
+//        $items = Rental::paginate(5)->toArray();
 
 //        return $items;
     	return view('rental::rental.list.multiple', compact('items'));
