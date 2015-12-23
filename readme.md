@@ -10,30 +10,28 @@ git clone https://github.com/helin16/properta.git
 ```
 #### PHP Packages
 ```Bash
-cd properta
-composer install
+cd properta; composer install
 ```
 #### Front-end Packages
 ```Bash
-cd public
-bower install
+cd public; bower install
 ```
 #### Database
 ```Bash
 mysql -e 'create database properta'
-php artisan migrate:refresh --seed
+cd ..; php artisan migrate:refresh --seed
 ```
 #### Hosting
 ```Apache
 <Directory "S:\PhpstormProjects\properta\public">
 Order Allow,Deny
-Allow from all 
+Allow from all
 Require all granted
 AllowOverride All
 </Directory>
 
-<VirtualHost *:8106>   
-DocumentRoot "S:\PhpstormProjects\properta\public" 
+<VirtualHost *:8106>
+DocumentRoot "S:\PhpstormProjects\properta\public"
 </VirtualHost>
 ```
 ### Design
