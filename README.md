@@ -11,7 +11,7 @@ git clone https://github.com/helin16/properta.git
 #### PHP Packages
 ```Bash
 cd properta
-compossor install
+composer install
 ```
 #### Front-end Packages
 ```Bash
