@@ -11,4 +11,15 @@ abstract class BaseModel extends Model
      * @var bool
      */
     public $timestamps = false;
+    public static function getAll()
+    {
+        $class = get_called_class();
+        return $class::all()->toArray();
+    }
+
+    public static function getById($id)
+    {
+        $class = get_called_class();
+        return $class::find($id) ? $class::find($id)->toArray() : [];
+    }
 }

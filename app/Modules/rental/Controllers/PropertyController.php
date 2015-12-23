@@ -1,18 +1,12 @@
 <?php namespace App\Modules\Rental\Controllers;
 
 use App\Modules\Abstracts\Controllers\BaseController;
-use App\Modules\Rental\Models\Rental;
-use App\Modules\Rental\Models\Property;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Modules\Rental\Models\Property;
+use App\Modules\Rental\Models\Address;
 
 class PropertyController extends BaseController
 {
-	//
-    public function __construct(){
-
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -20,17 +14,9 @@ class PropertyController extends BaseController
      */
     public function index()
     {
+        return view('rental::property.list', ['properties' => Property::getAll()]);
     }
-    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -39,7 +25,9 @@ class PropertyController extends BaseController
      */
     public function store(Request $request)
     {
-    	//
+        $address = Address::store($request->all()['address_street'], $request->all()['address_suburb'], $request->all()['address_state'], $request->all()['address_country'], $request->all()['address_postcode'], $request->all()['address_id']);
+        Property::store($request->all()['property_description'], $address, $request->all()['property_id']);
+        return $this->index();
     }
     
     /**
@@ -48,35 +36,11 @@ class PropertyController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id = 0)
     {
-        $item = Property::findOrFail($id)->toArray();
-        return view('rental::property.detail.form', compact('item'));
+        return view('rental::property.detail', ['property' => Property::getById($id)]);
     }
-    
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-    	//
-    }
-    
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-    	//
-    }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -85,6 +49,7 @@ class PropertyController extends BaseController
      */
     public function destroy($id)
     {
-    	//
+    	Property::destroy($id);
+        return $this->index();
     }
 }

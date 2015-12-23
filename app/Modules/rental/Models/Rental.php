@@ -2,15 +2,12 @@
 
 use App\Modules\Abstracts\Models\BaseModel;
 use App\Modules\Message\Models\Media;
+use Carbon\Carbon;
 
 class Rental extends BaseModel
 {
+    protected $fillable = ['dailyAmount', 'from', 'to', 'property_id', 'address_id'];
     protected $dates = ['from', 'to'];
-//    protected $dateFormat = 'Y-m-d H:i:s';
-	public function property()
-    {
-        return $this->belongsTo(Property::class);
-    }
     /**
      * Get the collection of items as a plain array.
      *
@@ -20,7 +17,7 @@ class Rental extends BaseModel
     {
         $array = parent::toArray();
         // property
-        $array['property'] = Property::findOrFail($array['property_id'])->toArray();
+        $array['property'] = Property::find($array['property_id']) ? Property::find($array['property_id'])->toArray() : [];
         unset($array['property_id']);
         // media
         $array['media'] = [];
@@ -31,5 +28,9 @@ class Rental extends BaseModel
         unset($array['media_ids']);
 
         return $array;
+    }
+    public static function store($dailyAmount, $from, $to, Property $property = null, $id = null)
+    {
+        return self::updateOrCreate(['id' => $id], ['dailyAmount' => $dailyAmount, 'from' => new Carbon($from), 'to' => new Carbon($to), 'property_id' => $property->id]);
     }
 }

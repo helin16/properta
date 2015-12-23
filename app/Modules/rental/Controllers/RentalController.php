@@ -1,17 +1,13 @@
 <?php namespace App\Modules\Rental\Controllers;
 
 use App\Modules\Abstracts\Controllers\BaseController;
+use App\Modules\Rental\Models\Property;
 use App\Modules\Rental\Models\Rental;
+use App\Modules\Rental\Models\Address;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class RentalController extends BaseController 
 {
-	//
-    public function __construct(){
-
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -19,22 +15,7 @@ class RentalController extends BaseController
      */
     public function index()
     {
-    	$items = Rental::all()->toArray();
-////        $items = DB::table('rentals')->paginate(15)->toArray();
-//        $items = Rental::paginate(5)->toArray();
-
-//        return $items;
-    	return view('rental::rental.list.multiple', compact('items'));
-    }
-    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('rental::rental.detail.form', ['item' => null]);
+        return view('rental::rental.list', ['rentals' => Rental::getAll()]);
     }
     
     /**
@@ -45,7 +26,10 @@ class RentalController extends BaseController
      */
     public function store(Request $request)
     {
-    	//
+        $address = Address::store($request->all()['address_street'], $request->all()['address_suburb'], $request->all()['address_state'], $request->all()['address_country'], $request->all()['address_postcode'], $request->all()['address_id']);
+        $property = Property::store($request->all()['property_description'], $address, $request->all()['property_id']);
+        Rental::store($request->all()['rental_dailyAmount'], $request->all()['rental_from'], $request->all()['rental_to'], $property, $request->all()['rental_id']);
+        return $this->index();
     }
     
     /**
@@ -56,31 +40,7 @@ class RentalController extends BaseController
      */
     public function show($id)
     {
-    	$item = Rental::findOrFail($id)->toArray();
-        return view('rental::rental.detail.form', compact('item'));
-    }
-    
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-    	//
-    }
-    
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-    	//
+        return view('rental::rental.detail', ['rental' => Rental::getById($id)]);
     }
     
     /**
@@ -91,6 +51,7 @@ class RentalController extends BaseController
      */
     public function destroy($id)
     {
-    	//
+        Rental::destroy($id);
+        return $this->index();
     }
 }
