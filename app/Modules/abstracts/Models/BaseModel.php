@@ -11,15 +11,17 @@ abstract class BaseModel extends Model
      * @var bool
      */
     public $timestamps = false;
+    public static $pageSize = 5;
     public static function getAll()
     {
         $class = get_called_class();
-        return $class::all()->toArray();
+        $data = $class::orderBy('id', 'desc')->paginate(self::$pageSize);
+        return $data;
     }
 
     public static function getById($id)
     {
         $class = get_called_class();
-        return $class::find($id) ? $class::find($id)->toArray() : [];
+        return $class::find($id) ? $class::find($id) : null;
     }
 }

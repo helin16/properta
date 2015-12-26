@@ -16,6 +16,7 @@ class CreatePropertiesTable extends Migration
             $table->unsignedInteger('address_id');
             $table->text('description');
         });
+
     }
 
     /**

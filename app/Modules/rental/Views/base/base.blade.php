@@ -6,6 +6,7 @@
     <title>Properta</title>
     @section('css')
         {!! HTML::style('bower_components\bootstrap\dist\css\bootstrap.css') !!}
+        {!! HTML::style('bower_components\font-awesome\css\font-awesome.css') !!}
     @show
 </head>
 <body>

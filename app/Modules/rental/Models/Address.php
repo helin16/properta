@@ -19,4 +19,16 @@ class Address extends BaseModel
     {
         return self::updateOrCreate(['id' => $id], compact('street', 'suburb', 'state', 'country', 'postcode'));
     }
+    public function inline()
+    {
+        $result = '';
+        foreach([$this->street, $this->suburb, $this->state, $this->country, $this->postcode] as $index => $string)
+        {
+            $string = trim($string);
+            if($index !== 0 && $string !== '')
+                $result .= ', ';
+            $result .= $string;
+        }
+        return $result;
+    }
 }
