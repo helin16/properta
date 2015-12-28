@@ -9,37 +9,31 @@ use NumberFormatter;
 
 class Rental extends BaseModel
 {
-    protected $fillable = ['dailyAmount', 'from', 'to', 'property_id', 'address_id'];
+    protected $fillable = ['dailyAmount', 'from', 'to', 'property_id', 'media_ids'];
     protected $dates = ['from', 'to'];
-//    /**
-//     * Get the collection of items as a plain array.
-//     *
-//     * @return array
-//     */
-//    public function toArray()
-//    {
-//        $array = parent::toArray();
-//        // property
-//        $array['property'] = Property::find($array['property_id']) ? Property::find($array['property_id'])->toArray() : [];
-//        unset($array['property_id']);
-//        // media
-//        $array['media'] = [];
-//        if(is_array($media_ids = json_decode($array['media_ids'])))
-//            foreach($media_ids as $media_id)
-//                if(($media = Media::find($media_id)) instanceof Media)
-//                    $array['media'][] = $media->toArray();
-//        unset($array['media_ids']);
-//
-//        return $array;
-//    }
-
     public function property()
     {
         return $this->belongsTo(Property::class);
     }
-    public static function store($dailyAmount, $from, $to, Property $property = null, $id = null)
+    public function media()
     {
+        return Media::whereIn('id', json_decode($this->media_ids))->get()->all();
+    }
+    public static function store($dailyAmount, $from, $to, Property $property, $media = [], $id = null)
+    {
+//        var_dump($media);
         $fmt = new NumberFormatter( 'en_AU', NumberFormatter::CURRENCY );
-        return self::updateOrCreate(['id' => $id], ['dailyAmount' => $fmt->parseCurrency($dailyAmount, $curr), 'from' => empty($from) ? null : new Carbon($from), 'to' =>  empty($to) ? null : new Carbon($to), 'property_id' => $property->id]);
+        $media_ids = [];
+        if(!is_array($media))
+        $media = [$media];
+        foreach($media as $single_media)
+            if($single_media instanceof Media)
+                $media_ids[] = $single_media->id;
+        return self::updateOrCreate(['id' => $id], ['dailyAmount' => $fmt->parseCurrency($dailyAmount, $curr),
+            'from' => empty($from) ? null : new Carbon($from),
+            'to' =>  empty($to) ? null : new Carbon($to),
+            'property_id' => $property->id,
+            'media_ids' => json_encode($media_ids),
+        ]);
     }
 }

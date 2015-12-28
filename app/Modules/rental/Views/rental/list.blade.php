@@ -14,6 +14,14 @@
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('Daily Amount')], 'body' => ['content' => money_format('%.2n',$rental->dailyAmount)]])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('from')], 'body' => ['content' => $rental->from ? $rental->from->format('l jS \\of F Y h:i:s A') : 'Not Available']])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('to')], 'body' => ['content' => $rental->to ? $rental->to->format('l jS \\of F Y h:i:s A') : 'Not Available']])
+                <div class="row">
+                    <div class="{{ $title['class'] or 'col-sm-2' }}">{{ ucfirst('media') }}</div>
+                    <div class="{{ $body['class'] or 'col-sm-10' }}">
+                        @foreach($rental->media() as $media)
+                            <a href="{{ $media->path }}" target="_blank" download="{{ $media->name }}">{{ $media->name }}</a>
+                        @endforeach
+                    </div>
+                </div>
             </div>
             <div class="col-sm-2">
                 {!! Form::open(['method' => 'GET', 'url' => '/rental/' . $rental->id, 'style'=>'display:inline-block']) !!}

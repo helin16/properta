@@ -1,6 +1,6 @@
 @extends('rental::base.base')
 @section('container')
-    {!! Form::open(array('url' => '/rental')) !!}
+    {!! Form::open(['url' => '/rental', 'files' => true]) !!}
         {!! Form::label('property_id', 'Property') !!}
         @include('rental::property.select', ['property' => $rental ? $rental->property : null, 'properties' => $properties, 'options' => ['class' => 'form-control']])
         @include('rental::rental.form', ['rental' => $rental])

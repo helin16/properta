@@ -4,6 +4,14 @@ use App\Modules\Abstracts\Models\BaseModel;
 
 class Media extends BaseModel
 {
+    protected $fillable = ['mimeType', 'name', 'path'];
+    public static function store(string $content, $mimeType = '', $name = '', $id = null)
+    {
+        $dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . str_repeat('..' . DIRECTORY_SEPARATOR, 4) . 'public' . DIRECTORY_SEPARATOR . 'media';
+        $path = $dir . DIRECTORY_SEPARATOR . sha1($content);
+        file_put_contents($path, $content);
+        return self::updateOrCreate(['id' => $id], ['path' => '/media/' . basename($path), 'mimeType' => $mimeType, 'name' => $name]);
+    }
     /**
      * Get the collection of items as a plain array.
      *

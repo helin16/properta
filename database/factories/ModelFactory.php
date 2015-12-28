@@ -105,7 +105,7 @@ $factory->define(Media::class, function (Faker\Generator $faker) {
     return [
         'mimeType' => $mimeType,
         'name' => $name,
-        'path' => $newPath
+        'path' => '/media/' . basename($newPath),
     ];
 });
 
