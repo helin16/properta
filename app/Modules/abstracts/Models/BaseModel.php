@@ -11,11 +11,13 @@ abstract class BaseModel extends Model
      * @var bool
      */
     public $timestamps = false;
-    public static $pageSize = 5;
-    public static function getAll()
+    public static function getAll($pageSize = 5)
     {
         $class = get_called_class();
-        $data = $class::orderBy('id', 'desc')->paginate(self::$pageSize);
+        $data = $class::orderBy('id', 'desc');
+        if(is_int($pageSize))
+            $data = $data->paginate($pageSize);
+        else $data = $data->get();
         return $data;
     }
 

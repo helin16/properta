@@ -3,6 +3,6 @@
     {!! Form::open(array('url' => '/property')) !!}
         @include('rental::property.form', ['property' => $property])
         @include('rental::address.form', ['address' => $property ? $property->address : null])
-        {!! Form::submit('Save') !!}
+        {!! Form::button('Save', array('type' => 'submit', 'class' => 'btn btn-success')) !!}
     {!! Form::close() !!}
 @endsection

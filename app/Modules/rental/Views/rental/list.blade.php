@@ -1,35 +1,27 @@
+<?php setlocale(LC_MONETARY, 'en_AU.UTF-8') ?>
 @extends('rental::base.list')
-@section('row')
-    <li class="list-group-item">
-        <div class="row title-row">
-            <div class="col-sm-1">ID</div>
-            <div class="col-sm-2">Daily Amount</div>
-            <div class="col-sm-2">From</div>
-            <div class="col-sm-2">To</div>
-            <div class="col-sm-4">Address</div>
-            <div class="col-sm-1">
-                {!! Form::open(['method' => 'GET', 'route' => 'rental.show']) !!}
-                    {!! Form::submit('Create') !!}
-                {!! Form::close() !!}
+@section('item-list')
+    <div class="row">
+        <strong style="line-height: 30px;">Found {{ $data->total() }} Rentals</strong>
+        {!! Form::open(['method' => 'GET', 'route' => 'rental.show', 'class' => 'pull-right', 'style'=>'display:inline-block']) !!}
+        {!! Form::button('Create', array('type' => 'submit', 'class' => 'btn btn-primary')) !!}
+        {!! Form::close() !!}
+    </div>
+    @foreach($data->all() as $rental)
+        <li class="list-group-item row" rental_id="{{ $rental->id }}">
+            <div class="col-sm-10">
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('address')], 'body' => ['content' => $rental->property->address->inline()]])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('Daily Amount')], 'body' => ['content' => money_format('%.2n',$rental->dailyAmount)]])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('from')], 'body' => ['content' => $rental->from ? $rental->from->format('l jS \\of F Y h:i:s A') : 'Not Available']])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('to')], 'body' => ['content' => $rental->to ? $rental->to->format('l jS \\of F Y h:i:s A') : 'Not Available']])
             </div>
-        </div>
-    </li>
-    @foreach($rentals as $rental)
-        <li class="list-group-item">
-            <div class="row item-row" rental_id="{{ $rental['id'] }}">
-                <div class="col-sm-1">{{ $rental['id'] }}</div>
-                <div class="col-sm-2">{{ $rental['dailyAmount'] }}</div>
-                <div class="col-sm-2">{{ $rental['from'] }}</div>
-                <div class="col-sm-2">{{ $rental['to'] }}</div>
-                <div class="col-sm-4">@include('rental::address.inline', ['address' => $rental['property'] ? $rental['property']['address'] : []])</div>
-                <div class="col-sm-1">
-                    {!! Form::open(['method' => 'GET', 'url' => '/rental/' . $rental['id']]) !!}
-                        {!! Form::submit('Update') !!}
-                    {!! Form::close() !!}
-                    {!! Form::open(['method' => 'DELETE', 'url' => '/rental/' . $rental['id']]) !!}
-                        {!! Form::submit('Delete') !!}
-                    {!! Form::close() !!}
-                </div>
+            <div class="col-sm-2">
+                {!! Form::open(['method' => 'GET', 'url' => '/rental/' . $rental->id, 'style'=>'display:inline-block']) !!}
+                {!! Form::button('Update', array('type' => 'submit', 'class' => 'btn btn-primary')) !!}
+                {!! Form::close() !!}
+                {!! Form::open(['method' => 'DELETE', 'url' => '/rental/' . $rental->id, 'style'=>'display:inline-block']) !!}
+                {!! Form::button('Delete', array('type' => 'submit', 'class' => 'btn btn-warning')) !!}
+                {!! Form::close() !!}
             </div>
         </li>
     @endforeach

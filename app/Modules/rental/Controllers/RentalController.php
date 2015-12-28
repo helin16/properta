@@ -15,7 +15,7 @@ class RentalController extends BaseController
      */
     public function index()
     {
-        return view('rental::rental.list', ['rentals' => Rental::getAll()]);
+        return view('rental::rental.list', ['data' => Rental::getAll()]);
     }
     
     /**
@@ -26,9 +26,8 @@ class RentalController extends BaseController
      */
     public function store(Request $request)
     {
-        $address = Address::store($request->all()['address_street'], $request->all()['address_suburb'], $request->all()['address_state'], $request->all()['address_country'], $request->all()['address_postcode'], $request->all()['address_id']);
-        $property = Property::store($request->all()['property_description'], $address, $request->all()['property_id']);
-        Rental::store($request->all()['rental_dailyAmount'], $request->all()['rental_from'], $request->all()['rental_to'], $property, $request->all()['rental_id']);
+//        die(var_dump($request->all()));
+        Rental::store($request->all()['rental_dailyAmount'], $request->all()['rental_from'], $request->all()['rental_to'], Property::findOrFail($request->all()['property_id']), $request->all()['rental_id']);
         return $this->index();
     }
     
@@ -38,9 +37,9 @@ class RentalController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id = 0)
     {
-        return view('rental::rental.detail', ['rental' => Rental::getById($id)]);
+        return view('rental::rental.detail', ['rental' => Rental::getById($id), 'properties' => Property::getAll(false)]);
     }
     
     /**
