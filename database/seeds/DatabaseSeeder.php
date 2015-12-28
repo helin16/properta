@@ -14,7 +14,7 @@ use App\Modules\User\Models\Role;
 use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
 use App\Modules\Rental\Models\Property;
-use App\Modules\PropertyDetail\Models\PropertyDetail;
+use App\Modules\Rental\Models\PropertyDetail;
 use App\Modules\PropertyLog\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\Rental\Models\RentalUser;
@@ -215,7 +215,12 @@ class PropertySeeder extends Seeder
      */
     public function run()
     {
-        factory(Property::class, SEED_LIMIT)->create();
+        factory(Property::class, SEED_LIMIT)->create()->each(function($property){
+            $property_detail = factory(PropertyDetail::class)->create([
+                'property_id' => $property->id
+            ]);
+            echoDebug($property, $property_detail);
+        });
     }
 }
 class PropertyDetailSeeder extends Seeder

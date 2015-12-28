@@ -3,6 +3,7 @@
 use App\Modules\Abstracts\Models\BaseModel;
 use App\Modules\Rental\Models\Address;
 use App\Modules\Rental\Models\Rental;
+use App\Modules\Rental\Models\PropertyDetail;
 
 class Property extends BaseModel
 {
@@ -46,6 +47,11 @@ class Property extends BaseModel
         $result['count'] = sizeof($result['averageDailyAmount']);
         $result['averageDailyAmount'] = sizeof($result['averageDailyAmount']) > 0 ? array_sum($result['averageDailyAmount']) / sizeof($result['averageDailyAmount']) : 0;
         return $result;
+    }
+
+    public function details()
+    {
+        return $this->hasMany(PropertyDetail::class);
     }
 
     /**

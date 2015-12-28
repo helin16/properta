@@ -12,7 +12,7 @@ use App\Modules\User\Models\Role;
 use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
 use App\Modules\Rental\Models\Property;
-use App\Modules\PropertyDetail\Models\PropertyDetail;
+use App\Modules\Rental\Models\PropertyDetail;
 use App\Modules\PropertyLog\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\Rental\Models\RentalUser;
@@ -143,14 +143,21 @@ $factory->define(Property::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(PropertyDetail::class, function (Faker\Generator $faker) {
-    return [
+    $array = [
         'property_id' => $faker->randomElement(Property::all()->all())->id,
         'type' => $faker->word,
-        'carParks' => $faker->numberBetween(0,2),
-        'bedrooms' => $faker->numberBetween(0,5),
-        'bathrooms' => $faker->numberBetween(1,3),
-        'options' => json_encode([])
+        'carParks' => random_int(0,5) === 0 ? null : random_int(0,3),
+        'carParks' => random_int(0,5) === 0 ? null : random_int(0,3),
+        'bedrooms' => random_int(0,10) === 0 ? null : random_int(1,5),
+        'bathrooms' => random_int(0,10) === 0 ? null : random_int(1,3),
+        'options' => [],
     ];
+    for($i=0; $i<random_int(0,5); $i++)
+    {
+        $array['options'][] = [$faker->word => $faker->randomNumber()];
+    }
+    $array['options'] = json_encode($array['options']);
+    return $array;
 });
 
 $factory->define(PropertyLog::class, function (Faker\Generator $faker) {
@@ -234,3 +241,5 @@ $factory->define(RentalUser::class, function (Faker\Generator $faker) {
         'rental_id' => $faker->randomElement(Rental::all()->all())->id,
     ];
 });
+
+
