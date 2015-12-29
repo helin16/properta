@@ -23,4 +23,8 @@ class Media extends BaseModel
         $array['data'] = base64_encode(file_get_contents($array['path']));
         return $array;
     }
+    public static function getById($id)
+    {
+        return (is_array($tmp = parent::getById($id)) ? $tmp : [$tmp]);
+    }
 }

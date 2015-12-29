@@ -8,7 +8,6 @@
         {!! Form::close() !!}
     </div>
     @foreach($data->all() as $issue)
-{{--        {{ die(var_dump($issue->details)) }}--}}
         <li class="list-group-item row" issue_id="{{ $issue->id }}">
             <div class="col-sm-10">
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('address')], 'body' => ['content' => $issue->rental->property->address->inline()]])
@@ -20,8 +19,6 @@
                     @include('rental::base.list_row', ['title' => ['content' => ucfirst('content')], 'body' => ['content' => $issue->details->first()->content]])
                     @include('message::media.list', ['media' => $issue->details->first()->media()])
                 @endforeach
-                {{--@include('rental::base.list_row', ['title' => ['content' => ucfirst('rental')], 'body' => ['content' => money_format('%.2n',$property->rental()['averageDailyAmount']) ]])--}}
-                {{--@include('rental::base.list_row', ['title' => ['content' => ucfirst('description')], 'body' => ['content' => $property->description]])--}}
             </div>
             <div class="col-sm-2">
                 {!! Form::open(['method' => 'GET', 'url' => '/issue/' . $issue->id, 'style'=>'display:inline-block']) !!}
