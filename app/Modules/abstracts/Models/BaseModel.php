@@ -24,6 +24,9 @@ abstract class BaseModel extends Model
     public static function getById($id)
     {
         $class = get_called_class();
-        return $class::find($id) ? $class::find($id) : null;
+        $ids = is_array($id) ? $id : [$id];
+//        return $class::find($id) ? $class::find($id) : null;
+        $items = $class::whereIn('id', $ids)->get();
+        return sizeof($items->all()) <= 1 ? $items->first() : $items->all();
     }
 }

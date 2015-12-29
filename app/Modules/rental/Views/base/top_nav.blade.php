@@ -16,6 +16,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="/property">{{ ucfirst('property') }}</a></li>
                 <li><a href="/rental">{{ ucfirst('rental') }}</a></li>
+                <li><a href="/issue">{{ ucfirst('issue') }}</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

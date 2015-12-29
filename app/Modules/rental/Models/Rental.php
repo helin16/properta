@@ -17,7 +17,7 @@ class Rental extends BaseModel
     }
     public function media()
     {
-        return Media::whereIn('id', json_decode($this->media_ids))->get()->all();
+        return Media::getById(json_decode($this->media_ids)) ?: [];
     }
     public static function store($dailyAmount, $from, $to, Property $property, $media = [], $id = null)
     {
