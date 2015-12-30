@@ -3,7 +3,7 @@
     <div class="{{ $body['class'] or 'col-sm-10' }}">
         @foreach($media as $single_media)
             @if($single_media)
-                <a href="{{ $single_media->path }}" target="_blank" download="{{ $single_media->name }}">{{ $single_media->name }}</a>
+                @include('message::media.single', ['media' => $single_media])
             @endif
         @endforeach
     </div>

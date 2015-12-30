@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\Password;
-use App\Modules\UserDetails\Models\UserDetails;
+use App\Modules\User\Models\UserDetail;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-//         $this->seed('SystemUserSeeder');
+        $this->seed('SystemUserSeeder');
         $this->seed('UsersSeeder');
 //         $this->seed('MessagesSeeder');
         $this->seed('AddressesSeeder');
@@ -106,11 +106,11 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make(str_random(15))
             ]);
             echoDebug($user, $password);
-            // user details
-//             $userDetails = factory(UserDetails::class)->create([
-//                 'user_id' => $user->id
-//             ]);
-//             echoDebug($user, $userDetails);
+//             user details
+             $userDetails = factory(UserDetail::class)->create([
+                 'user_id' => $user->id
+             ]);
+             echoDebug($user, $userDetails);
             // user relationship
 //             if(random_int(0,1) === 0)
 //             {

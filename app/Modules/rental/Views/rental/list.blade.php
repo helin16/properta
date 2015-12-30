@@ -1,3 +1,4 @@
+{{--{{ die(var_dump($data)) }}--}}
 <?php setlocale(LC_MONETARY, 'en_AU.UTF-8') ?>
 @extends('rental::base.list')
 @section('item-list')
@@ -14,7 +15,8 @@
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('Daily Amount')], 'body' => ['content' => money_format('%.2n',$rental->dailyAmount)]])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('from')], 'body' => ['content' => $rental->from ? $rental->from->format('l jS \\of F Y h:i:s A') : 'Not Available']])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('to')], 'body' => ['content' => $rental->to ? $rental->to->format('l jS \\of F Y h:i:s A') : 'Not Available']])
-                @include('message::media.list', ['media' => $rental->media()])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('issues')], 'body' => ['content' => $rental->issues->count()]])
+                @include('message::media.list', ['media' => $rental->media()->get()->all()])
             </div>
             <div class="col-sm-2">
                 {!! Form::open(['method' => 'GET', 'url' => '/rental/' . $rental->id, 'style'=>'display:inline-block']) !!}

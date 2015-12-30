@@ -8,19 +8,13 @@ use App\Modules\Rental\Models\PropertyDetail;
 class Property extends BaseModel
 {
     protected $fillable = ['description', 'address_id'];
-//    /**
-//     * Get the collection of items as a plain array.
-//     *
-//     * @return array
-//     */
-//    public function toArray()
-//    {
-//        $array = parent::toArray();
-//        $array['address'] = Address::findOrFail($array['address_id'])->toArray();
-//        unset($array['address_id']);
-//        return $array;
-//    }
-
+    public static function getAll($address_id = null, $pageSize = null)
+    {
+        $query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+        if($address_id)
+            $query->where('address_id', intval($address_id));
+        return $query->paginate($pageSize ?: self::$pageSize);
+    }
     public function address()
     {
         return $this->belongsTo(Address::class);
@@ -37,12 +31,13 @@ class Property extends BaseModel
 
     public function rental()
     {
-        $result = ['averageDailyAmount' => [], 'count' => 0];
+        $result = ['averageDailyAmount' => [], 'count' => 0, 'issuesCount' => 0];
 
         foreach($this->hasMany(Rental::class)->get() as $rental)
         {
             if(doubleval($rental->dailyAmount) > 0)
                 $result['averageDailyAmount'][] = doubleval($rental->dailyAmount);
+            $result['issuesCount'] += $rental->issues->count();
         }
         $result['count'] = sizeof($result['averageDailyAmount']);
         $result['averageDailyAmount'] = sizeof($result['averageDailyAmount']) > 0 ? array_sum($result['averageDailyAmount']) / sizeof($result['averageDailyAmount']) : 0;

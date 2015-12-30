@@ -7,6 +7,6 @@ class IssueDetail extends BaseModel
 {
     public function media()
     {
-        return Media::getById(json_decode($this->media_ids));
+        return Media::whereIn('id', json_decode($this->media_ids));
     }
 }

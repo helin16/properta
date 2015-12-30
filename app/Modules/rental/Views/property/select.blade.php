@@ -3,4 +3,4 @@
                     $result[$item->id] = $item->address->inline();
                     return $result;
                 }, array('0' => 'Select One Property'))
-), ((isset($property) && $property) ? $property->id : null), (isset($options) ? $options : [])) !!}
+), ((isset($property) && $property) ? $property->id : null), (isset($options) ? $options : ['class' => 'form-control'])) !!}

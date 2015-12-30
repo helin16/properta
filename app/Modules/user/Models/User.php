@@ -22,7 +22,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 	 * @var array
 	 */
 	protected $hidden = ['remember_token'];
-
+	public static function getAll($pageSize)
+	{
+		$query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+		return $query->paginate($pageSize ?: self::$pageSize);
+	}
     protected function checkLogin(){
         // do logic
         ;
@@ -30,7 +34,14 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return true;
 
     }
-
+	public function details()
+	{
+		return $this->hasMany(UserDetail::class);
+	}
+	public function inline()
+	{
+		return ($this->details->first() ? $this->details->first()->fullName() : '') . ' (' . $this->email . ')';
+	}
     protected function resetPassword(){
 
     }

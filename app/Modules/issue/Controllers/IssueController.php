@@ -2,7 +2,9 @@
 
 use App\Modules\Abstracts\Controllers\BaseController;
 use App\Modules\Issue\Models\Issue;
+use App\Modules\User\Models\User;
 use Illuminate\Http\Request;
+use App\Modules\Rental\Models\Rental;
 
 class IssueController extends BaseController 
 {
@@ -13,7 +15,10 @@ class IssueController extends BaseController
      */
     public function index()
     {
-        return view('issue::issue.list', ['data' => Issue::getAll()]);
+        return view('issue::issue.list', ['data' => Issue::getAll(
+            isset($_REQUEST['rental_id']) ? $_REQUEST['rental_id'] : null,
+            isset($_REQUEST['requester_user_id']) ? $_REQUEST['requester_user_id'] : null
+        )]);
     }
 
     /**
@@ -70,7 +75,7 @@ class IssueController extends BaseController
      */
     public function show($id = 0)
     {
-        return view('rental::property.detail', ['property' => Property::getById($id)]);
+        return view('issue::issue.detail', ['issue' => Issue::find($id), 'users' => User::getAll(PHP_INT_MAX), 'rentals' => Rental::getAll(false)]);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\Password;
-use App\Modules\UserDetails\Models\UserDetails;
+use App\Modules\User\Models\UserDetail;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
@@ -43,7 +43,7 @@ $factory->define(Password::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(UserDetails::class, function (Faker\Generator $faker) {
+$factory->define(UserDetail::class, function (Faker\Generator $faker) {
     $array =  [
         'firstName' => $faker->firstName,
         'lastName' => $faker->lastName,

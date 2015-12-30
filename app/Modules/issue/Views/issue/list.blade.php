@@ -13,11 +13,12 @@
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('address')], 'body' => ['content' => $issue->rental->property->address->inline()]])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('rental')], 'body' => ['content' => money_format('%.2n', $issue->rental->property->rental()['averageDailyAmount']) ]])
                 @foreach($issue->details->all() as $detail)
+                    <hr/>
                     @include('rental::base.list_row', ['title' => ['content' => ucfirst('type')], 'body' => ['content' => $issue->details->first()->type]])
                     @include('rental::base.list_row', ['title' => ['content' => ucfirst('priority')], 'body' => ['content' => $issue->details->first()->priority]])
                     @include('rental::base.list_row', ['title' => ['content' => ucfirst('3rd Party')], 'body' => ['content' => $issue->details->first()['3rdParty']]])
                     @include('rental::base.list_row', ['title' => ['content' => ucfirst('content')], 'body' => ['content' => $issue->details->first()->content]])
-                    @include('message::media.list', ['media' => $issue->details->first()->media()])
+                    @include('message::media.list', ['media' => $detail->media()->get()->all()])
                 @endforeach
             </div>
             <div class="col-sm-2">

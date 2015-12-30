@@ -18,7 +18,9 @@ class RentalController extends BaseController
      */
     public function index()
     {
-        return view('rental::rental.list', ['data' => Rental::getAll()]);
+        return view('rental::rental.list', ['data' => Rental::getAll(
+            isset($_REQUEST['property_id']) ? $_REQUEST['property_id'] : null
+        )]);
     }
     
     /**
@@ -68,9 +70,9 @@ class RentalController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id = 0)
+    public function show($id = null)
     {
-        return view('rental::rental.detail', ['rental' => Rental::getById($id), 'properties' => Property::getAll(false)]);
+        return view('rental::rental.detail', ['rental' => Rental::find($id), 'properties' => Property::getAll(null, PHP_INT_MAX)]);
     }
     
     /**

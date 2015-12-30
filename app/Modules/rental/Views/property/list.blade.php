@@ -21,6 +21,7 @@
                     @endforeach
                 @endforeach
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('rental')], 'body' => ['content' => money_format('%.2n',$property->rental()['averageDailyAmount']) ]])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('issues')], 'body' => ['content' => $property->rental()['issuesCount'] ]])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('description')], 'body' => ['content' => $property->description]])
             </div>
             <div class="col-sm-2">
