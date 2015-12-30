@@ -161,12 +161,16 @@ $factory->define(PropertyDetail::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(PropertyLog::class, function (Faker\Generator $faker) {
-    return [
+    $array = [
         'property_id' => $faker->randomElement(Property::all()->all())->id,
         'type' => $faker->word,
         'content' => $faker->sentences(random_int(1, 20), true),
-        'comments' => json_encode([])
+        'comments' => []
     ];
+    for($i=0; $i < random_int(0,5); $i++)
+        $array['comments'][] = $faker->sentences(random_int(1,3), true);
+    $array['comments'] = json_encode($array['comments']);
+    return $array;
 });
 
 $factory->define(Rental::class, function (Faker\Generator $faker) {
