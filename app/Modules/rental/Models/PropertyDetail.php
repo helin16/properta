@@ -1,7 +1,6 @@
 <?php namespace App\Modules\Rental\Models;
 
 use App\Modules\Abstracts\Models\BaseModel;
-use App\Modules\Rental\Models\Property;
 
 class PropertyDetail extends BaseModel
 {

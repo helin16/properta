@@ -3,8 +3,6 @@ setlocale(LC_MONETARY, 'en_AU.UTF-8');
 
 use App\Modules\Abstracts\Models\BaseModel;
 use App\Modules\Message\Models\Media;
-use App\Modules\Rental\Models\Property;
-use App\Modules\Rental\Models\Address;
 use Carbon\Carbon;
 use NumberFormatter;
 use App\Modules\Issue\Models\Issue;

@@ -13,7 +13,7 @@ use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
 use App\Modules\Rental\Models\Property;
 use App\Modules\Rental\Models\PropertyDetail;
-use App\Modules\PropertyLog\Models\PropertyLog;
+use App\Modules\Rental\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\Rental\Models\RentalUser;
 use App\Modules\AdminAccess\Models\AdminAccess;

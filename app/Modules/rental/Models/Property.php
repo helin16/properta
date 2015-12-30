@@ -1,8 +1,6 @@
 <?php namespace App\Modules\Rental\Models;
 
 use App\Modules\Abstracts\Models\BaseModel;
-use App\Modules\Rental\Models\Address;
-use App\Modules\Rental\Models\Rental;
 use App\Modules\Rental\Models\PropertyDetail;
 
 class Property extends BaseModel
@@ -19,12 +17,12 @@ class Property extends BaseModel
     {
         return $this->belongsTo(Address::class);
     }
-
+    public function logs()
+    {
+        return $this->hasMany(PropertyLog::class);
+    }
     public function rentals()
     {
-//        var_dump($this->id);
-//        $data = Rental::where('property_id', '=', 1)->get();
-////        $data = Rental::all();
         $data = $this->hasMany(Rental::class);
         return $data;
     }
