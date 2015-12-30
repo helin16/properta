@@ -74,7 +74,7 @@ class RentalController extends BaseController
     {
         return view('rental::rental.detail', ['rental' => Rental::find($id), 'properties' => Property::getAll(null, PHP_INT_MAX)]);
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -84,6 +84,6 @@ class RentalController extends BaseController
     public function destroy($id)
     {
         Rental::destroy($id);
-        return $this->index();
+        return Redirect::to('rental');
     }
 }

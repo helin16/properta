@@ -5,6 +5,7 @@ use App\Modules\Issue\Models\Issue;
 use App\Modules\User\Models\User;
 use Illuminate\Http\Request;
 use App\Modules\Rental\Models\Rental;
+use Illuminate\Support\Facades\Redirect;
 
 class IssueController extends BaseController 
 {
@@ -86,7 +87,7 @@ class IssueController extends BaseController
      */
     public function destroy($id)
     {
-        Property::destroy($id);
-        return Redirect::to('property');
+        Issue::destroy($id);
+        return Redirect::to('issue');
     }
 }
