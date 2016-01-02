@@ -1,3 +1,3 @@
 <?php
 
-echo trans('dashboard::example.welcome');
+echo 111;

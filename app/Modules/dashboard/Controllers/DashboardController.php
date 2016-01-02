@@ -2,8 +2,10 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
+use Session;
+use Redirect;
+
 
 class DashboardController extends Controller {
 
@@ -12,8 +14,20 @@ class DashboardController extends Controller {
 	 *
 	 * @return Response
 	 */
+
+    public function __construct(){
+        $value = Session::get('currentUser');
+        if(!$value){
+            Redirect::to('user')->send();
+        }
+
+    }
+
 	public function index()
 	{
+
+        $value = Session::get('currentUser');
+        Redirect::to('user');
 
 		return view("dashboard::index");
 	}

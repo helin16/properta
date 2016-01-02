@@ -1,12 +1,14 @@
 <?php namespace App\Modules\User\Models;
 
-use App\Modules\Abstracts\Models\BaseModel;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Model;
+use DB;
+use Illuminate\Support\Facades\Hash;
 
-class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 	use Authenticatable, CanResetPassword;
 	/**
@@ -23,16 +25,45 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 	 */
 	protected $hidden = ['remember_token'];
 
-    protected function checkLogin(){
+    protected function checkLogin($email,$password ){
         // do logic
-        ;
 
-        return true;
+        $user = DB::table('users')
+                ->leftJoin('passwords', 'users.id', '=', 'passwords.user_id')
+                ->where('users.email', '=', $email)
+                //->where('passwords.password', '=', $password)
+                ->get();
+
+        return $user;
 
     }
 
-    protected function resetPassword(){
+    protected function findCurrentPassword($id,$password){
+        // do logic
+        $currentPassword = DB::table('passwords')
+            ->where('user_id', '=', $id)
+            //->where('password', '=', $password)
+            ->get();
 
+        return $currentPassword;
     }
+
+    protected function getCurrentUserProfile($id){
+
+        $currentUserProfile = DB::table('user_details')
+            ->where('user_id', '=', $id)
+            ->first();
+
+        return $currentUserProfile;
+    }
+
+    protected function updateCurrentUserProfile($id,$data){
+        DB::table('user_details')
+            ->where('user_id', $id)
+            ->update(['firstName' => $data['firstName'] , 'lastName' => $data['lastName'] , 'contactNumber' => $data['contactNumber'] ])
+           ;
+    }
+
+
 
 }

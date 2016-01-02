@@ -149,7 +149,8 @@ return [
          */
         Illuminate\Html\HtmlServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        ArtemSchander\L5Modular\ModuleServiceProvider::class
+        ArtemSchander\L5Modular\ModuleServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class
     ],
 
     /*
@@ -203,6 +204,7 @@ return [
          */
         'Form'=> 'Illuminate\Html\FormFacade',
         'HTML'=> 'Illuminate\Html\HtmlFacade',
+        'Html' => Collective\Html\HtmlFacade::class,
     ],
 
 ];
