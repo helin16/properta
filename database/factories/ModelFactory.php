@@ -39,7 +39,7 @@ $factory->define(User::class, function (Faker\Generator $faker) {
 
 $factory->define(Password::class, function (Faker\Generator $faker) {
     return [
-        'password' => Hash::make(str_random(15))
+        'password' => Hash::make('12345678')
     ];
 });
 

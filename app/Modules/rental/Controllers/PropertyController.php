@@ -6,6 +6,7 @@ use App\Modules\Rental\Models\Property;
 use App\Modules\Rental\Models\Address;
 use Illuminate\Support\Facades\Redirect;
 use App\Modules\Rental\Models\PropertyDetail;
+use App\Modules\Personnel\Models\Personnel;
 
 class PropertyController extends BaseController
 {
@@ -16,6 +17,7 @@ class PropertyController extends BaseController
      */
     public function index()
     {
+        Personnel::checkUserAccess();
         return view('rental::property.list', ['data' => Property::getAll(
             isset($_REQUEST['address_id']) ? $_REQUEST['address_id'] : null
         )]);
