@@ -11,3 +11,4 @@ vendor
 /_ide_helper.php
 /media
 !/media/.gitkeep
+readme.md
