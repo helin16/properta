@@ -11,4 +11,6 @@ abstract class BaseModel extends Model
      * @var bool
      */
     public $timestamps = false;
+    public static $pageSize = 5;
+    public static $orderBy = ['id' => 'desc'];
 }

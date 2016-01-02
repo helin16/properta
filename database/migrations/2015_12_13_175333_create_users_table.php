@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
             $table->string('username', 25);
             $table->unsignedInteger('brand_id');
             $table->unsignedInteger('address_id');
+            $table->unsignedInteger('role_id');
         });
     }
 

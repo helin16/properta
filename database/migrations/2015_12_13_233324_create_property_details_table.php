@@ -15,9 +15,9 @@ class CreatePropertyDetailsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('property_id');
             $table->string('type', $table->type_string_length);
-            $table->unsignedTinyInteger('carParks');
-            $table->unsignedTinyInteger('bedrooms');
-            $table->unsignedTinyInteger('bathrooms');
+            $table->unsignedTinyInteger('carParks')->nullable()->default(null);
+            $table->unsignedTinyInteger('bedrooms')->nullable()->default(null);
+            $table->unsignedTinyInteger('bathrooms')->nullable()->default(null);
             $table->json('options');
         });
     }

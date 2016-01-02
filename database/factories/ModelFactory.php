@@ -2,7 +2,7 @@
 
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\Password;
-use App\Modules\UserDetails\Models\UserDetails;
+use App\Modules\User\Models\UserDetail;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
@@ -12,8 +12,8 @@ use App\Modules\User\Models\Role;
 use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
 use App\Modules\Rental\Models\Property;
-use App\Modules\PropertyDetail\Models\PropertyDetail;
-use App\Modules\PropertyLog\Models\PropertyLog;
+use App\Modules\Rental\Models\PropertyDetail;
+use App\Modules\Rental\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\Rental\Models\RentalUser;
 use App\Modules\AdminAccess\Models\AdminAccess;
@@ -43,7 +43,7 @@ $factory->define(Password::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(UserDetails::class, function (Faker\Generator $faker) {
+$factory->define(UserDetail::class, function (Faker\Generator $faker) {
     $array =  [
         'firstName' => $faker->firstName,
         'lastName' => $faker->lastName,
@@ -93,18 +93,19 @@ $factory->define(Address::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(Media::class, function (Faker\Generator $faker) {
-	if(!file_exists('/tmp'))
-		mkdir('/tmp');
-	$file = $faker->image(DIRECTORY_SEPARATOR . 'tmp');
+    $directory = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' .DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'media';
+	if(!file_exists($directory))
+		mkdir($directory);
+	$file = $faker->image($directory);
 	$name = basename($file);
 	$mimeType = mime_content_type($file);
-	$newPath = (DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . sha1(file_get_contents($file)) . (pathinfo($name, PATHINFO_EXTENSION) === '' ? : ('.' . pathinfo($name, PATHINFO_EXTENSION))));
+	$newPath = (dirname($file) . DIRECTORY_SEPARATOR . sha1(file_get_contents($file)) . (pathinfo($name, PATHINFO_EXTENSION) === '' ? : ('.' . pathinfo($name, PATHINFO_EXTENSION))));
 	if($file !== $newPath)
 		rename($file, $newPath);
     return [
         'mimeType' => $mimeType,
         'name' => $name,
-        'path' => $newPath
+        'path' => '/media/' . basename($newPath),
     ];
 });
 
@@ -142,23 +143,34 @@ $factory->define(Property::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(PropertyDetail::class, function (Faker\Generator $faker) {
-    return [
+    $array = [
         'property_id' => $faker->randomElement(Property::all()->all())->id,
         'type' => $faker->word,
-        'carParks' => $faker->numberBetween(0,2),
-        'bedrooms' => $faker->numberBetween(0,5),
-        'bathrooms' => $faker->numberBetween(1,3),
-        'options' => json_encode([])
+        'carParks' => random_int(0,5) === 0 ? null : random_int(0,3),
+        'carParks' => random_int(0,5) === 0 ? null : random_int(0,3),
+        'bedrooms' => random_int(0,10) === 0 ? null : random_int(1,5),
+        'bathrooms' => random_int(0,10) === 0 ? null : random_int(1,3),
+        'options' => [],
     ];
+    for($i=0; $i<random_int(0,5); $i++)
+    {
+        $array['options'][] = [$faker->word => $faker->randomNumber()];
+    }
+    $array['options'] = json_encode($array['options']);
+    return $array;
 });
 
 $factory->define(PropertyLog::class, function (Faker\Generator $faker) {
-    return [
+    $array = [
         'property_id' => $faker->randomElement(Property::all()->all())->id,
         'type' => $faker->word,
         'content' => $faker->sentences(random_int(1, 20), true),
-        'comments' => json_encode([])
+        'comments' => []
     ];
+    for($i=0; $i < random_int(0,5); $i++)
+        $array['comments'][] = $faker->sentences(random_int(1,3), true);
+    $array['comments'] = json_encode($array['comments']);
+    return $array;
 });
 
 $factory->define(Rental::class, function (Faker\Generator $faker) {
@@ -233,3 +245,5 @@ $factory->define(RentalUser::class, function (Faker\Generator $faker) {
         'rental_id' => $faker->randomElement(Rental::all()->all())->id,
     ];
 });
+
+

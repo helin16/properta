@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\Password;
-use App\Modules\UserDetails\Models\UserDetails;
+use App\Modules\User\Models\UserDetail;
 use App\Modules\UserRelationship\Models\UserRelationship;
 use App\Modules\Message\Models\Message;
 use App\Modules\Brand\Models\Brand;
@@ -14,8 +14,8 @@ use App\Modules\User\Models\Role;
 use App\Modules\Action\Models\Action;
 use App\Modules\Permission\Models\Permission;
 use App\Modules\Rental\Models\Property;
-use App\Modules\PropertyDetail\Models\PropertyDetail;
-use App\Modules\PropertyLog\Models\PropertyLog;
+use App\Modules\Rental\Models\PropertyDetail;
+use App\Modules\Rental\Models\PropertyLog;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\Rental\Models\RentalUser;
 use App\Modules\AdminAccess\Models\AdminAccess;
@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-//         $this->seed('SystemUserSeeder');
+        $this->seed('SystemUserSeeder');
         $this->seed('UsersSeeder');
 //         $this->seed('MessagesSeeder');
         $this->seed('AddressesSeeder');
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
 //         $this->seed('PermissionSeeder');
         $this->seed('PropertySeeder');
 //         $this->seed('PropertyDetailSeeder');
-//         $this->seed('PropertyLogSeeder');
+         $this->seed('PropertyLogSeeder');
 //         $this->seed('AdminAccessSeeder');
         $this->seed('RentalSeeder');
         $this->seed('RentalUserSeeder');
@@ -106,11 +106,11 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make(str_random(15))
             ]);
             echoDebug($user, $password);
-            // user details
-//             $userDetails = factory(UserDetails::class)->create([
-//                 'user_id' => $user->id
-//             ]);
-//             echoDebug($user, $userDetails);
+//             user details
+             $userDetails = factory(UserDetail::class)->create([
+                 'user_id' => $user->id
+             ]);
+             echoDebug($user, $userDetails);
             // user relationship
 //             if(random_int(0,1) === 0)
 //             {
@@ -215,7 +215,12 @@ class PropertySeeder extends Seeder
      */
     public function run()
     {
-        factory(Property::class, SEED_LIMIT)->create();
+        factory(Property::class, SEED_LIMIT)->create()->each(function($property){
+            $property_detail = factory(PropertyDetail::class)->create([
+                'property_id' => $property->id
+            ]);
+            echoDebug($property, $property_detail);
+        });
     }
 }
 class PropertyDetailSeeder extends Seeder
