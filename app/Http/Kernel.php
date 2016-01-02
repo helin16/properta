@@ -30,5 +30,6 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'simpleauth' => 'App\Http\Middleware\SimpleAuthMiddleware',
+        'roles' 		=> 'App\Http\Middleware\CheckRole'
     ];
 }

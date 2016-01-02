@@ -9,8 +9,6 @@ class Personnel extends Model {
 
 	protected function checkUserAccess(){
         $currentUserID = Session::get('currentUser');
-
-
         return App::abort(403, 'Access denied');
 
         //return $currentUserID;

@@ -15,7 +15,9 @@ Route::group(array('module' => 'User', 'namespace' => 'App\Modules\User\Controll
 
 
     Route::get('user/edit-password', [
-        'uses' => 'UserController@editPassword'
+        'middleware' => ['roles'],
+        'uses' => 'UserController@editPassword',
+        'roles' => ['agency admin', 'landlord']
     ]);
 
     Route::post('user/update-password', [

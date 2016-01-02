@@ -16,6 +16,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
      * @var array
      */
     protected $fillable = ['email','role_id', 'brand_id'];
+    protected $table = 'users';
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -27,6 +28,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         $query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
         return $query->paginate($pageSize ?: self::$pageSize);
     }
+
     protected function checkLogin($email,$password ){
         $user = DB::table('users')
             ->leftJoin('passwords', 'users.id', '=', 'passwords.user_id')
@@ -35,6 +37,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             ->get();
         return $user;
     }
+
     protected function findCurrentPassword($id,$password){
         // do logic
         $currentPassword = DB::table('passwords')
@@ -43,18 +46,27 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             ->get();
         return $currentPassword;
     }
+
     public function details()	{
         return $this->hasMany(UserDetail::class);
     }
+
     public function inline()	{
         return ($this->details->first() ? $this->details->first()->fullName() : '') . ' (' . $this->email . ')';
     }
+
+    protected function getCurrentUser($id){
+        $currentUser = User::find($id);
+        return $currentUser;
+    }
+
     protected function getCurrentUserProfile($id){
         $currentUserProfile = DB::table('user_details')
             ->where('user_id', '=', $id)
             ->first();
         return $currentUserProfile;
     }
+
     protected function updateCurrentUserProfile($id,$data){
         DB::table('user_details')
             ->where('user_id', $id)
