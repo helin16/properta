@@ -13,8 +13,6 @@ Route::group(array('module' => 'User', 'namespace' => 'App\Modules\User\Controll
 
     Route::post('user/login', 'UserController@login');
 
-    Route::get('user/reset/{code}', 'Auth\PasswordController@getReset');
-    Route::post('user/reset', 'Auth\PasswordController@postReset');
 
     Route::get('user/edit-password', [
         'uses' => 'UserController@editPassword'
