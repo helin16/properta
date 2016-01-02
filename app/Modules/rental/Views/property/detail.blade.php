@@ -1,6 +1,6 @@
 @extends('rental::base.base')
 @section('container')
-    {!! Form::open(array('url' => '/property')) !!}
+    {!! Form::open(array('route' => 'property.store')) !!}
         @include('rental::property.form', ['property' => $property])
         @include('rental::address.form', ['address' => $property ? $property->address : null])
         @foreach($property ? $property->logs->all() : [] as $log)

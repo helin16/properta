@@ -29,16 +29,6 @@ class PropertyController extends BaseController
      */
     public function store(Request $request)
     {
-//        var_dump($request->all());
-//        var_dump(array_intersect_key($request->all(), array_flip(preg_grep('/^property_details_option_/', array_keys($request->all())))));
-        $address = [
-            'id' => $request->all()['address_id'],
-            'street' => $request->all()['address_street'],
-            'suburb' => $request->all()['address_suburb'],
-            'state' => $request->all()['address_state'],
-            'country' => $request->all()['address_country'],
-            'postcode' => $request->all()['address_postcode'],
-        ];
         $property = [
             'id' => $request->all()['property_id'],
             'description' => $request->all()['property_description'],
@@ -51,10 +41,18 @@ class PropertyController extends BaseController
             'bathrooms' => ($tmp = trim($request->all()['property_details_bathrooms'])) === '' ? null : intval($tmp),
             'options' => self::stripPropertyDetailOptions($request),
         ];
+        $address = [
+            'id' => $request->all()['address_id'],
+            'street' => $request->all()['address_street'],
+            'suburb' => $request->all()['address_suburb'],
+            'state' => $request->all()['address_state'],
+            'country' => $request->all()['address_country'],
+            'postcode' => $request->all()['address_postcode'],
+        ];
         $address = Address::store($address['street'], $address['suburb'], $address['state'], $address['country'], $address['postcode'], $address['id']);
         $property = Property::store($property['description'], $address, $property['id']);
         PropertyDetail::store($property, $property_details['type'], $property_details['carParks'], $property_details['bedrooms'], $property_details['bathrooms'], $property_details['options'], $property_details['id']);
-        return Redirect::to('property');
+        return Redirect::route('property.index');
     }
     public static function stripPropertyDetailOptions(Request $request)
     {

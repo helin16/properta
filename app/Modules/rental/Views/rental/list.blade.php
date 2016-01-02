@@ -11,19 +11,19 @@
     @foreach($data->all() as $rental)
         <li class="list-group-item row" rental_id="{{ $rental->id }}">
             <div class="col-sm-10">
-                @include('rental::base.list_row', ['title' => ['content' => ucfirst('address')], 'body' => ['content' => $rental->property->address->inline()]])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('address')], 'body' => ['content' => '<a href=' . URL::route('property.show', ['property_id' => $rental->property->id]) . '>' . $rental->property->address->inline() . '</a>']])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('Daily Amount')], 'body' => ['content' => money_format('%.2n',$rental->dailyAmount)]])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('from')], 'body' => ['content' => $rental->from ? $rental->from->format('l jS \\of F Y h:i:s A') : 'Not Available']])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('to')], 'body' => ['content' => $rental->to ? $rental->to->format('l jS \\of F Y h:i:s A') : 'Not Available']])
-                @include('rental::base.list_row', ['title' => ['content' => ucfirst('issues')], 'body' => ['content' => $rental->issues->count()]])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('issues')], 'body' => ['content' => '<a href=' . URL::route('issue.index', ['rental_id' => $rental->id]) . '>' . $rental->issues->count() . '</a>' ]])
                 @include('message::media.list', ['media' => $rental->media()->get()->all()])
             </div>
             <div class="col-sm-2">
-                {!! Form::open(['method' => 'GET', 'url' => '/rental/' . $rental->id, 'style'=>'display:inline-block']) !!}
-                {!! Form::button('Update', array('type' => 'submit', 'class' => 'btn btn-primary')) !!}
+                {!! Form::open(['method' => 'GET', 'route' => ['rental.show', $rental->id], 'style'=>'display:inline-block']) !!}
+                    {!! Form::button('Update', array('type' => 'submit', 'class' => 'btn btn-primary')) !!}
                 {!! Form::close() !!}
-                {!! Form::open(['method' => 'DELETE', 'url' => '/rental/' . $rental->id, 'style'=>'display:inline-block']) !!}
-                {!! Form::button('Delete', array('type' => 'submit', 'class' => 'btn btn-warning')) !!}
+                {!! Form::open(['method' => 'DELETE', 'route' => ['rental.destroy', $rental->id], 'style'=>'display:inline-block']) !!}
+                    {!! Form::button('Delete', array('type' => 'submit', 'class' => 'btn btn-warning')) !!}
                 {!! Form::close() !!}
             </div>
         </li>

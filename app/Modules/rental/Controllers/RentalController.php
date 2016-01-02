@@ -3,11 +3,8 @@
 use App\Modules\Abstracts\Controllers\BaseController;
 use App\Modules\Rental\Models\Property;
 use App\Modules\Rental\Models\Rental;
-use App\Modules\Rental\Models\Address;
-use App\Modules\Message\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class RentalController extends BaseController 
 {
@@ -31,38 +28,16 @@ class RentalController extends BaseController
      */
     public function store(Request $request)
     {
+        $property = Property::findOrFail($request->all()['property_id']);
         $rental = [
             'id' => $request->all()['rental_id'],
             'dailyAmount' => $request->all()['rental_dailyAmount'],
             'from' => $request->all()['rental_from'],
             'to' => $request->all()['rental_to'],
-            'dailyAmount' => $request->all()['rental_dailyAmount'],
             'media' => self::stripMedia($request),
         ];
-        $property = Property::findOrFail($request->all()['property_id']);
-
         Rental::store($rental['dailyAmount'], $rental['from'], $rental['to'], $property, $rental['media'], $rental['id']);
-        return Redirect::to('rental');
-    }
-    public static function stripMedia(Request $request)
-    {
-        $result = [];
-        $regex = '/^media_id_/';
-        $options = array_intersect_key($request->all(), array_flip(preg_grep($regex, array_keys($request->all()))));
-        foreach($options as $key => $value)
-            if(preg_match($regex, $key) && boolval($value) === true && ($media = Media::getById(preg_replace($regex, '', $key))) instanceof Media)
-                $result[] = $media;
-        // new file
-        if(isset($request->all()['media_new']) && ($file = $request->all()['media_new']) instanceof UploadedFile && $file->isValid())
-        {
-            $fileName = $file->getClientOriginalName();
-            if(pathinfo($fileName, PATHINFO_FILENAME) === '')
-                $fileName = 'file' . $fileName;
-            if(pathinfo($fileName, PATHINFO_EXTENSION) === '')
-                $fileName .= '.' . (trim($file->guessClientExtension()) !== '' ? $file->guessClientExtension() : $file->guessExtension());
-            $result[] = Media::store(file_get_contents($file->getPathName()), $file->getMimeType(), $fileName);
-        }
-        return $result;
+        return Redirect::route('rental.index');
     }
     /**
      * Display the specified resource.

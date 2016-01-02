@@ -20,16 +20,16 @@
                         @include('rental::base.list_row', ['title' => ['content' => ucfirst(key($option))], 'body' => ['content' => $option[key($option)]]])
                     @endforeach
                 @endforeach
-                @include('rental::base.list_row', ['title' => ['content' => ucfirst('rental')], 'body' => ['content' => money_format('%.2n',$property->rental()['averageDailyAmount']) ]])
-                @include('rental::base.list_row', ['title' => ['content' => ucfirst('issues')], 'body' => ['content' => $property->rental()['issuesCount'] ]])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('rental')], 'body' => ['content' => '<a href=' . URL::route('rental.index', ['property_id' => $property->id]) . '>' . money_format('%.2n',$property->rental()['averageDailyAmount']) . '</a>' ]])
+                @include('rental::base.list_row', ['title' => ['content' => ucfirst('issues')], 'body' => ['content' => '<a href=' . URL::route('issue.index', ['property_id' => $property->id]) . '>' . $property->rental()['issuesCount'] . '</a>' ]])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('description')], 'body' => ['content' => $property->description]])
                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('logs')], 'body' => ['content' => $property->logs->count() ]])
             </div>
             <div class="col-sm-2">
-                {!! Form::open(['method' => 'GET', 'url' => '/property/' . $property->id, 'style'=>'display:inline-block']) !!}
+                {!! Form::open(['method' => 'GET', 'route' => ['property.show', $property->id], 'style'=>'display:inline-block']) !!}
                     {!! Form::button('Update', array('type' => 'submit', 'class' => 'btn btn-primary')) !!}
                 {!! Form::close() !!}
-                {!! Form::open(['method' => 'DELETE', 'url' => '/property/' . $property->id, 'style'=>'display:inline-block']) !!}
+                {!! Form::open(['method' => 'DELETE', 'route' => ['property.destroy', $property->id], 'style'=>'display:inline-block']) !!}
                     {!! Form::button('Delete', array('type' => 'submit', 'class' => 'btn btn-warning')) !!}
                 {!! Form::close() !!}
             </div>

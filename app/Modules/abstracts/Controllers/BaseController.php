@@ -3,82 +3,40 @@ namespace App\Modules\Abstracts\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Message\Models\Media;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class BaseController extends Controller
 {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
+	public static function stripMedia($request)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request)
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		//
+		$result = [];
+		$regex = '/^media_id_/';
+		$request = ($request instanceof Request ? $request->all() : (is_array($request) ? $request : []));
+		foreach(array_keys($request) as $key)
+		{
+			switch($key)
+			{
+				case (preg_match($regex, $key) === 1):
+				{
+					$media_id = preg_replace($regex, '', $key);
+					if(intval($request[$key]) !== 1)
+						Media::destroy($media_id);
+					elseif(($media = Media::find($media_id)) instanceof Media)
+						$result[] = $media;
+					break;
+				}
+				case ($key === 'media_new' && ($file = $request[$key]) instanceof UploadedFile && $file->isValid()):
+				{
+					$fileName = $file->getClientOriginalName();
+					if(pathinfo($fileName, PATHINFO_FILENAME) === '')
+						$fileName = 'file' . $fileName;
+					if(pathinfo($fileName, PATHINFO_EXTENSION) === '')
+						$fileName .= '.' . (trim($file->guessClientExtension()) !== '' ? $file->guessClientExtension() : $file->guessExtension());
+					$result[] = Media::store(file_get_contents($file->getPathName()), $file->getMimeType(), $fileName);
+				}
+			}
+		}
+		return $result;
 	}
 }
