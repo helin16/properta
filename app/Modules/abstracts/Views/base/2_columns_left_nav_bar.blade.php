@@ -7,10 +7,8 @@
     @section('css')
         {!! HTML::style('bower_components\bootstrap\dist\css\bootstrap.css') !!}
         {!! HTML::style('bower_components\font-awesome\css\font-awesome.css') !!}
-
         {!! HTML::style('bower_components\animate.css\animate.css') !!}
-        {!! HTML::style('Inspinia\Static_Full_Version\css\style.css') !!}
-
+        {!! HTML::style('css\style.css') !!}
         {!! HTML::style('bower_components\eonasdan-bootstrap-datetimepicker\build\css\bootstrap-datetimepicker.css') !!}
     @show
 </head>

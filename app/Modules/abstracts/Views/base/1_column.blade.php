@@ -7,10 +7,8 @@
     @section('css')
         {!! HTML::style('bower_components\bootstrap\dist\css\bootstrap.css') !!}
         {!! HTML::style('bower_components\font-awesome\css\font-awesome.css') !!}
-
         {!! HTML::style('bower_components\animate.css\animate.css') !!}
         {!! HTML::style('css\style.css') !!}
-
     @show
 </head>
 <body>

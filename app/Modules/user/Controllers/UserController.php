@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use App\Modules\User\Models\User;
+use App\Modules\User\Models\Role;
 use Session;
 use Hash;
 use App\Modules\Personnel\Models\Personnel;
@@ -59,8 +60,9 @@ class UserController extends Controller
                         'lastName' => $userDetailModel->lastName
                     )
                     ;
-
+                    $currentUserRole = Role::getCurrentRole($user[0]->role_id)->name;
                     Session::put('currentUserDetails', $currentUserDetails );
+                    Session::put('currentUserRole', $currentUserRole );
                     return Redirect::to('dashboard');
                 }else{
                     Session::flash('error', 'Incorrect password combination');
@@ -76,7 +78,7 @@ class UserController extends Controller
     }
 
     public function logout(){
-        Session::forget('currentUser');
+        Session::forget('currentUserId');
         Session::flash('error', 'You successfully logout');
         return Redirect::to('user');
     }

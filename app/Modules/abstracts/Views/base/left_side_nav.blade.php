@@ -13,7 +13,12 @@
                                             {{ Session::get('currentUserDetails')['lastName'] }}
                                         </strong>
                                     @endif
-                             </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+                             </span>
+                             <span class="text-muted text-xs block">
+                                 {{ Session::get('currentUserRole') }}
+                                 <b class="caret"></b></span>
+                            </span>
+                    </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
                         <li><a href="/user/edit-profile">Edit Profile</a></li>
                         <li><a href="/user/edit-password">Change Password</a></li>
