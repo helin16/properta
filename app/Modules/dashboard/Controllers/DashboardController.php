@@ -16,7 +16,7 @@ class DashboardController extends Controller {
 	 */
 
     public function __construct(){
-        $value = Session::get('currentUser');
+        $value = Session::get('currentUserId');
         if(!$value){
             Redirect::to('user')->send();
         }

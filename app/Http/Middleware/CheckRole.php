@@ -5,6 +5,7 @@ use Closure;
 use Session;
 use App\Modules\User\Models\Role;
 use App\Modules\User\Models\User;
+use Redirect;
 
 
 
@@ -24,7 +25,10 @@ class CheckRole{
         // Check if a role is required for the route, and
         // if so, ensure that the user has that role.
 
-        $currentUserId = Session::get('currentUser');
+        $currentUserId = Session::get('currentUserId');
+        if(!$currentUserId){
+            Redirect::to('user')->send();
+        }
         $currentUserRole = User::getCurrentUser($currentUserId);
         $currentRole = Role::getCurrentRole($currentUserRole->role_id)->name;
         if( in_array($currentRole,$roles))

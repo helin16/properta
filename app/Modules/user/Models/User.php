@@ -47,6 +47,13 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $currentPassword;
     }
 
+    protected function updatePassword($id,$password){
+        DB::table('passwords')
+            ->where('user_id', $id)
+            ->update(['password' => $password ])
+        ;
+    }
+
     public function details()	{
         return $this->hasMany(UserDetail::class);
     }
