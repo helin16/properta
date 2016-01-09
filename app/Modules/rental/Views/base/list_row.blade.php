@@ -6,3 +6,4 @@
         <div class="{!! $body['class'] or ((isset($title) && $title) ? 'col-sm-10' : 'col-sm-12') !!}">{!! $body['content'] !!}</div>
     @endif
 </div>
+

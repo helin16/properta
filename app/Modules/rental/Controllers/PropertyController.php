@@ -17,10 +17,12 @@ class PropertyController extends BaseController
      */
     public function index()
     {
-        Personnel::checkUserAccess();
         return view('rental::property.list', ['data' => Property::getAll(
             isset($_REQUEST['address_id']) ? $_REQUEST['address_id'] : null
         )]);
+   /*     return view('rental::property.test', ['data' => Property::getAll(
+            isset($_REQUEST['address_id']) ? $_REQUEST['address_id'] : null
+        )]);*/
     }
 
     /**
@@ -36,7 +38,7 @@ class PropertyController extends BaseController
             'description' => $request->all()['property_description'],
         ];
         $property_details = [
-            'id' => $request->all()['property_detail_id'],
+            'id' => $request->all()['property_deta  il_id'],
             'type' => $request->all()['property_details_type'],
             'carParks' => ($tmp = trim($request->all()['property_details_carParks'])) === '' ? null : intval($tmp),
             'bedrooms' => ($tmp = trim($request->all()['property_details_bedrooms'])) === '' ? null : intval($tmp),

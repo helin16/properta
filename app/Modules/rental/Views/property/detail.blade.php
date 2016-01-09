@@ -1,4 +1,9 @@
-@extends('rental::base.base')
+<!--@extends('rental::base.base')-->
+@extends('base::layouts.default')
+
+
+
+
 @section('container')
     {!! Form::open(array('route' => 'property.store')) !!}
         @include('rental::property.form', ['property' => $property])
