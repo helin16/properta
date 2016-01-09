@@ -1,3 +1,5 @@
+@extends('abstracts::base.2_columns_left_nav_bar')
+@section('page_body')
 {!! Form::open(array('url' => 'user/create-user')) !!}
 <h1>Create Sub user</h1>
 @if(Session::has('error'))
@@ -57,3 +59,4 @@
 
 
 {!! Form::close() !!}
+@endsection

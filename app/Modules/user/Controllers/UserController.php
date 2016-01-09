@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use App\Modules\User\Models\User;
+use App\Modules\User\Models\Role;
 use Session;
 use Hash;
 use App\Modules\Personnel\Models\Personnel;
@@ -19,12 +20,11 @@ class UserController extends Controller
     protected $currentUserId;
 
     protected function checkCurrentUser(){
-        $value = Session::get('currentUser');
+        $value = Session::get('currentUserId');
         $this->currentUserId = $value;
         if(!$value){
             Redirect::to('user')->send();
         }
-
     }
 
 	//
@@ -53,7 +53,16 @@ class UserController extends Controller
             // login.
             if (count($user) > 0 ) {
                 if( Hash::check(Input::get('password'), $user[0]->password) ){
-                    Session::put('currentUser', $user[0]->id);
+                    Session::put('currentUserId', $user[0]->id);
+                    $userDetailModel = User::getCurrentUserProfile($user[0]->id);
+                    $currentUserDetails = array(
+                        'firstName' => $userDetailModel->firstName,
+                        'lastName' => $userDetailModel->lastName
+                    )
+                    ;
+                    $currentUserRole = Role::getCurrentRole($user[0]->role_id)->name;
+                    Session::put('currentUserDetails', $currentUserDetails );
+                    Session::put('currentUserRole', $currentUserRole );
                     return Redirect::to('dashboard');
                 }else{
                     Session::flash('error', 'Incorrect password combination');
@@ -69,7 +78,7 @@ class UserController extends Controller
     }
 
     public function logout(){
-        Session::forget('currentUser');
+        Session::forget('currentUserId');
         Session::flash('error', 'You successfully logout');
         return Redirect::to('user');
     }
@@ -113,7 +122,7 @@ class UserController extends Controller
 
     public function editPassword(){
         $this->checkCurrentUser();
-        //echo $currentId = Session::get('currentUser');
+        //echo $currentId = Session::get('currentUserId');exit;
         return view('user::editPassword');
     }
 
@@ -146,7 +155,7 @@ class UserController extends Controller
 
         User::updatePassword($this->currentUserId,Hash::make($password));
 
-        return Redirect::back()->with('success', true)->with('message','User updated.');
+        return Redirect::back()->with('success', true)->with('message',"User's password updated.");
     }
 
     public function createUser(){
@@ -157,7 +166,7 @@ class UserController extends Controller
     }
 
     public function postCreateUser(){
-
+        $this->checkCurrentUser();
         $data = Input::all();
 
         $rules = array(
