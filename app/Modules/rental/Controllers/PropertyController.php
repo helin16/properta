@@ -17,7 +17,7 @@ class PropertyController extends BaseController
      */
     public function index()
     {
-        Personnel::checkUserAccess();
+//        Personnel::checkUserAccess();
         return view('rental::property.list', ['data' => Property::getAll(
             isset($_REQUEST['address_id']) ? $_REQUEST['address_id'] : null
         )]);
