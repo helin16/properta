@@ -86,7 +86,7 @@ class SystemUserSeeder extends Seeder
         Password::where('user_id', '=', $user->id)->delete();
         $password = factory(Password::class)->create([
             'user_id' => $user->id,
-            'password' => Hash::make(str_random(15))
+            'password' => Hash::make(12345678)
         ]);
     }
 }
