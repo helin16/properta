@@ -43,7 +43,6 @@ class DatabaseSeeder extends Seeder
 
         $this->seed('SystemUserSeeder');
         $this->seed('UsersSeeder');
-//         $this->seed('MessagesSeeder');
         $this->seed('AddressesSeeder');
 //         $this->seed('BrandsSeeder');
         $this->command->info('Start seeding media, this may take a while');
@@ -53,13 +52,14 @@ class DatabaseSeeder extends Seeder
 //         $this->seed('PermissionSeeder');
         $this->seed('PropertySeeder');
 //         $this->seed('PropertyDetailSeeder');
-         $this->seed('PropertyLogSeeder');
+        $this->seed('PropertyLogSeeder');
 //         $this->seed('AdminAccessSeeder');
         $this->seed('RentalSeeder');
         $this->seed('RentalUserSeeder');
         $this->seed('IssueSeeder');
         $this->seed('IssueDetailSeeder');
         $this->seed('IssueProgressSeeder');
+        $this->seed('MessagesSeeder');
 
         Model::reguard();
     }

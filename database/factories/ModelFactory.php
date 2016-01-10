@@ -68,9 +68,8 @@ $factory->define(Message::class, function (Faker\Generator $faker) {
         'content' => $faker->sentences(random_int(3,100), true),
         'media_ids' => []
     ];
-    if(Address::all()->count() > 0)
-	    for($i = 0; $i < random_int(1, 10); $i++)
-	    	$array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
+    for($i = 0; $i < random_int(0, 2); $i++)
+        $array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
 	$array['media_ids'] = json_encode($array['media_ids']);
     return $array;
 });
