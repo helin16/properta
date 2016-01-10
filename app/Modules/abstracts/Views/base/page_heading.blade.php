@@ -4,7 +4,7 @@
             {{ substr(class_basename(Route::currentRouteAction()), 0,
             (strpos(class_basename(Route::currentRouteAction()), 'Controller') -0) )
             }}
-            @if(isset($data))
+            @if(isset($data) && method_exists($data, 'total'))
                 <span>{{ '(' . $data->total() . ')' }}</span>
             @endif
         </h2>
