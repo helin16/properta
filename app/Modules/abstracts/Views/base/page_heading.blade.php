@@ -3,7 +3,11 @@
         <h2>
             {{ substr(class_basename(Route::currentRouteAction()), 0,
             (strpos(class_basename(Route::currentRouteAction()), 'Controller') -0) )
-            }}</h2>
+            }}
+            @if(isset($data))
+                <span>{{ '(' . $data->total() . ')' }}</span>
+            @endif
+        </h2>
         <ol class="breadcrumb">
             <li>
                 <a href="/dashboard">Home</a>
