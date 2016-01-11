@@ -5,13 +5,13 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    {!! Form::open(['method' => 'GET', 'route' => 'issue.show', 'class' => 'pull-right', 'style'=>'display:inline-block']) !!}
-                        {!! Form::button('Create', array('type' => 'submit', 'class' => 'btn btn-primary')) !!}
+                    {!! Form::open(['method' => 'GET', 'route' => 'issue.show']) !!}
+                        {!! Form::button('Create', array('type' => 'submit', 'class' => 'btn btn-primary', 'style' => 'width: 100%')) !!}
                     {!! Form::close() !!}
                 </div>
             </div>
         @foreach($data->all() as $issue)
-            <div class="col-lg-12" property_id="{{ $property->id }}">
+            <div class="col-lg-12" issue_id="{{ $issue->id }}">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <div class="row">
