@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         $this->seed('AddressesSeeder');
 //         $this->seed('BrandsSeeder');
         $this->command->info('Start seeding media, this may take a while');
-        $this->seed('MediaSeeder');
+//        $this->seed('MediaSeeder');
         $this->seed('RoleSeeder');
 //         $this->seed('ActionSeeder');
 //         $this->seed('PermissionSeeder');
@@ -179,7 +179,10 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        factory(Role::class, SEED_LIMIT)->create();
+        factory(Role::class)->create(['name' => 'agency admin']);
+        factory(Role::class)->create(['name' => 'agent']);
+        factory(Role::class)->create(['name' => 'tenant']);
+        factory(Role::class)->create(['name' => 'landlord']);
     }
 }
 class ActionSeeder extends Seeder
