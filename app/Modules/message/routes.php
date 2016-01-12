@@ -2,36 +2,44 @@
 
 Route::group(array('module' => 'Message', 'namespace' => 'App\Modules\Message\Controllers'), function() {
 
-    Route::get('messages', [
-        'as' => 'message.index',
-        'uses' => 'MessageController@index',
+    Route::get('message', [
+        'as' => 'message.listall',
+        'uses' => 'MessageController@listall',
         'middleware' => ['roles'],
         'roles' => ['agency admin'],
     ]);
     Route::get('message/{id}', [
-        'as' => 'message.show',
-        'uses' => 'MessageController@show',
+        'as' => 'message.view',
+        'uses' => 'MessageController@view',
         'middleware' => ['roles'],
         'roles' => ['agency admin'],
     ]);
     Route::get('message/{id}', [
-    		'as' => 'message.edit',
-    		'uses' => 'MessageController@compose',
+    		'as' => 'message.delete',
+    		'uses' => 'MessageController@delete',
     		'middleware' => ['roles'],
     		'roles' => ['agency admin'],
     ]);
-    Route::get('message/compose', [
-    		'as' => 'message.compose',
-    		'uses' => 'MessageController@compose',
+    Route::get('message/new', [
+    		'as' => 'message.new',
+    		'uses' => 'MessageController@new',
     		'middleware' => ['roles'],
     		'roles' => ['agency admin'],
     ]);
-    Route::delete('message/{id}', [
-        'as' => 'message.destroy',
-        'uses' => 'MessageController@show',
+    Route::get('message/{id}', [
+        'as' => 'message.reply',
+        'uses' => 'MessageController@reply',
         'middleware' => ['roles'],
         'roles' => ['agency admin'],
     ]);
-    Route::resource('messages', 'MessageController', ['only' => ['index', 'show', 'store', 'destroy']]);
+    
+    Route::get('message/{id}', [
+    		'as' => 'message.forward',
+    		'uses' => 'MessageController@forward',
+    		'middleware' => ['roles'],
+    		'roles' => ['agency admin'],
+    ]);
+    
+    Route::resource('messages', 'MessageController', ['only' => ['listall', 'view', 'create', 'delete', 'reply','forward']]);
 
 });	

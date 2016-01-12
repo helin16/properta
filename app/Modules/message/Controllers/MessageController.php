@@ -1,6 +1,9 @@
 <?php namespace App\Modules\Message\Controllers;
 
 use App\Modules\Abstracts\Controllers\BaseController;
+use Session;
+use App\Modules\Personnel\Models\Personnel;
+use Illuminate\Support\Facades\Redirect;
 
 class MessageController extends BaseController 
 {
@@ -11,30 +14,43 @@ class MessageController extends BaseController
 	 */
 
     public function __construct(){
-//         $value = Session::get('currentUserId');
-//         if(!$value){
-//             Redirect::to('user')->send();
-//         }
+        $value = Session::get('currentUserId');
+        if(!$value){
+            Redirect::to('user')->send();
+        }
 
     }
 
-	public function index()
+	public function listall()
 	{
 
-//         $value = Session::get('currentUser');
-//         Redirect::to('user');
+        $value = Session::get('currentUser');
+        Redirect::to('user');
+        //Personnel::checkUserAccess();
 
-		return view("message::index");
+		return view("message::list");
 	}
 
+	/**
+	 * Show the form for compose the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function create($id)
+	{
+		//
+		return view('message::create');
+	}
 	/**
 	 * Show the form for creating a new resource.
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function view()
 	{
 		//
+		return view('message::view');
 	}
 
 	/**
@@ -42,9 +58,10 @@ class MessageController extends BaseController
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function delete()
 	{
 		//
+		return view('message::delete');
 	}
 
 	/**
@@ -53,11 +70,11 @@ class MessageController extends BaseController
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function reply($id)
 	{
 		//
 		//return view('message::detail', ['message' => Message::find($id)]);
-		return view('message::detail');
+		return view('message::reply');
 	}
 
 	/**
@@ -66,32 +83,11 @@ class MessageController extends BaseController
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function forward($id)
 	{
 		//
-		return view('message::compose');
+		return view('message::forward');
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
 	
 }

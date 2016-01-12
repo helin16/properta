@@ -14,7 +14,7 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-content mailbox-content">
                         <div class="file-manager">
-                            <a class="btn btn-block btn-primary compose-mail" href="mail_compose.html">Compose Mail</a>
+                            <a class="btn btn-block btn-primary compose-mail" href="/message/compose">Compose Mail</a>
                             <div class="space-25"></div>
                             <h5>Folders</h5>
                             <ul class="folder-list m-b-md" style="padding: 0">
@@ -86,8 +86,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Anna Smith</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Lorem ipsum dolor noretek imit set.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Anna Smith</a></td>
+                    <td class="mail-subject"><a href="message/detail">Lorem ipsum dolor noretek imit set.</a></td>
                     <td class=""><i class="fa fa-paperclip"></i></td>
                     <td class="text-right mail-date">6.10 AM</td>
                 </tr>
@@ -95,8 +95,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks" checked>
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Jack Nowak</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Aldus PageMaker including versions of Lorem Ipsum.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Jack Nowak</a></td>
+                    <td class="mail-subject"><a href="message/detail">Aldus PageMaker including versions of Lorem Ipsum.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">8.22 PM</td>
                 </tr>
@@ -104,8 +104,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Facebook</a> <span class="label label-warning pull-right">Clients</span> </td>
-                    <td class="mail-subject"><a href="message/detail.html">Many desktop publishing packages and web page editors.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Facebook</a> <span class="label label-warning pull-right">Clients</span> </td>
+                    <td class="mail-subject"><a href="message/detail">Many desktop publishing packages and web page editors.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Jan 16</td>
                 </tr>
@@ -113,8 +113,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Mailchip</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">There are many variations of passages of Lorem Ipsum.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Mailchip</a></td>
+                    <td class="mail-subject"><a href="message/detail">There are many variations of passages of Lorem Ipsum.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Mar 22</td>
                 </tr>
@@ -122,8 +122,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Alex T.</a> <span class="label label-danger pull-right">Documents</span></td>
-                    <td class="mail-subject"><a href="message/detail.html">Lorem ipsum dolor noretek imit set.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Alex T.</a> <span class="label label-danger pull-right">Documents</span></td>
+                    <td class="mail-subject"><a href="message/detail">Lorem ipsum dolor noretek imit set.</a></td>
                     <td class=""><i class="fa fa-paperclip"></i></td>
                     <td class="text-right mail-date">December 22</td>
                 </tr>
@@ -131,8 +131,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Monica Ryther</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">The standard chunk of Lorem Ipsum used.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Monica Ryther</a></td>
+                    <td class="mail-subject"><a href="message/detail">The standard chunk of Lorem Ipsum used.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Jun 12</td>
                 </tr>
@@ -140,8 +140,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Sandra Derick</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Contrary to popular belief.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Sandra Derick</a></td>
+                    <td class="mail-subject"><a href="message/detail">Contrary to popular belief.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">May 28</td>
                 </tr>
@@ -149,8 +149,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Patrick Pertners</a> <span class="label label-info pull-right">Adv</span></td>
-                    <td class="mail-subject"><a href="message/detail.html">If you are going to use a passage of Lorem </a></td>
+                    <td class="mail-ontact"><a href="message/detail">Patrick Pertners</a> <span class="label label-info pull-right">Adv</span></td>
+                    <td class="mail-subject"><a href="message/detail">If you are going to use a passage of Lorem </a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">May 28</td>
                 </tr>
@@ -158,8 +158,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Michael Fox</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Humour, or non-characteristic words etc.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Michael Fox</a></td>
+                    <td class="mail-subject"><a href="message/detail">Humour, or non-characteristic words etc.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Dec 9</td>
                 </tr>
@@ -167,8 +167,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Damien Ritz</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Oor Lorem Ipsum is that it has a more-or-less normal.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Damien Ritz</a></td>
+                    <td class="mail-subject"><a href="message/detail">Oor Lorem Ipsum is that it has a more-or-less normal.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Jun 11</td>
                 </tr>
@@ -176,8 +176,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Anna Smith</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Lorem ipsum dolor noretek imit set.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Anna Smith</a></td>
+                    <td class="mail-subject"><a href="message/detail">Lorem ipsum dolor noretek imit set.</a></td>
                     <td class=""><i class="fa fa-paperclip"></i></td>
                     <td class="text-right mail-date">6.10 AM</td>
                 </tr>
@@ -185,8 +185,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Jack Nowak</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Aldus PageMaker including versions of Lorem Ipsum.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Jack Nowak</a></td>
+                    <td class="mail-subject"><a href="message/detail">Aldus PageMaker including versions of Lorem Ipsum.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">8.22 PM</td>
                 </tr>
@@ -194,8 +194,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Mailchip</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">There are many variations of passages of Lorem Ipsum.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Mailchip</a></td>
+                    <td class="mail-subject"><a href="message/detail">There are many variations of passages of Lorem Ipsum.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Mar 22</td>
                 </tr>
@@ -203,8 +203,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Alex T.</a> <span class="label label-warning pull-right">Clients</span></td>
-                    <td class="mail-subject"><a href="message/detail.html">Lorem ipsum dolor noretek imit set.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Alex T.</a> <span class="label label-warning pull-right">Clients</span></td>
+                    <td class="mail-subject"><a href="message/detail">Lorem ipsum dolor noretek imit set.</a></td>
                     <td class=""><i class="fa fa-paperclip"></i></td>
                     <td class="text-right mail-date">December 22</td>
                 </tr>
@@ -212,8 +212,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Monica Ryther</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">The standard chunk of Lorem Ipsum used.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Monica Ryther</a></td>
+                    <td class="mail-subject"><a href="message/detail">The standard chunk of Lorem Ipsum used.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Jun 12</td>
                 </tr>
@@ -221,8 +221,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Sandra Derick</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Contrary to popular belief.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Sandra Derick</a></td>
+                    <td class="mail-subject"><a href="message/detail">Contrary to popular belief.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">May 28</td>
                 </tr>
@@ -230,8 +230,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Patrick Pertners</a> </td>
-                    <td class="mail-subject"><a href="message/detail.html">If you are going to use a passage of Lorem </a></td>
+                    <td class="mail-ontact"><a href="message/detail">Patrick Pertners</a> </td>
+                    <td class="mail-subject"><a href="message/detail">If you are going to use a passage of Lorem </a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">May 28</td>
                 </tr>
@@ -239,8 +239,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Michael Fox</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Humour, or non-characteristic words etc.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Michael Fox</a></td>
+                    <td class="mail-subject"><a href="message/detail">Humour, or non-characteristic words etc.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Dec 9</td>
                 </tr>
@@ -248,8 +248,8 @@
                     <td class="check-mail">
                         <input type="checkbox" class="i-checks">
                     </td>
-                    <td class="mail-ontact"><a href="message/detail.html">Damien Ritz</a></td>
-                    <td class="mail-subject"><a href="message/detail.html">Oor Lorem Ipsum is that it has a more-or-less normal.</a></td>
+                    <td class="mail-ontact"><a href="message/detail">Damien Ritz</a></td>
+                    <td class="mail-subject"><a href="message/detail">Oor Lorem Ipsum is that it has a more-or-less normal.</a></td>
                     <td class=""></td>
                     <td class="text-right mail-date">Jun 11</td>
                 </tr>

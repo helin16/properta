@@ -5,11 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     @section('css')
+
+         
         {!! HTML::style('bower_components\bootstrap\dist\css\bootstrap.css') !!}
         {!! HTML::style('bower_components\font-awesome\css\font-awesome.css') !!}
+        {!! HTML::style('Inspinia\Static_Full_Version\css\plugins\summernote\summernote.css') !!}
+        {!! HTML::style('Inspinia\Static_Full_Version\css\plugins\summernote\summernote-bs3.css') !!}     
         {!! HTML::style('bower_components\animate.css\animate.css') !!}
         {!! HTML::style('css\style.css') !!}
         {!! HTML::style('bower_components\eonasdan-bootstrap-datetimepicker\build\css\bootstrap-datetimepicker.css') !!}
+       
+    @show
+    
+    @section('script')
+
+    
+
+    {!! HTML::script('Inspinia\Static_Full_Version\js\jquery-2.1.1.js') !!}
+    {!! HTML::script('Inspinia\Static_Full_Version\js\bootstrap.min.js') !!}
+    {!! HTML::script('Inspinia\Static_Full_Version\js\inspinia.js') !!}
+    {!! HTML::script('Inspinia\Static_Full_Version\js\plugins\summernote\summernote.min.js') !!}
+
+    {!! HTML::script('bower_components\metisMenu\dist\metisMenu.js') !!}
+    {!! HTML::script('bower_components\jquery-slimscroll\jquery.slimscroll.js') !!}
+
+    
+    {!! HTML::script('bower_components\PACE\pace.js') !!}
+
+    {!! HTML::script('bower_components\mustache.js\mustache.js') !!}
+    {!! HTML::script('bower_components\moment\moment.js') !!}
+    {!! HTML::script('bower_components\accounting\accounting.js') !!}
+    {!! HTML::script('bower_components\eonasdan-bootstrap-datetimepicker\src\js\bootstrap-datetimepicker.js') !!}
+    
+    
     @show
 </head>
 <body>
@@ -32,21 +60,7 @@
     </div>
 </div>
 
-@section('script')
-    {!! HTML::script('bower_components\jquery\dist\jquery.js') !!}
-    {!! HTML::script('bower_components\bootstrap\dist\js\bootstrap.js') !!}
 
-    {!! HTML::script('bower_components\metisMenu\dist\metisMenu.js') !!}
-    {!! HTML::script('bower_components\jquery-slimscroll\jquery.slimscroll.js') !!}
-
-    {!! HTML::script('Inspinia\Static_Full_Version\js\inspinia.js') !!}
-    {!! HTML::script('bower_components\PACE\pace.js') !!}
-
-    {!! HTML::script('bower_components\mustache.js\mustache.js') !!}
-    {!! HTML::script('bower_components\moment\moment.js') !!}
-    {!! HTML::script('bower_components\accounting\accounting.js') !!}
-    {!! HTML::script('bower_components\eonasdan-bootstrap-datetimepicker\src\js\bootstrap-datetimepicker.js') !!}
-@show
 </body>
 <style>
     .sub-list-item {

@@ -36,7 +36,7 @@
                     <i class="fa fa-users"></i>
                     <span class="nav-label">Rentals</span>
                 </a>
-                <a href="/messages">
+                <a href="/message">
                     <i class="fa fa-users"></i>
                     <span class="nav-label">Message</span>
                 </a>
