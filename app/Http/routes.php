@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return Redirect::route('property.index');
 });
+
+Route::get('utility/map', [
+    'as' => 'utility.map',
+    function(){
+        return view('abstracts::utilities.map', ['id' => 'google_map_auto_complete']);
+    }
+]);
