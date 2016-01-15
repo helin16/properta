@@ -1,8 +1,9 @@
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>
-            {{ substr(class_basename(Route::currentRouteAction()), 0,
-            (strpos(class_basename(Route::currentRouteAction()), 'Controller') -0) )
+            {{ str_plural(substr(class_basename(Route::currentRouteAction()), 0,
+                    (strpos(class_basename(Route::currentRouteAction()), 'Controller') -0)
+                ))
             }}
             @if(isset($data) && method_exists($data, 'total'))
                 <span>{{ '(' . $data->total() . ')' }}</span>
