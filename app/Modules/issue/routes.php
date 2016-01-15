@@ -25,3 +25,30 @@ Route::group(array('module' => 'Issue', 'namespace' => 'App\Modules\Issue\Contro
 //        'roles' => ['agency admin'],
     ]);
 });
+
+Route::group(array('module' => 'IssueDetail', 'namespace' => 'App\Modules\Issue\Controllers'), function() {
+    Route::get('issue_detail', [
+        'as' => 'issue_detail.index',
+        'uses' => 'IssueDetailController@index',
+//        'middleware' => ['roles'],
+//        'roles' => ['agency admin'],
+    ]);
+    Route::get('issue_detail/{id}', [
+        'as' => 'issue_detail.show',
+        'uses' => 'IssueDetailController@show',
+//        'middleware' => ['roles'],
+//        'roles' => ['agency admin'],
+    ]);
+    Route::post('issue_detail/{id}', [
+        'as' => 'issue_detail.store',
+        'uses' => 'IssueDetailController@store',
+//        'middleware' => ['roles'],
+//        'roles' => ['agency admin'],
+    ]);
+    Route::delete('issue_detail/{id}', [
+        'as' => 'issue_detail.destroy',
+        'uses' => 'IssueDetailController@show',
+//        'middleware' => ['roles'],
+//        'roles' => ['agency admin'],
+    ]);
+});

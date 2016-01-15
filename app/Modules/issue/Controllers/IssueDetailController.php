@@ -11,7 +11,7 @@ use App\Modules\Rental\Models\PropertyDetail;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Modules\Message\Models\Media;
 
-class IssueController extends BaseController 
+class IssueDetailController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -20,10 +20,8 @@ class IssueController extends BaseController
      */
     public function index()
     {
-        return view('issue::issue.list', ['data' => Issue::getAll(
-            isset($_REQUEST['rental_id']) ? $_REQUEST['rental_id'] : null,
-            isset($_REQUEST['requester_user_id']) ? $_REQUEST['requester_user_id'] : null,
-            isset($_REQUEST['property_id']) ? $_REQUEST['property_id'] : null
+        return view('issue::issue_detail.list', ['data' => IssueDetail::getAll(
+            isset($_REQUEST['issue_id']) ? $_REQUEST['rental_id'] : null
         )]);
     }
 
@@ -35,32 +33,16 @@ class IssueController extends BaseController
      */
     public function store(Request $request)
     {
-//        var_dump($request->all());
-//        die;
-        $rental = Rental::findOrFail($request->all()['rental_id']);
-        $user = User::findOrFail($request->all()['requester_user_id']);
-        $issue = [
-            'id' =>$request->all()['issue_id'],
-            'rental' => $rental,
-            'status' => $request->all()['issue_status'],
-            'requester_user' => $user,
+        $issue_detail = [
+            'id' => $request->all()['issue_detail_id'],
+            'issue' => ($issue = Issue::findOrFail($request->all()['issue_id'])),
+            'type' => $request->all()['issue_detail_type'],
+            'priority' => $request->all()['issue_detail_priority'],
+            'content' => $request->all()['issue_detail_content'],
+            '3rdParty' => $request->all()['issue_detail_3rdParty'],
+            'media' => [],
         ];
-        $issue = Issue::store($issue['requester_user'], $issue['rental'], $issue['status'], $issue['id']);
-
-//        $details = self::stripPropertyDetailOptions($request);
-//        foreach($details as $detail_id => $detail)
-//        {
-//            var_dump($detail);
-//            IssueDetail::store(
-//                $issue,
-//                self::issetOrDefault($detail, 'content'),
-//                self::issetOrDefault($detail, 'type'),
-//                self::issetOrDefault($detail, '3rdParty'),
-//                intval(self::issetOrDefault($detail, 'priority')),
-//                self::issetOrDefault($detail, 'media'),
-//                $detail_id === 'new' ? null : $detail_id
-//            );
-//        }
+        IssueDetail::store($issue_detail['issue'], $issue_detail['content'], $issue_detail['type'], $issue_detail['3rdParty'], $issue_detail['priority'], $issue_detail['media'], $issue_detail['id']);
         return Redirect::route('issue.index');
     }
     public static function issetOrDefault($array, $index, $default = null)
@@ -110,7 +92,9 @@ class IssueController extends BaseController
      */
     public function show($id = 0)
     {
-        return view('issue::issue.detail', ['issue' => Issue::find($id), 'users' => User::getAll(PHP_INT_MAX), 'rentals' => Rental::getAll(null, PHP_INT_MAX)]);
+        if(($issue_detail = IssueDetail::find($id)) instanceof IssueDetail)
+            $issue = Issue::findOrFail($issue_detail->issue_id);
+        return view('issue::issue_detail.detail', ['issue' => $issue, 'issue_detail' => $issue_detail]);
     }
 
     /**

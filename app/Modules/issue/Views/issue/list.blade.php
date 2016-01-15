@@ -20,14 +20,8 @@
                                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('status')], 'body' => ['content' => $issue->status ]])
                                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('address')], 'body' => ['content' => '<a href=' . URL::route('property.show', ['property_id' => $issue->rental->property->id]) . '>' . $issue->rental->property->address->inline() . '</a>' ]])
                                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('rental')], 'body' => ['content' => '<a href=' . URL::route('rental.show', ['property_id' => $issue->rental->property->id]) . '>' . money_format('%.2n', $issue->rental->property->rental()['averageDailyAmount']) . '</a>' ]])
-                                @foreach($issue->details->all() as $detail)
-                                    <hr/>
-                                    @include('rental::base.list_row', ['title' => ['content' => ucfirst('type')], 'body' => ['content' => $detail->type]])
-                                    @include('rental::base.list_row', ['title' => ['content' => ucfirst('priority')], 'body' => ['content' => $detail->priority]])
-                                    @include('rental::base.list_row', ['title' => ['content' => ucfirst('3rd Party')], 'body' => ['content' => $detail['3rdParty']]])
-                                    @include('rental::base.list_row', ['title' => ['content' => ucfirst('content')], 'body' => ['content' => $detail->content]])
-                                    @include('message::media.list', ['media' => $detail->media()->get()->all()])
-                                @endforeach
+                                <hr/>
+                                @include('issue::issue_detail.list', ['data' => $issue->details])
                             </div>
                             <div class="col-sm-1">
                                 {!! Form::open(['method' => 'GET', 'url' => URL::route('issue.show', $issue->id), 'style'=>'display:inline-block']) !!}

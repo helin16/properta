@@ -41,4 +41,8 @@ class Issue extends BaseModel
     {
         return self::updateOrCreate(['id' => $id], ['requester_user_id' => $requester_user->id, 'rental_id' => $rental->id, 'status' => $status]);
     }
+    public function inline()
+    {
+        return $this->rental->inline();
+    }
 }

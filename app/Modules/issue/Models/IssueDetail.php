@@ -10,6 +10,13 @@ class IssueDetail extends BaseModel
     {
         return Media::whereIn('id', json_decode($this->media_ids));
     }
+    public static function getAll($issue_id = null, $pageSize = null)
+    {
+        $query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+        if($issue_id)
+            $query->where('issue_id', intval($issue_id));
+        return $query->paginate($pageSize ?: self::$pageSize);
+    }
     public static function store(Issue $issue, $content = '', $type = '', $thirdParty = '', $priority = 0, array $media = [], $id = null)
     {
         $media_ids = [];
@@ -18,9 +25,6 @@ class IssueDetail extends BaseModel
         foreach($media as $single_media)
             if($single_media instanceof Media)
                 $media_ids[] = $single_media->id;
-
-//        var_dump(json_encode($media_ids));
-//        die;
 
         return self::updateOrCreate(
             ['id' => $id],
