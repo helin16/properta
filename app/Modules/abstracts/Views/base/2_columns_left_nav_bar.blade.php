@@ -48,10 +48,5 @@
     {!! HTML::script('bower_components\eonasdan-bootstrap-datetimepicker\src\js\bootstrap-datetimepicker.js') !!}
 @show
 </body>
-<style>
-    .sub-list-item {
-            margin-left: 3rem
-}
-</style>
 @yield('style')
 </html>
