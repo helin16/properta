@@ -122,6 +122,7 @@ class IssueController extends BaseController
     public function destroy($id)
     {
         Issue::destroy($id);
+        IssueDetail::where(['issue_id' => $id])->delete();
         return Redirect::to('issue');
     }
 }

@@ -20,7 +20,7 @@ Route::group(array('module' => 'Issue', 'namespace' => 'App\Modules\Issue\Contro
     ]);
     Route::delete('issue/{id}', [
         'as' => 'issue.destroy',
-        'uses' => 'IssueController@show',
+        'uses' => 'IssueController@destroy',
 //        'middleware' => ['roles'],
 //        'roles' => ['agency admin'],
     ]);
@@ -47,7 +47,7 @@ Route::group(array('module' => 'IssueDetail', 'namespace' => 'App\Modules\Issue\
     ]);
     Route::delete('issue_detail/{id}', [
         'as' => 'issue_detail.destroy',
-        'uses' => 'IssueDetailController@show',
+        'uses' => 'IssueDetailController@destroy',
 //        'middleware' => ['roles'],
 //        'roles' => ['agency admin'],
     ]);

@@ -105,7 +105,7 @@ class IssueDetailController extends BaseController
      */
     public function destroy($id)
     {
-        Issue::destroy($id);
+        IssueDetail::destroy($id);
         return Redirect::to('issue');
     }
 }
