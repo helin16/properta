@@ -1,6 +1,6 @@
 @extends('abstracts::base.2_columns_left_nav_bar')
 @section('page_body')
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content"> {{--summernote doesn't play well with animate.css--}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
@@ -40,10 +40,15 @@
     <script src="/bower_components/summernote/dist/summernote.min.js"></script>
     <script>
         $(document).ready(function(){
-            $('.summernote[name="property_description"]').summernote()
-                .on('summernote.change', function(we, contents, $editable) {
-                    $('.summernote[name="property_description"]').val(contents);
-                });;
+            $('.summernote[name="property_description"]').summernote({
+                height: 300,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true,                  // set focus to editable area after initializing summe
+            })
+            .on('summernote.change', function(we, contents, $editable) {
+                $('.summernote[name="property_description"]').val(contents);
+            });;
         });
     </script>
 @endsection
