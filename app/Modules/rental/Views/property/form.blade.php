@@ -2,9 +2,9 @@
 {!! Form::hidden('property_detail_id', ($property && $property->details->first()) ? $property->details->first()->id : 0) !!}
 <div class="form-group">
     {!! Form::label('property_description', ucfirst('description')) !!}
-    <div class="summernote form-control" name="property_description" id="property_description">
+    <input class="summernote form-control" name="property_description" id="property_description">
         {{ $property ? $property->description : '' }}
-    </div>
+    </input>
 </div>
 <div class="form-group">
     {!! Form::label('property_details_type', ucfirst('type')) !!}
