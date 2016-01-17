@@ -32,7 +32,7 @@
 @endsection
 @section('css')
     @parent
-    <link rel="stylesheet" href="/bower_components/summernote/dist/summernote.css">
+    <link rel="stylesheet/less" type="text/css" href="/bower_components/summernote/src/less/summernote.less">
     <link rel="stylesheet" href="/bower_components/summernote/dist/summernote-bs3.css">
 @endsection
 @section('script')
