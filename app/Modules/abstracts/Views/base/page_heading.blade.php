@@ -3,7 +3,8 @@
         <h2>
             {{ substr(class_basename(Route::currentRouteAction()), 0,
             (strpos(class_basename(Route::currentRouteAction()), 'Controller') -0) )
-            }}</h2>
+            }}
+        </h2>
         <ol class="breadcrumb">
             <li>
                 <a href="/dashboard">Home</a>
