@@ -5,8 +5,8 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
-                        {!! Form::open(['route' => 'issue.store', 'files' => true]) !!}
-                            @include('issue::issue.form', ['issue' => $issue])
+                        {!! Form::open(['route' => 'issue_detail.store', 'files' => true]) !!}
+                            @include('issue::issue_detail.form', ['issue' => $issue])
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 {!! Form::button('Save', array('type' => 'submit', 'class' => 'btn btn-success')) !!}

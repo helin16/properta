@@ -1,10 +1,10 @@
 @extends('rental::base.base')
-@section('container')
-    <ul class="list-group">
+@section('page_body')
+    <div class="wrapper wrapper-content animated fadeIn">
         @section('item-list')
         @show
-    </ul>
-    @section('pagination')
-        @include('rental::base.pagination')
-    @show
+        @section('pagination')
+            @include('rental::base.pagination')
+        @show
+    </div>
 @endsection

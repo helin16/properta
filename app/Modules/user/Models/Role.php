@@ -1,9 +1,9 @@
 <?php namespace App\Modules\User\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Modules\Abstracts\Models\BaseModel;
 use DB;
 
-class Role extends Model
+class Role extends BaseModel
 {
     protected $table = 'roles';
 

@@ -43,23 +43,23 @@ class DatabaseSeeder extends Seeder
 
         $this->seed('SystemUserSeeder');
         $this->seed('UsersSeeder');
-//         $this->seed('MessagesSeeder');
         $this->seed('AddressesSeeder');
 //         $this->seed('BrandsSeeder');
         $this->command->info('Start seeding media, this may take a while');
-        $this->seed('MediaSeeder');
+//        $this->seed('MediaSeeder');
         $this->seed('RoleSeeder');
 //         $this->seed('ActionSeeder');
 //         $this->seed('PermissionSeeder');
         $this->seed('PropertySeeder');
 //         $this->seed('PropertyDetailSeeder');
-         $this->seed('PropertyLogSeeder');
+        $this->seed('PropertyLogSeeder');
 //         $this->seed('AdminAccessSeeder');
         $this->seed('RentalSeeder');
         $this->seed('RentalUserSeeder');
         $this->seed('IssueSeeder');
         $this->seed('IssueDetailSeeder');
         $this->seed('IssueProgressSeeder');
+        $this->seed('MessagesSeeder');
 
         Model::reguard();
     }
@@ -86,7 +86,7 @@ class SystemUserSeeder extends Seeder
         Password::where('user_id', '=', $user->id)->delete();
         $password = factory(Password::class)->create([
             'user_id' => $user->id,
-            'password' => Hash::make(str_random(15))
+            'password' => Hash::make(12345678)
         ]);
     }
 }
@@ -179,7 +179,10 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        factory(Role::class, SEED_LIMIT)->create();
+        factory(Role::class)->create(['name' => 'agency admin']);
+        factory(Role::class)->create(['name' => 'agent']);
+        factory(Role::class)->create(['name' => 'tenant']);
+        factory(Role::class)->create(['name' => 'landlord']);
     }
 }
 class ActionSeeder extends Seeder

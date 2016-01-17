@@ -68,9 +68,9 @@ $factory->define(Message::class, function (Faker\Generator $faker) {
         'content' => $faker->sentences(random_int(3,100), true),
         'media_ids' => []
     ];
-    if(Address::all()->count() > 0)
-	    for($i = 0; $i < random_int(1, 10); $i++)
-	    	$array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
+    if(Media::all()->count() > 0)
+        for($i = 0; $i < random_int(0, 2); $i++)
+            $array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
 	$array['media_ids'] = json_encode($array['media_ids']);
     return $array;
 });
@@ -181,9 +181,10 @@ $factory->define(Rental::class, function (Faker\Generator $faker) {
         'to' => random_int(0, 1) === 0 ? null : $faker->dateTimeBetween('now', '+10 years'),
     	'media_ids' => []
     ];
-    
-    for($i = 0; $i < random_int(1, 10); $i++)
-    	$array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
+
+    if(Media::all()->count() > 0)
+        for($i = 0; $i < random_int(1, 10); $i++)
+            $array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
     $array['media_ids'] = json_encode($array['media_ids']);
 	    
     return $array;
@@ -223,9 +224,10 @@ $factory->define(IssueDetail::class, function (Faker\Generator $faker) {
     	'priority' => $faker->numberBetween(0,5),
     	'media_ids' => []
     ];
-    
-    for($i = 0; $i < random_int(1, 10); $i++)
-    	$array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
+
+    if(Media::all()->count() > 0)
+        for($i = 0; $i < random_int(1, 10); $i++)
+            $array['media_ids'][] = $faker->randomElement(Media::all()->all())->id;
     $array['media_ids'] = json_encode($array['media_ids']);
     
     return $array;
