@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         $this->seed('AddressesSeeder');
 //         $this->seed('BrandsSeeder');
         $this->command->info('Start seeding media, this may take a while');
-//        $this->seed('MediaSeeder');
+        $this->seed('MediaSeeder');
         $this->seed('RoleSeeder');
 //         $this->seed('ActionSeeder');
 //         $this->seed('PermissionSeeder');
