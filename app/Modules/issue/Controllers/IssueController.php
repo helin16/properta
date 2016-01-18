@@ -48,7 +48,7 @@ class IssueController extends BaseController
             'requester_user' => $user,
         ];
         if(intval($issue['id']) >0 && !Issue::find($issue['id']) instanceof Issue)
-            $errors['issue_id'] = '[system error]invalid issue passed in';
+            return Redirect::route('issue.show')->withErrors(['issue_id' => '[system error]invalid issue passed in'])->withInput($request->all());
         if(count($errors) > 0)
             return Redirect::route('issue.show')->withErrors($errors)->withInput($request->all());
         $issue = Issue::store($issue['requester_user'], $issue['rental'], $issue['status'], $issue['id']);

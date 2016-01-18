@@ -44,7 +44,7 @@ class IssueDetailController extends BaseController
             'media' => [],
         ];
         if(intval($issue_detail['id']) >0 && !IssueDetail::find($issue_detail['id']) instanceof IssueDetail)
-            return Redirect::route('issue_detail.show')->withErrors(['system error' => 'invalid issue detail passed in'])->withInput($request->all());
+            return Redirect::route('issue_detail.show')->withErrors(['issue_detail_id' => '[system error]invalid issue detail passed in'])->withInput($request->all());
         if(!$issue_detail['issue'] instanceof Issue)
             return Redirect::route('issue_detail.show')->withErrors(['issue_id' => '[system error]invalid issue passed in'])->withInput($request->all());
         if(strlen($issue_detail['type']) === 0)
