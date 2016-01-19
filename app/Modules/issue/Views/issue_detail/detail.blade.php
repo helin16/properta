@@ -16,5 +16,6 @@
                 </div>
             </div>
         </div>
+        @include('abstracts::base.errors', ['errors' => $errors])
     </div>
 @endsection

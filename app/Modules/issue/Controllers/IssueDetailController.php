@@ -33,15 +33,27 @@ class IssueDetailController extends BaseController
      */
     public function store(Request $request)
     {
+        $errors = [];
         $issue_detail = [
             'id' => $request->all()['issue_detail_id'],
-            'issue' => ($issue = Issue::findOrFail($request->all()['issue_id'])),
-            'type' => $request->all()['issue_detail_type'],
+            'issue' => ($issue = Issue::find($request->all()['issue_id'])),
+            'type' => trim($request->all()['issue_detail_type']),
             'priority' => $request->all()['issue_detail_priority'],
             'content' => $request->all()['issue_detail_content'],
             '3rdParty' => $request->all()['issue_detail_3rdParty'],
             'media' => [],
         ];
+        if(intval($issue_detail['id']) >0 && !IssueDetail::find($issue_detail['id']) instanceof IssueDetail)
+            return Redirect::route('issue_detail.show')->withErrors(['issue_detail_id' => '[system error]invalid issue detail passed in'])->withInput($request->all());
+        if(!$issue_detail['issue'] instanceof Issue)
+            return Redirect::route('issue_detail.show')->withErrors(['issue_id' => '[system error]invalid issue passed in'])->withInput($request->all());
+        if(strlen($issue_detail['type']) === 0)
+            $errors['issue_detail_type'] = 'type is required';
+        if(strlen(trim($issue_detail['content'])) === 0)
+            $errors['issue_detail_content'] = 'content is required';
+        if(count($errors) > 0)
+            return Redirect::route('issue_detail.show', ['id' => $issue_detail['id']])->withErrors($errors)->withInput($request->all());
+
         IssueDetail::store($issue_detail['issue'], $issue_detail['content'], $issue_detail['type'], $issue_detail['3rdParty'], $issue_detail['priority'], $issue_detail['media'], $issue_detail['id']);
         return Redirect::route('issue.index');
     }

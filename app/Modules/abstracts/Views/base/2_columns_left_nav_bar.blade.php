@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     @section('css')
-        {!! HTML::style('bower_components\bootstrap\dist\css\bootstrap.css') !!}
-        {!! HTML::style('bower_components\font-awesome\css\font-awesome.css') !!}
-        {!! HTML::style('bower_components\animate.css\animate.css') !!}
-        {!! HTML::style('css\style.css') !!}
-        {!! HTML::style('bower_components\eonasdan-bootstrap-datetimepicker\build\css\bootstrap-datetimepicker.css') !!}
+        <link rel="stylesheet/less" type="text/css" href="/bower_components/bootstrap/less/bootstrap.less">
+        <link rel="stylesheet/less" type="text/css" href="/bower_components/font-awesome/less/font-awesome.less">
+        <link media="screen" type="text/css" rel="stylesheet" href="/bower_components/animate.css/animate.min.css">
+        <link media="screen" type="text/css" rel="stylesheet" href="/css/style.css">
+        <link media="screen" type="text/css" rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
     @show
+    <script src="/bower_components/less/dist/less.min.js"></script>
 </head>
 <body>
 <div id="wrapper">

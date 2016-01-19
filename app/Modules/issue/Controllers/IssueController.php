@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Modules\Rental\Models\PropertyDetail;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Modules\Message\Models\Media;
+use Illuminate\Support\Facades\Validator;
 
 class IssueController extends BaseController 
 {
@@ -35,32 +36,23 @@ class IssueController extends BaseController
      */
     public function store(Request $request)
     {
-//        var_dump($request->all());
-//        die;
-        $rental = Rental::findOrFail($request->all()['rental_id']);
-        $user = User::findOrFail($request->all()['requester_user_id']);
+        $errors = [];
+        if(!($rental = Rental::find($request->all()['rental_id'])) instanceof Rental)
+            $errors['rental_id'] = 'Please choose a valid rental';
+        if(!($user = User::find($request->all()['requester_user_id'])) instanceof User)
+            $errors['requester_user_id'] = 'Please choose a valid requester';
         $issue = [
             'id' =>$request->all()['issue_id'],
             'rental' => $rental,
             'status' => $request->all()['issue_status'],
             'requester_user' => $user,
         ];
+        if(intval($issue['id']) >0 && !Issue::find($issue['id']) instanceof Issue)
+            return Redirect::route('issue.show')->withErrors(['issue_id' => '[system error]invalid issue passed in'])->withInput($request->all());
+        if(count($errors) > 0)
+            return Redirect::route('issue.show')->withErrors($errors)->withInput($request->all());
         $issue = Issue::store($issue['requester_user'], $issue['rental'], $issue['status'], $issue['id']);
 
-//        $details = self::stripPropertyDetailOptions($request);
-//        foreach($details as $detail_id => $detail)
-//        {
-//            var_dump($detail);
-//            IssueDetail::store(
-//                $issue,
-//                self::issetOrDefault($detail, 'content'),
-//                self::issetOrDefault($detail, 'type'),
-//                self::issetOrDefault($detail, '3rdParty'),
-//                intval(self::issetOrDefault($detail, 'priority')),
-//                self::issetOrDefault($detail, 'media'),
-//                $detail_id === 'new' ? null : $detail_id
-//            );
-//        }
         return Redirect::route('issue.index');
     }
     public static function issetOrDefault($array, $index, $default = null)
