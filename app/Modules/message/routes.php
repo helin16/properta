@@ -6,25 +6,21 @@ Route::group(array('module' => 'Message', 'namespace' => 'App\Modules\Message\Co
 //        'middleware' => ['roles'],
 //        'roles' => ['agency admin'],
     ]);
-//    Route::get('property/{id}', [
-//        'as' => 'property.show',
-//        'uses' => 'PropertyController@show',
-////        'middleware' => ['roles'],
-////        'roles' => ['agency admin'],
-//    ]);
-//    Route::post('property/{id}', [
-//        'as' => 'property.store',
-//        'uses' => 'PropertyController@store',
-////        'middleware' => ['roles'],
-////        'roles' => ['agency admin'],
-//    ]);
-//    Route::delete('property/{id}', [
-//        'as' => 'property.destroy',
-//        'uses' => 'PropertyController@show',
-////        'middleware' => ['roles'],
-////        'roles' => ['agency admin'],
-//    ]);
-//});
+    Route::get('messages/create', [
+        'uses' => 'MessageController@createMessage',
+//        'middleware' => ['roles'],
+//        'roles' => ['agency admin'],
+    ]);
+    Route::post('messages/post-create', [
+        'uses' => 'MessageController@postMessage',
+//        'middleware' => ['roles'],
+//        'roles' => ['agency admin'],
+    ]);
+    Route::get('messages/detail', [
+        'uses' => 'MessageController@detail',
+//        'middleware' => ['roles'],
+//        'roles' => ['agency admin'],
+    ]);
 //Route::group(array('module' => 'Rental', 'namespace' => 'App\Modules\Rental\Controllers'), function() {
 //    Route::get('rental', [
 //        'as' => 'rental.index',

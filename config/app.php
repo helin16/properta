@@ -205,6 +205,7 @@ return [
         'Form'=> 'Illuminate\Html\FormFacade',
         'HTML'=> 'Illuminate\Html\HtmlFacade',
         'Html' => Collective\Html\HtmlFacade::class,
+        'Helper' => App\Helpers\Helper::class
     ],
 
 ];

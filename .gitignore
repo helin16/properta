@@ -13,3 +13,4 @@ vendor
 /media
 !/media/.gitkeep
 readme.md
+.env

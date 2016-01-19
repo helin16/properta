@@ -6,6 +6,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use DB;
+use Session;
 
 class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract
 {
@@ -79,6 +80,29 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             ->where('user_id', $id)
             ->update(['firstName' => $data['firstName'] , 'lastName' => $data['lastName'] , 'contactNumber' => $data['contactNumber'] ])
         ;
+    }
+
+    protected function getRelevantUsers($id){
+
+        $currentRole = Session::get('currentUserRole');
+
+        if( $currentRole == 'agency admin' || $currentRole == 'agent' ){
+            $relevantUsers = DB::table('user_relationships')
+                ->leftJoin('user_details', 'user_relationships.user_id', '=', 'user_details.user_id')
+                ->Where('user_relationships.parent_user_id', $id)
+                ->get()
+            ;
+
+        }else{
+            $relevantUsers = DB::table('user_relationships')
+                ->leftJoin('user_details', 'user_relationships.user_id', '=', 'user_details.user_id')
+                ->where('user_relationships.user_id','=', $id)
+                ->get()
+            ;
+        }
+
+
+        return $relevantUsers;
     }
 
 }
