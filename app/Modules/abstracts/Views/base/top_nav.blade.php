@@ -14,7 +14,10 @@
             </li>
             <li class="dropdown">
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                    <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
+                    <i class="fa fa-envelope"></i>
+                    <span class="label label-warning">
+                        {!! Helper::bob() !!}
+                    </span>
                 </a>
                 <ul class="dropdown-menu dropdown-messages">
                     <li>
@@ -65,7 +68,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="dropdown">
+            <!--<li class="dropdown">
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                     <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
                 </a>
@@ -106,7 +109,7 @@
                         </div>
                     </li>
                 </ul>
-            </li>
+            </li>-->
 
 
             <li>

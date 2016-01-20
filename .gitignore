@@ -6,9 +6,11 @@
 config/app.php
 vendor
 .idea
+.gitignore
 /.phpstorm.meta.php
 /composer.lock
 /_ide_helper.php
 /media
 !/media/.gitkeep
 readme.md
+.env

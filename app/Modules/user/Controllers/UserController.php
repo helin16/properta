@@ -30,7 +30,11 @@ class UserController extends Controller
 	//
     public function index()
     {
-        return view('user::index');
+        if( Session::get('currentUserId') ){
+            return Redirect::to('dashboard');
+        }else{
+            return view('user::index');
+        }
     }
 
     public function login() {
