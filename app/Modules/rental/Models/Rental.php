@@ -6,6 +6,8 @@ use App\Modules\Message\Models\Media;
 use Carbon\Carbon;
 use NumberFormatter;
 use App\Modules\Issue\Models\Issue;
+use App\Modules\User\Models\User;
+use Session;
 
 class Rental extends BaseModel
 {
@@ -13,7 +15,15 @@ class Rental extends BaseModel
     protected $dates = ['from', 'to'];
     public static function getAll($property_id = null, $pageSize = null)
     {
-        $query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            abort(403);
+
+        $ids = [];
+        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+            $ids[] = $rental_user->rental_id;
+        $ids = array_unique($ids);
+
+        $query = self::whereIn('id', $ids)->orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
         if($property_id)
             $query->where('property_id', intval($property_id));
         return $query->paginate($pageSize ?: self::$pageSize);

@@ -1,5 +1,6 @@
 <?php setlocale(LC_MONETARY, 'en_AU.UTF-8') ?>
 @extends('abstracts::base.2_columns_left_nav_bar')
+{{--{{ Session::get('currentUserId') }}--}}
 @section('page_body')
     <div class="wrapper wrapper-content animated fadeIn">
         <div class="row">

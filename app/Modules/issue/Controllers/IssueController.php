@@ -11,6 +11,8 @@ use App\Modules\Rental\Models\PropertyDetail;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Modules\Message\Models\Media;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
+use App\Modules\Rental\Models\RentalUser;
 
 class IssueController extends BaseController 
 {
@@ -102,6 +104,7 @@ class IssueController extends BaseController
      */
     public function show($id = 0)
     {
+        self::checkPermission($id);
         return view('issue::issue.detail', ['issue' => Issue::find($id), 'users' => User::getAll(PHP_INT_MAX), 'rentals' => Rental::getAll(null, PHP_INT_MAX)]);
     }
 
@@ -113,8 +116,23 @@ class IssueController extends BaseController
      */
     public function destroy($id)
     {
+        self::checkPermission($id);
         Issue::destroy($id);
         IssueDetail::where(['issue_id' => $id])->delete();
         return Redirect::to('issue');
+    }
+    private function checkPermission($id)
+    {
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            abort(403);
+
+        $rental_ids = [];
+        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+            if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
+                $rental_ids[] = $rental->id;
+        $rental_ids = array_unique($rental_ids);
+
+        if(($issue = Issue::find($id)) instanceof Issue && !in_array($issue->rental_id, $rental_ids))
+            abort(403);
     }
 }

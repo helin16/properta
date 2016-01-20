@@ -4,13 +4,24 @@ use App\Modules\Abstracts\Models\BaseModel;
 use App\Modules\Rental\Models\Rental;
 use App\Modules\Rental\Models\Property;
 use App\Modules\User\Models\User;
+use App\Modules\Rental\Models\RentalUser;
+use Illuminate\Support\Facades\Session;
 
 class Issue extends BaseModel
 {
     protected $fillable = ['requester_user_id', 'rental_id', 'status'];
     public static function getAll($rental_id = null, $requester_user_id = null, $property_id = null)
     {
-        $query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            abort(403);
+
+        $rental_ids = [];
+        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+            if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
+                $rental_ids[] = $rental->id;
+        $rental_ids = array_unique($rental_ids);
+
+        $query = self::whereIn('rental_id', $rental_ids)->orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
         if($rental_id)
             $query->where('rental_id', intval($rental_id));
         elseif($property_id and ($property = Property::find($property_id)) instanceof Property)
