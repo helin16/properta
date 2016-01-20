@@ -97,7 +97,7 @@ class PropertyController extends BaseController
     private function checkPermission($id)
     {
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
-            abort(403);
+            return Redirect::to('user')->send();
 
         $ids = [];
         foreach(RentalUser::where('user_id', 1)->get() as $rental_user)

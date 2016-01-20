@@ -16,10 +16,10 @@ class Rental extends BaseModel
     public static function getAll($property_id = null, $pageSize = null)
     {
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
-            abort(403);
+            return Redirect::to('user')->send();
 
         $ids = [];
-        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+        foreach(RentalUser::where('user_id', $user->id)->get() as $rental_user)
             $ids[] = $rental_user->rental_id;
         $ids = array_unique($ids);
 

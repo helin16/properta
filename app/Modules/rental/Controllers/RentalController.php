@@ -33,8 +33,7 @@ class RentalController extends BaseController
     public function store(Request $request)
     {
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
-            abort(403);
-
+            return Redirect::to('user')->send();
 
         if(!($role = Role::where('name', Session::get('currentUserRole'))->first()) instanceof Role)
             abort(403);
@@ -80,7 +79,7 @@ class RentalController extends BaseController
     private function checkPermission($id)
     {
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
-            abort(403);
+            return Redirect::to('user')->send();
 
         $ids = [];
         foreach(RentalUser::where('user_id', 1)->get() as $rental_user)

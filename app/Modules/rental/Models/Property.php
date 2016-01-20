@@ -1,9 +1,9 @@
 <?php namespace App\Modules\Rental\Models;
 
 use App\Modules\Abstracts\Models\BaseModel;
-use App\Modules\Rental\Models\PropertyDetail;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class Property extends BaseModel
 {
@@ -11,10 +11,10 @@ class Property extends BaseModel
     public static function getAll($address_id = null, $pageSize = null, $getAll = false)
     {
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
-            abort(403);
+            return Redirect::to('user')->send();
 
         $ids = [];
-        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+        foreach(RentalUser::where('user_id', $user->id)->get() as $rental_user)
             if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
                 $ids[] = $rental->property_id;
         $ids = array_unique($ids);

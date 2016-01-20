@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Redirect;
 use App\Modules\Rental\Models\PropertyDetail;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Modules\Message\Models\Media;
+use Illuminate\Support\Facades\Session;
+use App\Modules\Rental\Models\RentalUser;
+
 
 class IssueDetailController extends BaseController
 {
@@ -104,6 +107,7 @@ class IssueDetailController extends BaseController
      */
     public function show($id = 0)
     {
+        self::checkPermission($id);
         if(($issue_detail = IssueDetail::find($id)) instanceof IssueDetail)
             $issue = Issue::findOrFail($issue_detail->issue_id);
         return view('issue::issue_detail.detail', ['issue' => $issue, 'issue_detail' => $issue_detail]);
@@ -117,7 +121,22 @@ class IssueDetailController extends BaseController
      */
     public function destroy($id)
     {
+        self::checkPermission($id);
         IssueDetail::destroy($id);
         return Redirect::to('issue');
+    }
+    private function checkPermission($id)
+    {
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            return Redirect::to('user')->send();
+
+        $rental_ids = [];
+        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+            if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
+                $rental_ids[] = $rental->id;
+        $rental_ids = array_unique($rental_ids);
+
+        if(($issue_detail = IssueDetail::find($id)) instanceof IssueDetail && !in_array($issue_detail->issue_id, $rental_ids))
+            abort(403);
     }
 }

@@ -13,10 +13,10 @@ class Issue extends BaseModel
     public static function getAll($rental_id = null, $requester_user_id = null, $property_id = null)
     {
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
-            abort(403);
+            return Redirect::to('user')->send();
 
         $rental_ids = [];
-        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+        foreach(RentalUser::where('user_id', $user->id)->get() as $rental_user)
             if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
                 $rental_ids[] = $rental->id;
         $rental_ids = array_unique($rental_ids);
