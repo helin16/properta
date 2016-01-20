@@ -2,13 +2,24 @@
 
 use App\Modules\Abstracts\Models\BaseModel;
 use App\Modules\Rental\Models\PropertyDetail;
+use App\Modules\User\Models\User;
+use Illuminate\Support\Facades\Session;
 
 class Property extends BaseModel
 {
     protected $fillable = ['description', 'address_id'];
     public static function getAll($address_id = null, $pageSize = null)
     {
-        $query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            abort(403);
+
+        $ids = [];
+        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+            if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
+                $ids[] = $rental->property_id;
+        $ids = array_unique($ids);
+
+        $query = self::whereIn('id', $ids)->orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
         if($address_id)
             $query->where('address_id', intval($address_id));
         return $query->paginate($pageSize ?: self::$pageSize);

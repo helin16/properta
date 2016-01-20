@@ -6,7 +6,10 @@ use App\Modules\Rental\Models\Property;
 use App\Modules\Rental\Models\Address;
 use Illuminate\Support\Facades\Redirect;
 use App\Modules\Rental\Models\PropertyDetail;
-use App\Modules\Personnel\Models\Personnel;
+use Illuminate\Support\Facades\Session;
+use App\Modules\Rental\Models\RentalUser;
+use App\Modules\User\Models\User;
+use App\Modules\Rental\Models\Rental;
 
 class PropertyController extends BaseController
 {
@@ -35,6 +38,7 @@ class PropertyController extends BaseController
             'id' => $request->all()['property_id'],
             'description' => $request->all()['property_description'],
         ];
+
         $property_details = [
             'id' => $request->all()['property_detail_id'],
             'type' => $request->all()['property_details_type'],
@@ -75,6 +79,7 @@ class PropertyController extends BaseController
      */
     public function show($id = null)
     {
+        self::checkPermission($id);
         return view('rental::property.detail', ['property' => Property::find($id)]);
     }
 
@@ -88,5 +93,19 @@ class PropertyController extends BaseController
     {
         Property::destroy($id);
         return Redirect::to('property');
+    }
+    private function checkPermission($id)
+    {
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            abort(403);
+
+        $ids = [];
+        foreach(RentalUser::where('user_id', 1)->get() as $rental_user)
+            if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
+                $ids[] = $rental->property_id;
+        $ids = array_unique($ids);
+
+        if(($property = Property::find($id)) instanceof Property && !in_array($property->id, $ids))
+            abort(403);
     }
 }
