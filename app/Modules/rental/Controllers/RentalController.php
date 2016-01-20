@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use App\Modules\User\Models\User;
 use App\Modules\Rental\Models\RentalUser;
+use App\Modules\User\Models\Role;
 
 class RentalController extends BaseController 
 {
@@ -31,6 +32,13 @@ class RentalController extends BaseController
      */
     public function store(Request $request)
     {
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            abort(403);
+
+
+        if(!($role = Role::where('name', Session::get('currentUserRole'))->first()) instanceof Role)
+            abort(403);
+
         $property = Property::findOrFail($request->all()['property_id']);
         $rental = [
             'id' => $request->all()['rental_id'],
@@ -39,7 +47,10 @@ class RentalController extends BaseController
             'to' => $request->all()['rental_to'],
             'media' => self::stripMedia($request),
         ];
-        Rental::store($rental['dailyAmount'], $rental['from'], $rental['to'], $property, $rental['media'], $rental['id']);
+        $rental = Rental::store($rental['dailyAmount'], $rental['from'], $rental['to'], $property, $rental['media'], $rental['id']);
+
+        RentalUser::store($user, $rental, $role);
+
         return Redirect::route('rental.index');
     }
     /**
@@ -51,7 +62,7 @@ class RentalController extends BaseController
     public function show($id = null)
     {
         self::checkPermission($id);
-        return view('rental::rental.detail', ['rental' => Rental::find($id), 'properties' => Property::getAll(null, PHP_INT_MAX)]);
+        return view('rental::rental.detail', ['rental' => Rental::find($id), 'properties' => Property::getAll(null, PHP_INT_MAX, true)]);
     }
 
     /**

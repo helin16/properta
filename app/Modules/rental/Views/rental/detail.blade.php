@@ -5,7 +5,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
-                        {!! Form::open(['url' => '/rental', 'files' => true, 'role' => 'form']) !!}
+                        {!! Form::open(['route' => 'rental.store', 'files' => true, 'role' => 'form']) !!}
                             <div class="form-group">
                                 {!! Form::label('property_id', 'Property') !!}
                                 @include('rental::property.select', ['property' => $rental ? $rental->property : null, 'properties' => $properties, 'options' => ['class' => 'form-control']])

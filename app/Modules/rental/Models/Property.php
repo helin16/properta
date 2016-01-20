@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
 class Property extends BaseModel
 {
     protected $fillable = ['description', 'address_id'];
-    public static function getAll($address_id = null, $pageSize = null)
+    public static function getAll($address_id = null, $pageSize = null, $getAll = false)
     {
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
             abort(403);
@@ -18,8 +18,9 @@ class Property extends BaseModel
             if(($rental = Rental::find($rental_user->rental_id)) instanceof Rental)
                 $ids[] = $rental->property_id;
         $ids = array_unique($ids);
-
-        $query = self::whereIn('id', $ids)->orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+        if($getAll === false)
+            $query = self::whereIn('id', $ids)->orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
+        else $query = self::orderBy(array_keys(self::$orderBy)[0], array_values(self::$orderBy)[0]);
         if($address_id)
             $query->where('address_id', intval($address_id));
         return $query->paginate($pageSize ?: self::$pageSize);
