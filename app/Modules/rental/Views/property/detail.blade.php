@@ -1,6 +1,7 @@
 @extends('abstracts::base.2_columns_left_nav_bar')
 @section('page_body')
     <div class="wrapper wrapper-content"> {{--summernote doesn't play well with animate.css--}}
+        <div id="map"></div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
@@ -38,7 +39,8 @@
 @section('script')
     @parent
     <script src="/bower_components/summernote/dist/summernote.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&signed_in=true&libraries=places&callback=initAutocomplete" async defer></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&signed_in=true&libraries=places&callback=initAutocomplete" async defer></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize"></script>-->
     <script>
         $(document).ready(function(){
             // summer note
@@ -69,9 +71,52 @@
                 country: 'long_name',
                 postal_code: 'short_name'
             };
-            function initAutocomplete() {
-                autocomplete = new google.maps.places.Autocomplete((google_map_elements['street'][0]), {types: ['geocode']});
-                autocomplete.addListener('place_changed', fillInAddress);
+        jQuery(function($) {
+            // Asynchronously Load the map API
+            var script = document.createElement('script');
+            script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize";
+            document.body.appendChild(script);
+        });
+            function initialize() {
+                //autocomplete = new google.maps.places.Autocomplete((google_map_elements['street'][0]), {types: ['geocode']});
+                //autocomplete.addListener('place_changed', fillInAddress);
+                var map;
+                // Set the latitude & longitude for our location (London Eye)
+                var myLatlng = new google.maps.LatLng(-37.8221802,145.0082775);
+                var mapOptions = {
+                    center: myLatlng, // Set our point as the centre location
+                    zoom: 14, // Set the zoom level
+                    mapTypeId: 'roadmap' // set the default map type
+                };
+
+                // Display a map on the page
+                map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                // Allow our satellite view have a tilted display (This only works for certain locations)
+                map.setTilt(45);
+
+                // Create our info window content
+                var infoWindowContent =
+                    '<div class="info_content">' +
+                    '<h3>Melbourne</h3>' +
+                    '<p>this is my Burnley station.</p>' +
+                    '</div>';
+
+                // Initialise the inforWindow
+                var infoWindow = new google.maps.InfoWindow({
+                    content: infoWindowContent
+                });
+
+                // Add a marker to the map based on our coordinates
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    title: 'London Eye, London'
+                });
+
+                // Display our info window when the marker is clicked
+                google.maps.event.addListener(marker, 'click', function() {
+                    infoWindow.open(map, marker);
+                });
             }
             function fillInAddress() {
                 var place = autocomplete.getPlace();

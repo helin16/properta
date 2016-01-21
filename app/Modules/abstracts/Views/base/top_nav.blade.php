@@ -16,52 +16,29 @@
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                     <i class="fa fa-envelope"></i>
                     <span class="label label-warning">
-                        {!! Helper::bob() !!}
+                        {!! Helper::getAllMessages()->count() !!}
                     </span>
                 </a>
+                <!--{{ $data =  Helper::getAllMessages()->get() }}-->
                 <ul class="dropdown-menu dropdown-messages">
-                    <li>
-                        <div class="dropdown-messages-box">
-                            <a href="profile.html" class="pull-left">
-                                <img alt="image" class="img-circle" src="/Inspinia/Static_Full_Version/img/a7.jpg">
-                            </a>
-                            <div class="media-body">
-                                <small class="pull-right">46h ago</small>
-                                <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
+                    @foreach($data as $message)
+                        <li>
+                            <div class="dropdown-messages-box">
+                                <!--<a href="profile.html" class="pull-left">
+                                    <img alt="image" class="img-circle" src="/Inspinia/Static_Full_Version/img/a7.jpg">
+                                </a>-->
+                                <div class="media-body">
+                                    <small class="pull-right">46h ago</small>
+                                        <a href="/messages/detail/?id={{ $message->id }}"><strong>{{ $message->subject }}</strong></a><br>
+                                    <small class="text-muted">{{ $message->created_at }}</small>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <div class="dropdown-messages-box">
-                            <a href="profile.html" class="pull-left">
-                                <img alt="image" class="img-circle" src="/Inspinia/Static_Full_Version/img/a4.jpg">
-                            </a>
-                            <div class="media-body ">
-                                <small class="pull-right text-navy">5h ago</small>
-                                <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica Smith</strong>. <br>
-                                <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <div class="dropdown-messages-box">
-                            <a href="profile.html" class="pull-left">
-                                <img alt="image" class="img-circle" src="/Inspinia/Static_Full_Version/img/profile.jpg">
-                            </a>
-                            <div class="media-body ">
-                                <small class="pull-right">23h ago</small>
-                                <strong>Monica Smith</strong> love <strong>Kim Smith</strong>. <br>
-                                <small class="text-muted">2 days ago at 2:30 am - 11.06.2014</small>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="divider"></li>
+                        </li>
+                        <li class="divider"></li>
+                    @endforeach
                     <li>
                         <div class="text-center link-block">
-                            <a href="mailbox.html">
+                            <a href="/messages">
                                 <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
                             </a>
                         </div>

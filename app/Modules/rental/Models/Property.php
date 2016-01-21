@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 class Property extends BaseModel
 {
     protected $fillable = ['description', 'address_id'];
-    public static function getAll($address_id = null, $pageSize = null, $getAll = false)
-    {
+    public static function getAll($address_id = null, $pageSize = null, $getAll = false){
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
             return Redirect::to('user')->send();
 
@@ -25,22 +24,18 @@ class Property extends BaseModel
             $query->where('address_id', intval($address_id));
         return $query->paginate($pageSize ?: self::$pageSize);
     }
-    public function address()
-    {
+    public function address(){
         return $this->belongsTo(Address::class);
     }
-    public function logs()
-    {
+    public function logs(){
         return $this->hasMany(PropertyLog::class);
     }
-    public function rentals()
-    {
+    public function rentals(){
         $data = $this->hasMany(Rental::class);
         return $data;
     }
 
-    public function rental()
-    {
+    public function rental(){
         $result = ['averageDailyAmount' => [], 'count' => 0, 'issuesCount' => 0];
 
         foreach($this->hasMany(Rental::class)->get() as $rental)
@@ -54,8 +49,7 @@ class Property extends BaseModel
         return $result;
     }
 
-    public function details()
-    {
+    public function details(){
         return $this->hasMany(PropertyDetail::class);
     }
 
@@ -66,8 +60,7 @@ class Property extends BaseModel
      * @param null $id
      * @return static
      */
-    public static function store($description, Address $address = null, $id = null)
-    {
+    public static function store($description, Address $address = null, $id = null){
         return self::updateOrCreate(['id' => $id], ['description' => $description, 'address_id' => $address->id]);
     }
 }

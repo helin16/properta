@@ -77,9 +77,7 @@ class PropertyController extends BaseController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
-    {
-        self::checkPermission($id);
+    public function show($id = null){
         return view('rental::property.detail', ['property' => Property::find($id)]);
     }
 
@@ -89,13 +87,12 @@ class PropertyController extends BaseController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         Property::destroy($id);
         return Redirect::to('property');
     }
-    private function checkPermission($id)
-    {
+
+    private function checkPermission($id){
         if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
             return Redirect::to('user')->send();
 

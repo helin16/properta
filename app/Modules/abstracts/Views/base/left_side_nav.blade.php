@@ -32,27 +32,80 @@
                     Properta
                 </div>
             </li>
+
             <li>
-                <a href="/rental">
-                    <i class="fa fa-users"></i>
-                    <span class="nav-label">Rentals</span>
-                </a>
-                <a href="/messages">
-                    <i class="fa fa-users"></i>
-                    <span class="nav-label">Message</span>
-                </a>
-                <a href="/property">
-                    <i class="fa fa-users"></i>
-                    <span class="nav-label">Property</span>
-                </a>
-                <a href="/issue">
-                    <i class="fa fa-users"></i>
-                    <span class="nav-label">Issue</span>
-                </a>
-                <a href="/document">
-                    <i class="fa fa-users"></i>
-                    <span class="nav-label">Document</span>
-                </a>
+                @if( 'agency admin' == Session::get('currentUserRole') )
+                    <a href="/user/list">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Users</span>
+                    </a>
+                @endif
+                @if( 'agent' == Session::get('currentUserRole') )
+                    <a href="/user/list">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Users</span>
+                    </a>
+                    <a href="/rental">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Rentals</span>
+                    </a>
+                    <a href="/messages">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Message</span>
+                    </a>
+                    <a href="/property">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Property</span>
+                    </a>
+                    <a href="/issue">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Issue</span>
+                    </a>
+                    <a href="/document">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Document</span>
+                    </a>
+                @endif
+                @if( 'tenant' == Session::get('currentUserRole') )
+                    <a href="/rental">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Rentals</span>
+                    </a>
+                    <a href="/messages">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Message</span>
+                    </a>
+                    <a href="/issue">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Issue</span>
+                    </a>
+                    <a href="/document">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Document</span>
+                    </a>
+                @endif
+                @if( 'landlord' == Session::get('currentUserRole') )
+                    <a href="/rental">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Rentals</span>
+                    </a>
+                    <a href="/messages">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Message</span>
+                    </a>
+                    <a href="/property">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Property</span>
+                    </a>
+                    <a href="/issue">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Issue</span>
+                    </a>
+                    <a href="/document">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">Document</span>
+                    </a>
+                @endif
             </li>
         </ul>
 

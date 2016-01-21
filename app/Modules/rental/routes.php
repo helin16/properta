@@ -9,14 +9,14 @@ Route::group(array('module' => 'Property', 'namespace' => 'App\Modules\Rental\Co
     Route::get('property/{id}', [
         'as' => 'property.show',
         'uses' => 'PropertyController@show',
-//        'middleware' => ['roles'],
-//        'roles' => ['agency admin'],
+        'middleware' => ['roles'],
+        'roles' => ['agency admin','agent'],
     ]);
     Route::post('property/{id}', [
         'as' => 'property.store',
         'uses' => 'PropertyController@store',
-//        'middleware' => ['roles'],
-//        'roles' => ['agency admin'],
+        'middleware' => ['roles'],
+        'roles' => ['agency admin'],
     ]);
     Route::delete('property/{id}', [
         'as' => 'property.destroy',
