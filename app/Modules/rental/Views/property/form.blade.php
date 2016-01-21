@@ -1,10 +1,11 @@
 {!! Form::hidden('property_id', $property ? $property->id : 0) !!}
 {!! Form::hidden('property_detail_id', ($property && $property->details->first()) ? $property->details->first()->id : 0) !!}
+{!! Form::hidden('property_description', $property ? $property->description : '') !!}
 <div class="form-group">
     {!! Form::label('property_description', ucfirst('description')) !!}
-    <input class="summernote form-control" name="property_description" id="property_description">
+    <div class="summernote form-control" name="property_description" id="property_description">
         {{ $property ? $property->description : '' }}
-    </input>
+    </div>
 </div>
 <div class="form-group">
     {!! Form::label('property_details_type', ucfirst('type')) !!}
