@@ -3,26 +3,26 @@ Route::group(array('module' => 'Issue', 'namespace' => 'App\Modules\Issue\Contro
     Route::get('issue', [
         'as' => 'issue.index',
         'uses' => 'IssueController@index',
-//        'middleware' => ['roles'],
-//        'roles' => ['agency admin'],
+        'middleware' => ['roles'],
+        'roles' => ['agency admin','agent', 'tenant', 'landlord'],
     ]);
     Route::get('issue/{id}', [
         'as' => 'issue.show',
         'uses' => 'IssueController@show',
-//        'middleware' => ['roles'],
-//        'roles' => ['agency admin'],
+        'middleware' => ['roles'],
+        'roles' => ['agency admin','agent', 'tenant', 'landlord'],
     ]);
     Route::post('issue/{id}', [
         'as' => 'issue.store',
         'uses' => 'IssueController@store',
-//        'middleware' => ['roles'],
-//        'roles' => ['agency admin'],
+        'middleware' => ['roles'],
+        'roles' => ['agency admin','agent', 'tenant', 'landlord'],
     ]);
     Route::delete('issue/{id}', [
         'as' => 'issue.destroy',
         'uses' => 'IssueController@destroy',
-//        'middleware' => ['roles'],
-//        'roles' => ['agency admin'],
+        'middleware' => ['roles'],
+        'roles' => ['agency admin'],
     ]);
 });
 

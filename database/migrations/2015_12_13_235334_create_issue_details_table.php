@@ -19,6 +19,10 @@ class CreateIssueDetailsTable extends Migration
             $table->string('3rdParty');
             $table->unsignedTinyInteger('priority');
             $table->json('media_ids');
+
+            $table->index('type');
+            $table->index('priority');
+            $table->foreign('issue_id')->references('id')->on('issues')->onDelete('cascade');
         });
     }
 

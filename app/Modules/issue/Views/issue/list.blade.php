@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-sm-11">
                                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('requester')], 'body' => ['content' => $issue->requester_user->inline() ]])
-                                @include('rental::base.list_row', ['title' => ['content' => ucfirst('status')], 'body' => ['content' => $issue->status ]])
+                                @include('rental::base.list_row', ['title' => ['content' => ucfirst('status')], 'body' => ['content' => $issue->status() ]])
                                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('address')], 'body' => ['content' => '<a href=' . URL::route('property.show', ['property_id' => $issue->rental->property->id]) . '>' . $issue->rental->property->address->inline() . '</a>' ]])
                                 @include('rental::base.list_row', ['title' => ['content' => ucfirst('rental')], 'body' => ['content' => '<a href=' . URL::route('rental.show', ['property_id' => $issue->rental->property->id]) . '>' . money_format('%.2n', $issue->rental->property->rental()['averageDailyAmount']) . '</a>' ]])
                                 <hr/>

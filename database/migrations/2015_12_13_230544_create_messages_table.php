@@ -18,6 +18,10 @@ class CreateMessagesTable extends Migration
             $table->string('subject');
             $table->text('content');
             $table->json('media_ids');
+
+            $table->index('subject');
+            $table->foreign('from_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('to_user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

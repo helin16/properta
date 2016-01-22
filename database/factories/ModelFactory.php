@@ -39,7 +39,7 @@ $factory->define(User::class, function (Faker\Generator $faker) {
 
 $factory->define(Password::class, function (Faker\Generator $faker) {
     return [
-        'password' => Hash::make('12345678')
+        'password' => Hash::make('123456')
     ];
 });
 
@@ -65,7 +65,7 @@ $factory->define(Message::class, function (Faker\Generator $faker) {
         'from_user_id' => ($from_user_id = $faker->randomElement(User::all()->all())->id),
         'to_user_id' => $faker->randomElement(User::where('id', '!=', $from_user_id)->get()->all())->id,
         'subject' => $faker->sentence,
-        'content' => $faker->sentences(random_int(3,100), true),
+        'content' => $faker->sentences(random_int(2,4), true),
         'media_ids' => []
     ];
     if(Media::all()->count() > 0)
@@ -138,21 +138,28 @@ $factory->define(Permission::class, function (Faker\Generator $faker) {
 $factory->define(Property::class, function (Faker\Generator $faker) {
     return [
         'address_id' => $faker->randomElement(Address::all()->all())->id,
-        'description' => $faker->sentences(random_int(1, 20), true)
+        'description' => $faker->sentences(random_int(1, 2), true)
     ];
 });
 
 $factory->define(PropertyDetail::class, function (Faker\Generator $faker) {
+    $types = [
+        'house',
+        'townhouse',
+        'apartment',
+        'flat',
+        'commercial',
+    ];
     $array = [
         'property_id' => $faker->randomElement(Property::all()->all())->id,
-        'type' => $faker->word,
+        'type' => $faker->randomElement($types),
         'carParks' => random_int(0,5) === 0 ? null : random_int(0,3),
         'carParks' => random_int(0,5) === 0 ? null : random_int(0,3),
         'bedrooms' => random_int(0,10) === 0 ? null : random_int(1,5),
         'bathrooms' => random_int(0,10) === 0 ? null : random_int(1,3),
         'options' => [],
     ];
-    for($i=0; $i<random_int(0,5); $i++)
+    for($i=0; $i<random_int(0,1); $i++)
     {
         $array['options'][] = [$faker->word => $faker->randomNumber()];
     }
@@ -164,11 +171,11 @@ $factory->define(PropertyLog::class, function (Faker\Generator $faker) {
     $array = [
         'property_id' => $faker->randomElement(Property::all()->all())->id,
         'type' => $faker->word,
-        'content' => $faker->sentences(random_int(1, 20), true),
+        'content' => $faker->sentences(random_int(1, 2), true),
         'comments' => []
     ];
     for($i=0; $i < random_int(0,5); $i++)
-        $array['comments'][] = $faker->sentences(random_int(1,3), true);
+        $array['comments'][] = $faker->sentences(random_int(1,2), true);
     $array['comments'] = json_encode($array['comments']);
     return $array;
 });
@@ -211,18 +218,38 @@ $factory->define(Issue::class, function (Faker\Generator $faker) {
     return [
         'requester_user_id' => $faker->randomElement(User::all()->all())->id,
         'rental_id' => $faker->randomElement(Rental::all()->all())->id,
-    	'status' => $faker->words(random_int(1, 2), true),
+    	'status' => $faker->randomElement([Issue::STATUS_APPROVED, Issue::STATUS_PENDING]),
     ];
 });
 
 $factory->define(IssueDetail::class, function (Faker\Generator $faker) {
+    $contents = [
+      'Permanent Marker on the Walls',
+      'Countertop Stains',
+      'Damaged Baseboards',
+      'Dirty Windows',
+      'Door Problems',
+      'Ant Infestation',
+      'Concealing Electrical Cords',
+      'Wine Stains on Carpet',
+      'Cluttered Pantry',
+      'Clogged Drains',
+      'Oil Stains in the Garage',
+      'Mildew and Mold in the Shower',
+      'Kitchen Sink Odors',
+    ];
+    $types = [
+        'normal',
+        'wear out',
+        'deliberately',
+    ];
     $array = [
         'issue_id' => $faker->randomElement(Issue::all()->all())->id,
-        'content' => $faker->sentences(random_int(1, 200), true),
-    	'type' => $faker->words(random_int(1, 2), true),
+        'content' => $faker->randomElement($contents),
+    	'type' => $faker->randomElement($types),
     	'3rdParty' => $faker->url,
     	'priority' => $faker->numberBetween(0,5),
-    	'media_ids' => []
+    	'media_ids' => [],
     ];
 
     if(Media::all()->count() > 0)
@@ -236,7 +263,7 @@ $factory->define(IssueDetail::class, function (Faker\Generator $faker) {
 $factory->define(IssueProgress::class, function (Faker\Generator $faker) {
     return [
         'issue_id' => $faker->randomElement(Issue::all()->all())->id,
-        'content' => $faker->sentences(random_int(1, 200), true),
+        'content' => $faker->sentences(random_int(1, 2), true),
     ];
 });
 

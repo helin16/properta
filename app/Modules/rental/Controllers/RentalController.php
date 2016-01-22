@@ -72,7 +72,7 @@ class RentalController extends BaseController
      */
     public function destroy($id)
     {
-        self::checkPermission($id);
+//        self::checkPermission($id);
         Rental::destroy($id);
         return Redirect::to('rental');
     }

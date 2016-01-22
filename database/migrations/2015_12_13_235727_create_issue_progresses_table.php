@@ -15,6 +15,8 @@ class CreateIssueProgressesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('issue_id');
             $table->text('content');
+
+            $table->foreign('issue_id')->references('id')->on('issues')->onDelete('cascade');
         });
     }
 

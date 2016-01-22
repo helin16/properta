@@ -17,6 +17,9 @@ class CreatePropertyLogsTable extends Migration
             $table->string('type', $table->type_string_length);
             $table->text('content');
             $table->json('comments');
+
+            $table->index('type');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

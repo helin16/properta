@@ -15,6 +15,10 @@ class CreateRentalUserTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('role_id');
             $table->unsignedInteger('rental_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('rental_id')->references('id')->on('rentals')->onDelete('cascade');
         });
     }
 

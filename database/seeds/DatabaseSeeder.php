@@ -41,24 +41,18 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->seed('SystemUserSeeder');
         $this->seed('UsersSeeder');
         $this->seed('AddressesSeeder');
 //         $this->seed('BrandsSeeder');
         $this->command->info('Start seeding media, this may take a while');
         $this->seed('MediaSeeder');
-        $this->seed('RoleSeeder');
 //         $this->seed('ActionSeeder');
 //         $this->seed('PermissionSeeder');
         $this->seed('PropertySeeder');
-//         $this->seed('PropertyDetailSeeder');
-        $this->seed('PropertyLogSeeder');
 //         $this->seed('AdminAccessSeeder');
         $this->seed('RentalSeeder');
         $this->seed('RentalUserSeeder');
         $this->seed('IssueSeeder');
-        $this->seed('IssueDetailSeeder');
-        $this->seed('IssueProgressSeeder');
         $this->seed('MessagesSeeder');
 
         Model::reguard();
@@ -67,27 +61,6 @@ class DatabaseSeeder extends Seeder
     {
         if(class_exists($className))
             $this->call($className);
-    }
-}
-class SystemUserSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        User::where('email', '=', 'test@test.com')->delete();
-        $user = factory(User::class)->create([
-           'email' =>  'test@test.com'
-        ]);
-
-        Password::where('user_id', '=', $user->id)->delete();
-        $password = factory(Password::class)->create([
-            'user_id' => $user->id,
-            'password' => Hash::make(12345678)
-        ]);
     }
 }
 class UsersSeeder extends Seeder
@@ -99,27 +72,28 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        factory(User::class, SEED_LIMIT)->create()->each(function($user){
-            // password
+        // roles
+        $role_agency_admin = factory(Role::class)->create(['name' => 'agency admin', 'description' => '']);
+        $role_agent = factory(Role::class)->create(['name' => 'agent', 'description' => '']);
+        $role_tenant = factory(Role::class)->create(['name' => 'tenant', 'description' => '']);
+        $role_landlord = factory(Role::class)->create(['name' => 'landlord', 'description' => '']);
+
+        $usersInfo = [
+          ['email' => 'agency_admin@test.com', 'role_id' => $role_agency_admin->id],
+          ['email' => 'agent@test.com', 'role_id' => $role_agent->id],
+          ['email' => 'tenant@test.com', 'role_id' => $role_tenant->id],
+          ['email' => 'landlord@test.com', 'role_id' => $role_landlord->id],
+        ];
+        foreach($usersInfo as $userInfo) {
+            $user = factory(User::class)->create($userInfo);
             $password = factory(Password::class)->create([
                 'user_id' => $user->id,
-                'password' => Hash::make(str_random(15))
+                'password' => Hash::make(123456)
             ]);
-            echoDebug($user, $password);
-//             user details
-             $userDetails = factory(UserDetail::class)->create([
-                 'user_id' => $user->id
-             ]);
-             echoDebug($user, $userDetails);
-            // user relationship
-//             if(random_int(0,1) === 0)
-//             {
-//                 $userRelationship = factory(UserRelationship::class)->create([
-//                     'user_id' => $user->id
-//                 ]);
-//                 echoDebug($user, $userRelationship);
-//             }
-        });
+            $userDetails = factory(UserDetail::class)->create([
+                'user_id' => $user->id
+            ]);
+        }
     }
 }
 class MessagesSeeder extends Seeder
@@ -143,7 +117,34 @@ class AddressesSeeder extends Seeder
      */
     public function run()
     {
-        factory(Address::class, User::all()->count() * ADDRESS_SEED_MULTI)->create();
+        factory(Address::class)->create([
+            'street' => '21 Hibiscus Dr',
+            'suburb' => 'Wheelers Hill',
+            'state' => 'VIC',
+            'country' => 'Australia',
+            'postcode' => '3150',
+        ]);
+        factory(Address::class)->create([
+            'street' => '3/2 McKelvie Ct',
+            'suburb' => 'Glen Waverley',
+            'state' => 'VIC',
+            'country' => 'Australia',
+            'postcode' => '3150',
+        ]);
+        factory(Address::class)->create([
+            'street' => '72/108 Greville St',
+            'suburb' => 'Prahran',
+            'state' => 'VIC',
+            'country' => 'Australia',
+            'postcode' => '3181',
+        ]);
+        factory(Address::class)->create([
+            'street' => '77/75-77 Irving Rd',
+            'suburb' => 'Toorak',
+            'state' => 'VIC',
+            'country' => 'Australia',
+            'postcode' => '3142',
+        ]);
     }
 }
 class BrandsSeeder extends Seeder
@@ -168,21 +169,6 @@ class MediaSeeder extends Seeder
     public function run()
     {
         factory(Media::class, SEED_LIMIT)->create();
-    }
-}
-class RoleSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        factory(Role::class)->create(['name' => 'agency admin']);
-        factory(Role::class)->create(['name' => 'agent']);
-        factory(Role::class)->create(['name' => 'tenant']);
-        factory(Role::class)->create(['name' => 'landlord']);
     }
 }
 class ActionSeeder extends Seeder
@@ -218,36 +204,17 @@ class PropertySeeder extends Seeder
      */
     public function run()
     {
-        factory(Property::class, SEED_LIMIT)->create()->each(function($property){
+        foreach(Address::all() as $address) {
+            $property = factory(Property::class)->create([
+                'address_id' => $address->id,
+            ]);
             $property_detail = factory(PropertyDetail::class)->create([
                 'property_id' => $property->id
             ]);
-            echoDebug($property, $property_detail);
-        });
-    }
-}
-class PropertyDetailSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        factory(PropertyDetail::class, SEED_LIMIT)->create();
-    }
-}
-class PropertyLogSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        factory(PropertyLog::class, Property::all()->count() * PROPERTY_LOG_SEED_MULTI)->create();
+            $property_log = factory(PropertyLog::class)->create([
+                'property_id' => $property->id
+            ]);
+        }
     }
 }
 class AdminAccessSeeder extends Seeder
@@ -271,31 +238,21 @@ class IssueSeeder extends Seeder
      */
     public function run()
     {
-        factory(Issue::class, Property::all()->count())->create();
-    }
-}
-class IssueDetailSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        factory(IssueDetail::class, Issue::all()->count())->create();
-    }
-}
-class IssueProgressSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        factory(IssueProgress::class, Issue::all()->count())->create();
+        foreach(RentalUser::all() as $rental_user) {
+            for($i=0; $i<random_int(0,5); $i++) {
+                $issue = factory(Issue::class)->create([
+                    'requester_user_id' => $rental_user->user_id,
+                    'rental_id' => $rental_user->rental_id,
+                    'status' => random_int(0, 1),
+                ]);
+                $issue_detail = factory(IssueDetail::class)->create([
+                    'issue_id' => $issue->id,
+                ]);
+                $issue_progress = factory(IssueProgress::class)->create([
+                    'issue_id' => $issue->id,
+                ]);
+            }
+        }
     }
 }
 class RentalSeeder extends Seeder
@@ -307,7 +264,10 @@ class RentalSeeder extends Seeder
      */
     public function run()
     {
-        factory(Rental::class, Property::all()->count() * RENTAL_SEED_MULTI)->create();
+        foreach(Property::all() as $property)
+            factory(Rental::class)->create([
+                'property_id' => $property->id,
+            ]);
     }
 }
 class RentalUserSeeder extends Seeder

@@ -16,6 +16,10 @@ class CreateIssuesTable extends Migration
             $table->unsignedInteger('requester_user_id');
             $table->unsignedInteger('rental_id');
             $table->string('status', $table->status_string_length);
+
+            $table->index('status');
+            $table->foreign('requester_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('rental_id')->references('id')->on('rentals')->onDelete('cascade');
         });
     }
 

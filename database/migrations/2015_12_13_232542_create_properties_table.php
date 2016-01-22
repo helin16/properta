@@ -15,6 +15,8 @@ class CreatePropertiesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('address_id');
             $table->text('description');
+
+            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
         });
 
     }

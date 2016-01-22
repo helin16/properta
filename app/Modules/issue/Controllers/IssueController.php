@@ -53,6 +53,7 @@ class IssueController extends BaseController
             return Redirect::route('issue.show')->withErrors(['issue_id' => '[system error]invalid issue passed in'])->withInput($request->all());
         if(count($errors) > 0)
             return Redirect::route('issue.show')->withErrors($errors)->withInput($request->all());
+
         $issue = Issue::store($issue['requester_user'], $issue['rental'], $issue['status'], $issue['id']);
 
         return Redirect::route('issue.index');
@@ -105,7 +106,13 @@ class IssueController extends BaseController
     public function show($id = 0)
     {
         self::checkPermission($id);
-        return view('issue::issue.detail', ['issue' => Issue::find($id), 'users' => User::getAll(PHP_INT_MAX), 'rentals' => Rental::getAll(null, PHP_INT_MAX)]);
+        $role = (Session::get('currentUserRole'));
+        if(!($user = User::find(Session::get('currentUserId'))) instanceof User)
+            return Redirect::to('user')->send();
+        if(!in_array($role, ['agency admin', 'agent']))
+            $users = [$user];
+        else $users = User::getAll(PHP_INT_MAX);
+        return view('issue::issue.detail', ['issue' => Issue::find($id), 'users' => $users, 'rentals' => Rental::getAll(null, PHP_INT_MAX)]);
     }
 
     /**

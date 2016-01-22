@@ -19,6 +19,10 @@ class CreatePropertyDetailsTable extends Migration
             $table->unsignedTinyInteger('bedrooms')->nullable()->default(null);
             $table->unsignedTinyInteger('bathrooms')->nullable()->default(null);
             $table->json('options');
+
+            $table->index('type');
+            $table->index('bedrooms');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

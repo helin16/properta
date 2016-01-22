@@ -19,6 +19,9 @@ class CreateRentalsTable extends Migration
             $table->timestamp('to')->nullable();
             $table->json('media_ids');
 
+            $table->index('dailyAmount');
+            $table->index('from');
+            $table->index('to');
             $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }

@@ -88,8 +88,8 @@ class PropertyController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        Property::destroy($id);
-        return Redirect::to('property');
+        Property::destroy([$id]);
+        return $this->index();
     }
 
     private function checkPermission($id){

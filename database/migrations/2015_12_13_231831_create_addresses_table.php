@@ -18,6 +18,9 @@ class CreateAddressesTable extends Migration
             $table->string('state', 50);
             $table->string('country', 50);
             $table->unsignedSmallInteger('postcode');
+
+            $table->index('suburb');
+            $table->index('postcode');
         });
     }
 
