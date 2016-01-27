@@ -1,1 +1,0 @@
-@extends('abstracts::base.2_columns_left_nav_bar')

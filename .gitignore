@@ -1,16 +1,6 @@
-/.buildpath
-/.project
-/.settings
-/web/assets
-/web/protected/runtime
-config/app.php
-vendor
-.idea
-.gitignore
-/.phpstorm.meta.php
-/composer.lock
-/_ide_helper.php
-/media
-!/media/.gitkeep
-readme.md
-.env
+### Laravel template
+/bootstrap/compiled.php
+.env.*.php
+.env.php
+/public/bower_components/
+# Created by .ignore support plugin (hsz.mobi)

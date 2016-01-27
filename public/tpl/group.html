@@ -1,0 +1,28 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12">
+			<editable-group-name my-dir-model='group'></editable-group-name>
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-condensed table-hover">
+			<thead>
+				<tr>
+					<th></th>
+					<th ng-repeat="user in group.members">{{user.firstname}}</th>
+					<th class="text-right"><div new-user-to-group></div></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="transaction in group.transactions">
+					<td></td>
+					<td ng-repeat="user in group.members">{{user.firstname}}</td>
+					<td class="text-right"><div new-user-to-group></div></td>
+				</tr>
+				<tr>
+					<td class="text-center" colspan="{{group.members.length + 2}}" new-trans-to-group my-dir-model='group'></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

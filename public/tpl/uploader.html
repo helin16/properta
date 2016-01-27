@@ -1,0 +1,54 @@
+<div class="container">
+    <h3 class="page-header"><small><i class="fa fa-cloud-upload"></i></small> Uploader </h3>
+    <div class="row" ng-controller="uploaderController">
+        <div class="col-xs-12">
+            <div class="well">
+                <form action="" class="dropzone" dropzone="" id="dropzone">
+                    <div class="dz-default dz-message">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-success" ng-click="uploadFile()">Upload File</button>
+            <button class="btn btn-danger" ng-click="reset()">Reset Dropzone</button>
+        </div>
+        <div>
+            <form>
+                <label>File to download</label>
+                <input ng-model="filename" type="text" placeholder="Filename" />
+                <a class="btn btn-primary" href="" ng-href="{{ partialDownloadLink + filename }}">Download File</a>
+            </form>
+        </div>
+
+        <script type="text/javascript">
+            Dropzone.autoDiscover = false;
+        </script>
+    </div>
+</div>
+
+<style>
+    .thumb {
+        width: 24px;
+        height: 24px;
+        float: none;
+        position: relative;
+        top: 7px;
+    }
+
+    form .progress {
+        line-height: 15px;
+    }
+
+    .progress {
+        display: inline-block;
+        width: 100px;
+        border: 3px groove #CCC;
+    }
+
+    .progress div {
+        font-size: smaller;
+        background: orange;
+        width: 0;
+    }
+</style>

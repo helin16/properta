@@ -1,0 +1,41 @@
+<div class="container">
+	<h3 class="page-header"><small><i class="fa fa-group"></i></small> My Groups <small>: {{groupList.total}}</small></h3>
+	<div class="row">
+		<div class="col-sm-6 col-md-4 col-lg-3" ng-repeat="group in groupList.data | filter: nameFilter">
+			<a href="#/group/{{group.id}}">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-7"><h4 class="one-line-truncate" title="{{group.name}}">{{group.name}}</h4></div>
+							<div class="col-xs-5 text-right"><div class="huge">$ fs</div></div>
+						</div>
+						<div class="row" title="{{group.description}}">
+							<div class="col-xs-12 group-box-description"><small>{{group.description}}</small></div>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-6 col-md-4 col-lg-3" ng-show="groupList.pageNo < groupList.totalPages">
+			<a href="javascript: void(0);" ng-click="getData(groupList.pageNo + 1)">
+				<div class="panel panel-success">
+					<div class="panel-heading text-center">
+						<h4>Show More...</h4>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-6 col-md-4 col-lg-3 new-group-btn-wrapper">
+			<a class="new-group-btn" href="javascript: void(0);" uib-popover-template="'/tpl/newGroupForm.html'" popover-animation="true">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-heading text-center" >
+							<i class="fa fa-plus"></i>
+							<h4>New Group</h4>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>

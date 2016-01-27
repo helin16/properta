@@ -11,6 +11,18 @@ abstract class BaseModel extends Model
      * @var bool
      */
     public $timestamps = false;
-    public static $pageSize = 5;
-    public static $orderBy = ['id' => 'desc'];
+    /**
+     * Get the creator
+     */
+    public function created_by()
+    {
+    	return $this->belongsTo(\App\Modules\System\Models\User::class, 'created_by');
+    }
+    /**
+     * Get the updater
+     */
+    public function updated_by()
+    {
+    	return $this->belongsTo(\App\Modules\System\Models\User::class, 'updated_by');
+    }
 }

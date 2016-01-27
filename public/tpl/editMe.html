@@ -1,0 +1,18 @@
+<form role="form" ng-submit="submit()" name="editMeForm">
+  <div class="form-group">
+    <label>Firstname:</label>
+    <input class="form-control" placeholder="Firstname" ng-model="userModel.firstname"/>
+  </div>
+  <div class="form-group">
+    <label>Lastname:</label>
+    <input class="form-control" placeholder="Lastname" ng-model="userModel.lastname"/>
+  </div>
+  <div class="form-group">
+    <label>Email:</label>
+    <input class="form-control" placeholder="Email" ng-model="userModel.email"/>
+  </div>
+  <div reset-password ng-user="userModel"></div>
+  <div class="form-group">
+    <button class="btn btn-success" type="submit" ng-disabled="editMeForm.$pristine || editMeForm.$invalid">Submit</button>
+  </div>
+</form>
